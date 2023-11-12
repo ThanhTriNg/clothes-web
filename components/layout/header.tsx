@@ -1,6 +1,6 @@
 import React from "react";
-import { NavMenu } from "./navMenu";
-import Nav from "./nav";
+import { NavMenu } from "./NavMenu";
+import Nav from "./Nav";
 import Image from "next/image";
 import { MagnifyingGlass, User, ShoppingCart } from "@phosphor-icons/react";
 

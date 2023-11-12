@@ -1,12 +1,29 @@
-import React from "react";
-import { AspectRatio } from "@/components/ui/aspect-ratio";
+import React, { useEffect } from "react";
+import { Clothes } from "@/redux/reducer/Clothes";
 import Image from "next/image";
 
 import SlideShow from "@/components/swiper";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { getClothesThunk } from "@/redux/reducer/Clothes";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch } from "@/redux/store/Store";
+import OutStanding from "@/components/OutStanding";
+import LimitedPromotion from "@/components/Promotion";
+
+export const imgMenVar = "/img/men";
+export const imgWomenVar = "/img/women";
 
 export default function HomePage() {
+  const dispatch = useDispatch<AppDispatch>();
+  const { clothesInfo } = useSelector((state: any) => state.clothes);
+  console.log(clothesInfo);
+
+  useEffect(() => {
+    dispatch(getClothesThunk());
+  }, [dispatch]);
+  console.log(clothesInfo);
+
   return (
     <div className="">
       <div className="space-y-5">
@@ -51,62 +68,6 @@ export default function HomePage() {
         </div>
 
         <div className="grid grid-cols-12 gap-x-10 bg-white p-3 rounded items-center">
-          {/* <div className="col-span-6 space-y-2 ">
-            <div className="flex justify-between items-center px-10">
-              <p className="uppercase font-medium text-base">
-                Deal hot cho bạn
-              </p>
-              <Button variant="link" className="text-xs">
-                Xem thêm
-              </Button>
-            </div>
-            <div className="grid grid-cols-12">
-              {listDeal.map((item, idx) => {
-                const price: number = item.price;
-                const discount: number = item.discount / 100;
-                const priceDiscount: number = price * (1 - discount);
-
-                const convertPrice: string = price.toLocaleString("it-IT", {
-                  style: "currency",
-                  currency: "VND",
-                });
-
-                const convertPriceDiscount: string =
-                  priceDiscount.toLocaleString("it-IT", {
-                    style: "currency",
-                    currency: "VND",
-                  });
-                return (
-                  <div
-                    className="col-span-4 mx-auto transition-all hover:scale-105"
-                    key={`deal-${idx}`}
-                  >
-                    <Link href="/" className="space-y-0.5">
-                      <div className="relative">
-                        <p className="text-xs font-bold text-primary absolute p-2 rounded-s-sm bg-primary-foreground right-0">
-                          -{item.discount}%
-                        </p>
-                        <Image
-                          // src={item.img}
-                          src={item.img}
-                          width="0"
-                          height="0"
-                          sizes="100vw"
-                          alt=""
-                          className="w-[160px] h-[160px]"
-                        />
-                      </div>
-                      <p className="text-center text-xs line-through text-black/50">
-                        {convertPrice}
-                      </p>
-                      <p className="text-center">{convertPriceDiscount}</p>
-                    </Link>
-                  </div>
-                );
-              })}
-            </div>
-          </div> */}
-
           {listTab.map((title: string, idx: number) => {
             return (
               <div className="col-span-6 space-y-2" key={`tab-${idx}`}>
@@ -118,20 +79,25 @@ export default function HomePage() {
                 </div>
                 <div className="grid grid-cols-12">
                   {listDeal.map((item, idx) => {
-                    const price: number = item.price;
-                    const discount: number = item.discount / 100;
-                    const priceDiscount: number = price * (1 - discount);
+                    // const price: number = item.price;
+                    // const discount: number = item.discount / 100;
+                    // const priceDiscount: number = price * (1 - discount);
 
-                    const convertPrice: string = price.toLocaleString("it-IT", {
-                      style: "currency",
-                      currency: "VND",
-                    });
+                    // const convertPrice: string = price.toLocaleString("it-IT", {
+                    //   style: "currency",
+                    //   currency: "VND",
+                    // });
 
-                    const convertPriceDiscount: string =
-                      priceDiscount.toLocaleString("it-IT", {
-                        style: "currency",
-                        currency: "VND",
-                      });
+                    // const convertPriceDiscount: string =
+                    //   priceDiscount.toLocaleString("it-IT", {
+                    //     style: "currency",
+                    //     currency: "VND",
+                    //   });
+                    const { convertPrice, convertPriceDiscount } = formatPrice(
+                      item.price,
+                      item.discount
+                    );
+
                     return (
                       <div
                         className="col-span-4 mx-auto transition-all hover:scale-105"
@@ -139,7 +105,7 @@ export default function HomePage() {
                       >
                         <Link href="/" className="space-y-0.5">
                           <div className="relative">
-                            <p className="text-xs font-bold text-primary absolute p-2 rounded-s-sm bg-primary-foreground right-0">
+                            <p className="text-xs font-bold text-primary absolute p-2 rounded-s-sm bg-primary-foreground right-[10%]">
                               -{item.discount}%
                             </p>
                             <Image
@@ -149,7 +115,8 @@ export default function HomePage() {
                               height="0"
                               sizes="100vw"
                               alt=""
-                              className="w-[160px] h-[160px]"
+                              // className="w-[160px] h-[160px]"
+                              className="w-4/5 h-auto mx-auto"
                             />
                           </div>
                           <p className="text-center text-xs line-through text-black/50">
@@ -165,6 +132,19 @@ export default function HomePage() {
             );
           })}
         </div>
+
+        <div className="w-1/2 mx-auto bg-primary py-10 rounded text-white">
+          <div className="text-center space-y-3 ">
+            <h1 className="text-4xl font-bold uppercase">Giá mới hấp dẫn</h1>
+            <h1 className="text-xl font-semibold">Số lượng có hạn</h1>
+            <p className="text-base font-medium">
+              Mua sắm online tiện lợi và nhận hàng tại cửa hàng gần bạn
+            </p>
+          </div>
+        </div>
+
+        <OutStanding />
+        <LimitedPromotion />
       </div>
     </div>
   );
@@ -215,9 +195,6 @@ const listImgIcon = [
   },
 ];
 
-const imgMenVar = "/img/men";
-const imgWomenVar = "/img/women";
-
 const listTab = ["Deal cho bạn", "Hàng hiệu giá tốt"];
 
 const listDeal = [
@@ -261,3 +238,19 @@ const listDesignerClothing = [
     discount: 1,
   },
 ];
+
+export const formatPrice = (price: number, discount: number = 0) => {
+  const discountP: number = discount / 100;
+  const priceDiscount: number = price * (1 - discountP);
+
+  const convertPrice: string = price.toLocaleString("it-IT", {
+    style: "currency",
+    currency: "VND",
+  });
+
+  const convertPriceDiscount: string = priceDiscount.toLocaleString("it-IT", {
+    style: "currency",
+    currency: "VND",
+  });
+  return { convertPrice, convertPriceDiscount };
+};
