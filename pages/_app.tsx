@@ -12,12 +12,14 @@ export const noto = Noto_Sans({
 function LandingPage({ Component, pageProps }: AppProps) {
   return (
     <Provider store={store}>
-      <main className={`${noto.className} min-h-screen  bg-slate-200`}>
-        <div className=" mx-auto lg:max-w-[1300px]">
-          <Header />
-          <Component {...pageProps} />
-        </div>
-      </main>
+      <div className={`${noto.className} bg-slate-200`}>
+        <Header />
+        <main>
+          <div className=" mx-auto lg:max-w-[1300px]">
+            <Component {...pageProps} />
+          </div>
+        </main>
+      </div>
     </Provider>
   );
 }

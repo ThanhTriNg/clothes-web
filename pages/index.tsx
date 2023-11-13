@@ -17,12 +17,12 @@ export const imgWomenVar = "/img/women";
 export default function HomePage() {
   const dispatch = useDispatch<AppDispatch>();
   const { clothesInfo } = useSelector((state: any) => state.clothes);
-  console.log(clothesInfo);
+  // console.log(clothesInfo);
 
   useEffect(() => {
     dispatch(getClothesThunk());
   }, [dispatch]);
-  console.log(clothesInfo);
+  // console.log(clothesInfo);
 
   return (
     <div className="">
