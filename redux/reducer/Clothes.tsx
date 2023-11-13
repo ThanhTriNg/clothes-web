@@ -35,7 +35,7 @@ export const getClothesThunk = createAsyncThunk(
   async (arg, { rejectWithValue }) => {
     try {
       const response = await ClothesApi.getClothes();
-      console.log(response);
+      // console.log(response);
       return response;
     } catch (error: any) {
       console.log(error);

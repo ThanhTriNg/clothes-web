@@ -15,53 +15,53 @@ import Link from "next/link";
 
 const Nav = () => {
   return (
-    <NavigationMenu>
-      <NavigationMenuList>
-        {sex.map((name, idx) => {
-          let selectClothes;
-          if (idx === 0) {
-            selectClothes = womenClothes;
-          }
-          if (idx === 1) {
-            selectClothes = menClothes;
-          }
-          return (
-            <NavigationMenuItem key={`s-${idx}`}>
-              <NavigationMenuTrigger className="uppercase text-base font-bold bg-bg-slate-200  ">
-                {name}
-              </NavigationMenuTrigger>
-              <NavigationMenuContent>
-                <ul className="grid gap-3 p-6 md:w-[200px] lg:w-[800px] lg:grid-cols-4">
-                  {selectClothes &&
-                    selectClothes.map((clothe, idx) => {
-                      const item = clothe.item;
-                      return (
-                        <div key={`clothes-${idx}`} className="space-y-3">
-                          <p className="font-semibold uppercase text-base">
-                            {clothe.title}
-                          </p>
-                          <div>
-                            {item.map((name, idx) => {
-                              return (
-                                <ListItem
-                                  href="/"
-                                  className="capitalize"
-                                  title={name}
-                                  key={`${name}-${idx}`}
-                                />
-                              );
-                            })}
+      <NavigationMenu>
+        <NavigationMenuList>
+          {sex.map((name, idx) => {
+            let selectClothes;
+            if (idx === 0) {
+              selectClothes = womenClothes;
+            }
+            if (idx === 1) {
+              selectClothes = menClothes;
+            }
+            return (
+              <NavigationMenuItem key={`s-${idx}`}>
+                <NavigationMenuTrigger className="uppercase text-base font-bold bg-bg-slate-200  ">
+                  {name}
+                </NavigationMenuTrigger>
+                <NavigationMenuContent>
+                  <ul className="grid gap-3 p-6 md:w-[200px] lg:w-[800px] lg:grid-cols-4">
+                    {selectClothes &&
+                      selectClothes.map((clothe, idx) => {
+                        const item = clothe.item;
+                        return (
+                          <div key={`clothes-${idx}`} className="space-y-3">
+                            <p className="font-semibold uppercase text-base">
+                              {clothe.title}
+                            </p>
+                            <div>
+                              {item.map((name, idx) => {
+                                return (
+                                  <ListItem
+                                    href="/"
+                                    className="capitalize"
+                                    title={name}
+                                    key={`${name}-${idx}`}
+                                  />
+                                );
+                              })}
+                            </div>
                           </div>
-                        </div>
-                      );
-                    })}
-                </ul>
-              </NavigationMenuContent>
-            </NavigationMenuItem>
-          );
-        })}
-      </NavigationMenuList>
-    </NavigationMenu>
+                        );
+                      })}
+                  </ul>
+                </NavigationMenuContent>
+              </NavigationMenuItem>
+            );
+          })}
+        </NavigationMenuList>
+      </NavigationMenu>
   );
 };
 
