@@ -1,7 +1,7 @@
 import React from "react";
 import Image from "next/image";
 import { Heart } from "@phosphor-icons/react";
-import PickColor from "./pickColor/PickColor";
+import PickColor from "./pickColor";
 import { formatPrice } from "@/pages";
 const imgMenVar = "/img/men";
 const LimitedPromotion = () => {
@@ -60,7 +60,7 @@ const LimitedPromotion = () => {
                   />
 
                   <PickColor colors={colors} />
-                  <p className="truncate-2 text-lg font-semibold min-h-[4.5rem]">
+                  <p className="truncate-2 text-lg font-semibold">
                     {item.name}
                   </p>
                   <p className="truncate-2 text-2xl font-bold text-primary">
