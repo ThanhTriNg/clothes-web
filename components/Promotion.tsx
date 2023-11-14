@@ -3,6 +3,7 @@ import Image from "next/image";
 import { Heart } from "@phosphor-icons/react";
 import PickColor from "./pickColor";
 import { formatPrice } from "@/pages";
+import Card from "./card";
 const imgMenVar = "/img/men";
 const LimitedPromotion = () => {
   return (
@@ -33,40 +34,17 @@ const LimitedPromotion = () => {
               </p>
             </div>
           </div>
-          <div className=" col-span-8 grid grid-cols-3 gap-8 ">
-            {ListOutstanding.map((item, idx) => {
-              const { convertPrice } = formatPrice(item.price);
+          <div className="col-span-8 grid grid-cols-3 gap-x-4 gap-y-8">
+            {ListOutstanding.map((item, idx: number) => {
               return (
-                <div
-                  key={`outstanding-${idx}`}
-                  className="relative col-span-1 space-y-4 transition-all hover:scale-105 cursor-pointer select-none"
-                >
-                  {/* <Heart size={30} weight="fill" color="red" /> */}
-                  <Heart
-                    className="absolute top-[5%] right-[5%]"
-                    size={30}
-                    color="black"
-                    onClick={() => console.log("click")}
-                  />
-
-                  <Image
-                    src={item.img}
-                    width="0"
-                    height="0"
-                    sizes="100vw"
-                    alt=""
-                    // className="w-[260px] h-auto mx-auto "
-                    className="w-full h-auto !mt-0"
-                  />
-
-                  <PickColor colors={colors} />
-                  <p className="truncate-2 text-lg font-semibold">
-                    {item.name}
-                  </p>
-                  <p className="truncate-2 text-2xl font-bold text-primary">
-                    {convertPrice}
-                  </p>
-                </div>
+                <Card
+                  colors={colors}
+                  key={`product-card-${idx}`}
+                  id={item.id}
+                  img={item.img}
+                  name={item.name}
+                  price={item.price}
+                />
               );
             })}
           </div>
@@ -80,35 +58,44 @@ export default LimitedPromotion;
 
 const ListOutstanding = [
   {
-    name: "Áo Parka Chống UV Bỏ Túi (3D Cut) (Chống Nắng)",
+    id: "0",
+    name: "Áo Parka Chống UV Bỏ Túi (3D Cut) (Chống Nắng)(Chống Nắng)",
     img: `${imgMenVar}/bottom/E463458-000/vngoods_06_463458.jpg`,
     price: 870000,
   },
   {
+    id: "1",
+
     name: "Áo Parka 2 mặt",
     img: `${imgMenVar}/bottom/E463458-000/vngoods_06_463458.jpg`,
     price: 740000,
   },
   {
+    id: "2",
+
     name: "Áo Thun Soft Brushed Cổ Tròn Dài Tay",
     img: `${imgMenVar}/bottom/E463458-000/vngoods_06_463458.jpg`,
     price: 120000,
   },
   {
+    id: "3",
+
     name: "HEATTECH Áo Thun Cổ Tròn Dài Tay",
     img: `${imgMenVar}/bottom/E463458-000/vngoods_06_463458.jpg`,
     price: 9760000,
   },
 
   {
+    id: "4",
     name: "Áo Len Vải Sợi Souffle Cổ Tròn Dài Tay",
     img: `${imgMenVar}/bottom/E463458-000/vngoods_06_463458.jpg`,
     price: 415000,
   },
   {
+    id: "5",
     name: "Áo Len Dệt 3D Vải Souffle Cổ 3 Phân Dài Tay",
     img: `${imgMenVar}/bottom/E463458-000/vngoods_06_463458.jpg`,
     price: 170000,
   },
 ];
-const colors = ["#E7DFD4", "#535353", "#F3BCB9", "#EFEDF0"];
+const colors = ["#E7DFD4", "#535353", "#F3BCB9", "#EFEDF0", "red"];
