@@ -20,7 +20,7 @@ const Card = ({ id, img, name, price, colors }: productCardProps) => {
     setIsLike((prev) => !prev);
   };
   return (
-    <div className="relative col-span-1 space-y-4 transition-all hover:scale-105 cursor-pointer select-none">
+    <div className="relative col-span-1  transition-all hover:scale-105 cursor-pointer select-none">
       {isLike ? (
         <Heart
           className="absolute top-[5%] right-[5%]"
@@ -37,7 +37,7 @@ const Card = ({ id, img, name, price, colors }: productCardProps) => {
           onClick={() => handleClickLike()}
         />
       )}
-      <Link href={`/tops/${id}`}>
+      <Link href={`/tops/${id}`} className="space-y-4">
         <Image
           src={img}
           width="0"
@@ -48,7 +48,7 @@ const Card = ({ id, img, name, price, colors }: productCardProps) => {
         />
 
         <PickColor colors={colors} />
-        <p className={`truncate-2  font-semibold text-lg h-[3.5rem]`}>{name}</p>
+        <p className={`truncate-2  font-semibold text-base h-[3rem]`}>{name}</p>
         <p className={`truncate-2  font-bold text-primary`}>{convertPrice}</p>
       </Link>
     </div>
