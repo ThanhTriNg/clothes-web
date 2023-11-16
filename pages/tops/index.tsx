@@ -1,4 +1,4 @@
-import ProductCard from "@/components/productCard";
+import ProductList from "@/components/productList";
 import ProductNav from "@/components/productNav";
 import { Combobox } from "@/components/selectBox";
 import React from "react";
@@ -21,7 +21,7 @@ const Tops = () => {
         </div>
         <div className="grid grid-cols-12 gap-x-8">
           <ProductNav className="col-span-4" />
-          <ProductCard className="col-span-8"/>
+          {/* <ProductList className="col-span-8"/> */}
         </div>
       </div>
     </div>
@@ -44,3 +44,5 @@ const textFilters = [
     label: "Từ cao đến thấp",
   },
 ];
+
+
