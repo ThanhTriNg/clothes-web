@@ -19,6 +19,8 @@ interface myState {
   clothesInfo: Clothes | null;
   successLogout: boolean;
   errorLogout: string | null;
+
+  colorAPI: colorAPI | null;
 }
 
 const initialState: myState = {
@@ -29,13 +31,41 @@ const initialState: myState = {
 
   successLogout: false,
   errorLogout: null,
+
+  colorAPI: null,
 };
+interface colorAPI {
+  name: {
+    value: string;
+  };
+}
+interface colors {
+  hex: string;
+}
 export const getClothesThunk = createAsyncThunk(
   "getClothes",
   async (arg, { rejectWithValue }) => {
     try {
       const response = await ClothesApi.getClothes();
       // console.log(response);
+      return response;
+    } catch (error: any) {
+      console.log(error);
+      if (error.response && error.response.data.message) {
+        return rejectWithValue(error.response.data.message);
+      } else {
+        return rejectWithValue(error.message);
+      }
+    }
+  }
+);
+
+export const getColorNameThunk = createAsyncThunk(
+  "getColorName",
+  async (colors: colors, { rejectWithValue }) => {
+    try {
+      const { hex } = colors;
+      const response = await ClothesApi.getColorName(hex);
       return response;
     } catch (error: any) {
       console.log(error);
@@ -61,6 +91,15 @@ export const clothesSlice = createSlice({
     });
 
     builder.addCase(getClothesThunk.rejected, (state, action) => {});
+
+    //get color name
+
+    builder.addCase(getColorNameThunk.pending, (state) => {});
+    builder.addCase(getColorNameThunk.fulfilled, (state, action) => {
+      state.colorAPI = action.payload.data;
+    });
+
+    builder.addCase(getColorNameThunk.rejected, (state, action) => {});
   },
 });
 

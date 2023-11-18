@@ -6,12 +6,12 @@ import { Pagination, Autoplay } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/pagination";
 
-interface slideShowProps {
+interface SlideShowProps {
   listImg?: any;
   className?: string;
 }
 
-const SlideShow = ({ listImg, className }: slideShowProps) => {
+const SlideShow = ({ listImg, className }: SlideShowProps) => {
   return (
     <div className={className}>
       <Swiper

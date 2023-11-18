@@ -3,9 +3,8 @@ import ProductNav from "@/components/productNav";
 import { Combobox } from "@/components/selectBox";
 import { useRouter } from "next/router";
 
-import React from "react";
 const imgMenVar = "/img/men";
-
+import React, { useState } from "react";
 const Category = () => {
   const router = useRouter();
   const { category } = router.query;
@@ -14,6 +13,8 @@ const Category = () => {
   if (category) {
     products = getCategoryData(category);
   }
+
+
   return (
     <div className="min-h-screen">
       <div className=" bg-white p-6 space-y-10">
@@ -40,6 +41,7 @@ const Category = () => {
           )}
         </div>
       </div>
+
     </div>
   );
 };

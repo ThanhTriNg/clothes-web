@@ -18,12 +18,12 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 
-interface textFilter {
+interface TextFilter {
   value?: string;
   label: string;
 }
 interface ComboBoxProps {
-  textFilters: textFilter[];
+  textFilters: TextFilter[];
 }
 
 export function Combobox({ textFilters }: ComboBoxProps) {

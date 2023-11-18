@@ -5,7 +5,7 @@ import PickColor from "../pickColor";
 import { formatPrice } from "@/pages";
 import Link from "next/link";
 
-export interface productCardProps {
+export interface ProductCardProps {
   id: string;
   img: string;
   name: string;
@@ -13,7 +13,7 @@ export interface productCardProps {
   colors: string[];
 }
 
-const Card = ({ id, img, name, price, colors }: productCardProps) => {
+const Card = ({ id, img, name, price, colors }: ProductCardProps) => {
   const { convertPrice } = formatPrice(price);
   const [isLike, setIsLike] = useState<boolean>(false);
   const handleClickLike = () => {

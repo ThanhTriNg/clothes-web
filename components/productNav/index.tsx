@@ -7,11 +7,11 @@ import {
 } from "@/components/ui/accordion";
 import Link from "next/link";
 
-interface productNavProps {
+interface ProductNavProps {
   className?: string;
 }
 
-const ProductNav = ({ className }: productNavProps) => {
+const ProductNav = ({ className }: ProductNavProps) => {
   return (
     <div className={className}>
       <div>

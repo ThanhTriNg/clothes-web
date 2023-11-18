@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Clothes } from "@/redux/reducer/Clothes";
 import Image from "next/image";
 
@@ -23,9 +23,19 @@ export default function HomePage() {
     dispatch(getClothesThunk());
   }, [dispatch]);
   // console.log(clothesInfo);
+  const [rating, setRating] = useState<number>();
+  const handleRating = (rate: number) => {
+    setRating(rate);
 
+    // other logic
+  };
+  const onPointerEnter = () => console.log("Enter");
+  const onPointerLeave = () => console.log("Leave");
+  const onPointerMove = (value: number, index: number) =>
+    console.log(value, index);
   return (
     <div className="">
+
       <div className="space-y-5">
         <div className="grid grid-cols-12 space-x-2">
           <SlideShow className="col-span-8 " listImg={listImg} />

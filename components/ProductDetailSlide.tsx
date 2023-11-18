@@ -5,31 +5,14 @@ import { Pagination, Autoplay } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/pagination";
 import Image from "next/image";
-const imgMenVar = "/img/men";
-const imgWomenVar = "/img/women";
 
-// Import Swiper core styles
 
-// Import Swiper Pagination styles
-// const CustomButton = () => {
-//   const swiper = useSwiper();
-
-//   const navigateToSlide = () => {
-//     if (swiper) {
-//       swiper.slideNext();
-//     }
-//     console.log(swiper);
-//   };
-
-//   return (
-//     <div>
-//       <button onClick={() => navigateToSlide()} className="p-10 bg-yellow-400">
-//         Go to next
-//       </button>
-//     </div>
-//   );
-// };
-const ProductDetailSlide = () => {
+interface ProductDetailSlide {
+  thumbnail: {
+    img: string;
+  }[];
+}
+const ProductDetailSlide = ({ thumbnail }: ProductDetailSlide) => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const sliderRef = useRef<any>(null);
 
@@ -64,7 +47,7 @@ const ProductDetailSlide = () => {
     <div className="col-span-7 grid grid-cols-7">
       {/* thumbnail */}
       <div className="col-span-2 grid grid-cols-2 gap-0 mr-2 h-fit">
-        {listImg.map((item, idx: number) => {
+        {thumbnail.map((item, idx: number) => {
           return (
             <div
               key={idx}
@@ -98,7 +81,7 @@ const ProductDetailSlide = () => {
         >
           {/* <CustomButton /> */}
 
-          {listImg.map((item, idx: number) => {
+          {thumbnail.map((item, idx: number) => {
             return (
               <SwiperSlide key={`slide-${idx}`} className="h-full">
                 <Image
@@ -118,17 +101,3 @@ const ProductDetailSlide = () => {
   );
 };
 export default ProductDetailSlide;
-const listImg = [
-  {
-    img: `${imgMenVar}/bottom/E463458-000/vngoods_06_463458.jpg`,
-  },
-  {
-    img: `${imgWomenVar}/bottom/E458340-000/vngoods_31_458340.png`,
-  },
-  {
-    img: `${imgMenVar}/bottom/E463458-000/vngoods_06_463458.jpg`,
-  },
-  {
-    img: `${imgWomenVar}/bottom/E458340-000/vngoods_31_458340.png`,
-  },
-];
