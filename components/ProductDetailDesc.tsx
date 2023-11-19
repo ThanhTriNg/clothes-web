@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { Rating } from "react-simple-star-rating";
-import PickColor from "../pickColor";
-
+import PickColor from "./pickColor";
+import PickSize from "./pickSize";
+import { Input } from "./ui/input";
+import { Button } from "./ui/button";
 const ProductDetailDesc = () => {
   const [rating, setRating] = useState<number>();
   const handleRating = (rate: number) => {
@@ -39,9 +41,19 @@ const ProductDetailDesc = () => {
             thường ngày hoặc tinh tế.
           </h1>
         </div>
-        <div className="border border-solid border-black/20" />
+        <div className="border border-solid border-black/10" />
         <div>
-          <PickColor colors={colors} size={30} spaceBetween={8} showName />
+          <PickColor colors={colors} size={40} spaceBetween={8} showName />
+        </div>
+        <div className="border border-solid border-black/10" />
+        <PickSize />
+        <div className="border border-solid border-black/10" />
+        <div className="space-y-2">
+          <h1 className="uppercase">Số lượng</h1>
+          <Input type="number" min={0} defaultValue={1} className="w-1/3" />
+        </div>
+        <div>
+          <Button className="uppercase w-full">Thêm vào giỏ hàng</Button>
         </div>
       </div>
     </div>
@@ -49,4 +61,4 @@ const ProductDetailDesc = () => {
 };
 
 export default ProductDetailDesc;
-const colors = ["#E7DFD4", "#535353", "#F3BCB9", "#EFEDF0", "red"];
+const colors = ["#E7DFD4", "#535353", "#F3BCB9", "#EFEDF0"];

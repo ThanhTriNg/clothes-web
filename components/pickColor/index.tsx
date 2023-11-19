@@ -46,7 +46,7 @@ const PickColor = ({
 
   return (
     <div className="space-y-2">
-      {showName ? <h1>Màu sắc: {colorName} </h1> : ""}
+      {showName ? <h1 className="uppercase font-semibold">Màu sắc: {colorName} </h1> : ""}
       <div
         className="flex items-center "
         style={{
@@ -65,7 +65,9 @@ const PickColor = ({
                 width: sizeText,
               }}
               className={`cursor-pointer transition-all ${
-                activeColor === color ? `scale-110 border border-solid` : ``
+                showName && activeColor === color
+                  ? `scale-110 border border-solid`
+                  : ``
               }  `}
             />
           );
