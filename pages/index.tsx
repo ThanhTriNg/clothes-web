@@ -7,7 +7,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { getClothesThunk } from "@/redux/reducer/Clothes";
 import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch } from "@/redux/store/Store";
+import { AppDispatch,RootState } from "@/redux/store/Store";
 import OutStanding from "@/components/OutStanding";
 import LimitedPromotion from "@/components/Promotion";
 
@@ -16,13 +16,13 @@ export const imgWomenVar = "/img/women";
 
 export default function HomePage() {
   const dispatch = useDispatch<AppDispatch>();
-  const { clothesInfo } = useSelector((state: any) => state.clothes);
+  const { clothesInfo } = useSelector((state: RootState) => state.clothes);
   // console.log(clothesInfo);
 
   useEffect(() => {
     dispatch(getClothesThunk());
   }, [dispatch]);
-  // console.log(clothesInfo);
+  console.log(clothesInfo);
   const [rating, setRating] = useState<number>();
   const handleRating = (rate: number) => {
     setRating(rate);

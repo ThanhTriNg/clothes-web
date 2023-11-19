@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import ClothesApi from "../api/ClothesApi";
-
+import { addClothesProps } from "../module";
 export interface Clothes {
   id: string;
   name: string;
@@ -47,7 +47,7 @@ export const getClothesThunk = createAsyncThunk(
   async (arg, { rejectWithValue }) => {
     try {
       const response = await ClothesApi.getClothes();
-      // console.log(response);
+      console.log(response);
       return response;
     } catch (error: any) {
       console.log(error);
@@ -66,6 +66,24 @@ export const getColorNameThunk = createAsyncThunk(
     try {
       const { hex } = colors;
       const response = await ClothesApi.getColorName(hex);
+      return response;
+    } catch (error: any) {
+      console.log(error);
+      if (error.response && error.response.data.message) {
+        return rejectWithValue(error.response.data.message);
+      } else {
+        return rejectWithValue(error.message);
+      }
+    }
+  }
+);
+
+export const addClothesThunk = createAsyncThunk(
+  "addClothes",
+  async (addClothes: addClothesProps, { rejectWithValue }) => {
+    try {
+      const response = await ClothesApi.addClothes(addClothes);
+      console.log(response)
       return response;
     } catch (error: any) {
       console.log(error);
