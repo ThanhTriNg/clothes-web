@@ -1,5 +1,5 @@
 import AxiosClient, { TheColorAPI } from "./AxiosClient";
-import { addClothesProps } from "../module";
+import { AddClothesProps } from "../module";
 const ClothesApi = {
   getClothes: () => {
     return AxiosClient.get("/clothes");
@@ -7,17 +7,11 @@ const ClothesApi = {
   getColorName: (hex: string) => {
     return TheColorAPI.get(`/id?hex=${hex}`);
   },
-  addClothes: (addClothes: addClothesProps) => {
-    const { categoryId, genderId, name, price, desc_sort, desc } = addClothes;
-    // return AxiosClient.post("/clothes", {
-    //   categoryId,
-    //   genderId,
-    //   name,
-    //   price,
-    //   desc_sort,
-    //   desc,
-    // });
+  addClothes: (addClothes: AddClothesProps) => {
     return AxiosClient.post("/clothes", addClothes);
+  },
+  getCategories: () => {
+    return AxiosClient.get("/categories");
   },
 };
 

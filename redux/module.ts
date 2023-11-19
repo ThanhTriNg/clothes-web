@@ -1,5 +1,6 @@
-export interface addClothesProps {
+export interface AddClothesProps {
   categoryId: string;
+  subCategoryId: string;
   genderId: string;
   name: string;
   price: number;
@@ -11,15 +12,17 @@ export interface addClothesProps {
   };
 }
 
-export interface addClothesProps {
-  categoryId: string;
-  genderId: string;
+export interface Categories {
+  id: string;
   name: string;
-  price: number;
-  desc_sort: string;
-  desc: string;
-  img: {
-    main: string;
-    sub: string[];
-  };
+}
+export interface GetSubCateProps {
+  subName: string;
+  categoryId: string;
+}
+
+export interface SubCateProps {
+  id: string;
+  categoryId: string;
+  name: string;
 }

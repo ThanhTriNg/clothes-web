@@ -1,35 +1,69 @@
 import { Button } from "@/components/ui/button";
-import React, { ChangeEvent, FormEvent, useState } from "react";
-import { useDispatch } from "react-redux";
+import React, { ChangeEvent, FormEvent, useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/redux/store/Store";
 import { addClothesThunk } from "@/redux/reducer/Clothes";
-import { addClothesProps } from "@/redux/module";
+import {
+  getCategoriesThunk,
+  getSubCateThunk,
+} from "@/redux/reducer/Categories";
+import { getGenderThunk } from "@/redux/reducer/Gender";
+import { AddClothesProps } from "@/redux/module";
+import { getWomenClothesThunk } from "@/redux/reducer/Women";
+import { GetSubCateProps, SubCateProps } from "@/redux/module";
 const Add = () => {
-  const [formData, setFormData] = useState<addClothesProps>({
-    categoryId: "",
-    genderId: "",
+  const dispatch = useDispatch<AppDispatch>();
+  const [formData, setFormData] = useState<AddClothesProps>({
+    categoryId: "1",
+    subCategoryId: "1",
+    genderId: "1",
     name: "",
     price: 0,
     desc_sort: "",
     desc: "",
     img: {
       main: "",
-      sub: [""],
+      sub: [],
     },
   });
-  const [base64Image, setBase64Image] = useState("");
-
+  const subCate: GetSubCateProps = {
+    subName: "",
+    categoryId: "",
+  };
   const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
 
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
-        if (typeof reader.result === "string") {
-          setBase64Image(reader.result);
-        }
+        setFormData((prevData: any) => ({
+          ...prevData,
+          img: { ...prevData.img, main: reader.result as string },
+        }));
       };
       reader.readAsDataURL(file);
+    }
+  };
+  const handleSubImageChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+
+    if (files) {
+      const subImages: string[] = [];
+
+      for (let i = 0; i < files.length; i++) {
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          subImages.push(reader.result as string);
+
+          if (subImages.length === files.length) {
+            setFormData((prevData) => ({
+              ...prevData,
+              img: { ...prevData.img, sub: subImages },
+            }));
+          }
+        };
+        reader.readAsDataURL(files[i]);
+      }
     }
   };
 
@@ -39,14 +73,41 @@ const Add = () => {
     const { name, value } = e.target;
     setFormData((prevData) => ({ ...prevData, [name]: value }));
   };
-  const dispatch = useDispatch<AppDispatch>();
-
+  const handleCategoryChange = (e: ChangeEvent<HTMLSelectElement>) => {
+    setFormData((prevData) => ({ ...prevData, categoryId: e.target.value }));
+  };
+  const handleGenderChange = (e: ChangeEvent<HTMLSelectElement>) => {
+    setFormData((prevData) => ({ ...prevData, genderId: e.target.value }));
+  };
+  const handleSubCateChange = (e: ChangeEvent<HTMLSelectElement>) => {
+    setFormData((prevData) => ({ ...prevData, subCategoryId: e.target.value }));
+  };
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     // Add your form submission logic here, for example, send formData to a server
-    console.log("Form submitted:", formData);
-    // dispatch(addClothesThunk(formData));
+    dispatch(addClothesThunk(formData));
   };
+
+  const { categoriesInfo, subCateInfo } = useSelector(
+    (state: RootState) => state.categories
+  );
+  const { genderInfo } = useSelector((state: RootState) => state.gender);
+
+  useEffect(() => {
+    dispatch(getCategoriesThunk());
+    dispatch(getGenderThunk());
+  }, [dispatch]);
+
+  useEffect(() => {
+    subCate.categoryId = formData.categoryId;
+    if (formData.genderId === "1") {
+      subCate.subName = "women";
+    } else if (formData.genderId === "2") {
+      subCate.subName = "men";
+    }
+
+    dispatch(getSubCateThunk(subCate));
+  }, [dispatch, formData.categoryId, formData.genderId,]);
 
   return (
     <div>
@@ -56,37 +117,61 @@ const Add = () => {
         className="max-w-md mx-auto mt-8 p-8 bg-gray-100 rounded-lg shadow-lg"
         onSubmit={handleSubmit}
       >
-        {/* <label className="block mb-4">
-          <span className="text-gray-700">ID:</span>
-          <input
-            type="text"
-            name="id"
-            value={formData.id}
-            onChange={handleChange}
-            className="form-input mt-1 block w-full"
-          />
-        </label> */}
-
+        {/* Gender */}
         <label className="block mb-4">
-          <span className="text-gray-700">Category ID:</span>
-          <input
-            type="text"
-            name="categoryId"
-            value={formData.categoryId}
-            onChange={handleChange}
-            className="form-input mt-1 block w-full"
-          />
-        </label>
-
-        <label className="block mb-4">
-          <span className="text-gray-700">Gender ID:</span>
-          <input
-            type="text"
+          <span className="text-gray-700">Gender:</span>
+          <select
             name="genderId"
             value={formData.genderId}
-            onChange={handleChange}
-            className="form-input mt-1 block w-full"
-          />
+            onChange={handleGenderChange}
+          >
+            {genderInfo &&
+              genderInfo.map((gender) => (
+                <option key={gender.id} value={gender.id}>
+                  {gender.name}
+                </option>
+              ))}
+          </select>
+        </label>
+        {/* Category */}
+        <label>
+          Category:
+          <select
+            name="categoryId"
+            value={formData.categoryId}
+            onChange={handleCategoryChange}
+          >
+            {categoriesInfo &&
+              categoriesInfo.map((category) => (
+                <option key={category.id} value={category.id}>
+                  {category.name}
+                </option>
+              ))}
+          </select>
+        </label>
+        {/* Sub-categories */}
+        <label className="block mb-4">
+          <span className="text-gray-700">Sub categories:</span>
+          <select
+            name="subCategoryId"
+            value={formData.subCategoryId}
+            onChange={handleSubCateChange}
+          >
+            {subCateInfo &&
+              subCateInfo.map((item, idx: number) => {
+                return (
+                  <option key={`${item.categoryId}-${idx}`} value={item.id}>
+                    {item.name}
+                  </option>
+                );
+              })}
+          </select>
+
+          {/* <select name="">
+            <option value="1">So 1</option>
+            <option value="2">So 2</option>
+            <option value="3">So 3</option>
+          </select> */}
         </label>
 
         <label className="block mb-4">
@@ -131,9 +216,18 @@ const Add = () => {
             className="form-textarea mt-1 block w-full"
           />
         </label>
-        <label className="block mb-4">
-          <span className="text-gray-700">Image:</span>
-          <input type="file" onChange={handleImageChange}  value={formData.img.main}/>
+        <label>
+          Main Image:
+          <input type="file" accept="image/*" onChange={handleImageChange} />
+        </label>
+        <label>
+          Thumbnail Images:
+          <input
+            type="file"
+            accept="image/*"
+            multiple
+            onChange={handleSubImageChange}
+          />
         </label>
         <button
           type="submit"
