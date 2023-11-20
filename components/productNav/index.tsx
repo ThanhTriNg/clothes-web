@@ -7,9 +7,7 @@ import {
 } from "@/components/ui/accordion";
 import Link from "next/link";
 
-interface ProductNavProps {
-  className?: string;
-}
+import { ProductNavProps, listItemProps } from "@/common/type";
 
 const ProductNav = ({ className }: ProductNavProps) => {
   return (
@@ -49,7 +47,9 @@ const ProductNav = ({ className }: ProductNavProps) => {
                       {selected.map((item: listItemProps, idx: number) => {
                         return (
                           <Link href={item.href} key={`item-product-${idx}`}>
-                            <p className="text-sm font-normal hover:font-medium">{item.name}</p>
+                            <p className="text-sm font-normal hover:font-medium">
+                              {item.name}
+                            </p>
                           </Link>
                         );
                       })}
@@ -66,11 +66,6 @@ const ProductNav = ({ className }: ProductNavProps) => {
 };
 
 export default ProductNav;
-
-interface listItemProps {
-  href: string;
-  name: string;
-}
 
 const listItems = ["Đồ mặc ngoài", "Áo", "Quần"];
 const listOutwears = [

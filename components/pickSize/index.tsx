@@ -1,14 +1,5 @@
-import React, { useState, useEffect } from "react";
+import { useState } from "react";
 
-import { AppDispatch, RootState } from "@/redux/store/Store";
-import { useDispatch, useSelector } from "react-redux";
-import { getColorNameThunk } from "@/redux/reducer/Clothes";
-interface PickSizeProps {
-  colors: string[];
-  size?: number;
-  spaceBetween?: number;
-  showName?: boolean;
-}
 
 const PickSize = () => {
   const [isActive, setIsActive] = useState<number>();

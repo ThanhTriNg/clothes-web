@@ -5,7 +5,7 @@ import { AppDispatch, RootState } from "@/redux/store/Store";
 import { addClothesThunk } from "@/redux/reducer/Clothes";
 import {
   getCategoriesThunk,
-  getSubCateThunk,
+  getSubCateByCategoryIdThunk,
 } from "@/redux/reducer/Categories";
 import { getGenderThunk } from "@/redux/reducer/Gender";
 import { AddClothesProps } from "@/redux/module";
@@ -106,7 +106,7 @@ const Add = () => {
       subCate.subName = "men";
     }
 
-    dispatch(getSubCateThunk(subCate));
+    dispatch(getSubCateByCategoryIdThunk(subCate));
   }, [dispatch, formData.categoryId, formData.genderId,]);
 
   return (

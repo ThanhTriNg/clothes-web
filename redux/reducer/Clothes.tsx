@@ -47,10 +47,8 @@ export const getClothesThunk = createAsyncThunk(
   async (arg, { rejectWithValue }) => {
     try {
       const response = await ClothesApi.getClothes();
-      console.log(response);
       return response;
     } catch (error: any) {
-      console.log(error);
       if (error.response && error.response.data.message) {
         return rejectWithValue(error.response.data.message);
       } else {
@@ -68,7 +66,6 @@ export const getColorNameThunk = createAsyncThunk(
       const response = await ClothesApi.getColorName(hex);
       return response;
     } catch (error: any) {
-      console.log(error);
       if (error.response && error.response.data.message) {
         return rejectWithValue(error.response.data.message);
       } else {
@@ -86,7 +83,6 @@ export const addClothesThunk = createAsyncThunk(
       const response = await ClothesApi.addClothes(addClothes);
       return response;
     } catch (error: any) {
-      console.log(error);
       if (error.response && error.response.data.message) {
         return rejectWithValue(error.response.data.message);
       } else {

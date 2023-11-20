@@ -7,7 +7,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { getClothesThunk } from "@/redux/reducer/Clothes";
 import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch,RootState } from "@/redux/store/Store";
+import { AppDispatch, RootState } from "@/redux/store/Store";
 import OutStanding from "@/components/OutStanding";
 import LimitedPromotion from "@/components/Promotion";
 
@@ -22,20 +22,10 @@ export default function HomePage() {
   useEffect(() => {
     dispatch(getClothesThunk());
   }, [dispatch]);
-  console.log(clothesInfo);
-  const [rating, setRating] = useState<number>();
-  const handleRating = (rate: number) => {
-    setRating(rate);
+  // console.log(clothesInfo);
 
-    // other logic
-  };
-  const onPointerEnter = () => console.log("Enter");
-  const onPointerLeave = () => console.log("Leave");
-  const onPointerMove = (value: number, index: number) =>
-    console.log(value, index);
   return (
     <div className="">
-
       <div className="space-y-5">
         <div className="grid grid-cols-12 space-x-2">
           <SlideShow className="col-span-8 " listImg={listImg} />

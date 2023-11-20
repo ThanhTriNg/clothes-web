@@ -1,19 +1,27 @@
 import ProductList from "@/components/productList";
 import ProductNav from "@/components/productNav";
 import { Combobox } from "@/components/selectBox";
+import { GetStaticPaths, GetStaticProps } from "next";
 import { useRouter } from "next/router";
-
-const imgMenVar = "/img/men";
 import React, { useState } from "react";
+import { ProductProps } from "@/common/type";
+const imgMenVar = "/img/men";
 const Category = () => {
   const router = useRouter();
   const { category } = router.query;
-  console.log(category);
+  // console.log(category);
   let products;
   if (category) {
     products = getCategoryData(category);
   }
-
+  // console.log(category);
+  // // You can handle the allowed categories here
+  // const allowedCategories = ["tops", "bottoms"];
+  // const a = allowedCategories.includes("top");
+  // console.log(a);
+  // if (!allowedCategories.includes(category as string)) {
+  //   return <div>Not Found</div>;
+  // }
 
   return (
     <div className="min-h-screen">
@@ -41,7 +49,6 @@ const Category = () => {
           )}
         </div>
       </div>
-
     </div>
   );
 };
@@ -63,13 +70,8 @@ const textFilters = [
   },
 ];
 
-export interface Product {
-  id: string;
-  name: string;
-  img: string;
-  price: number;
-}
-const getCategoryData = (category: string | string[]): Product[] => {
+
+const getCategoryData = (category: string | string[]): ProductProps[] => {
   // Implement logic to fetch or return data based on the category
   switch (category) {
     case "tops":
@@ -210,3 +212,26 @@ const outwearsData = [
     price: 170000,
   },
 ];
+
+export const getStaticPaths: GetStaticPaths = async () => {
+  // Define the allowed categories
+  const allowedCategories = ["tops", "bottoms"];
+
+  // Generate the paths based on the allowed categories
+  const paths = allowedCategories.map((category) => ({
+    params: { category },
+  }));
+
+  return { paths, fallback: false };
+};
+export const getStaticProps: GetStaticProps = async ({ params }) => {
+  // Fetch data or perform any necessary logic based on the current category
+  const category = params?.category || "";
+
+  // Pass the category to the component
+  return {
+    props: {
+      category,
+    },
+  };
+};

@@ -12,9 +12,10 @@ export interface AddClothesProps {
   };
 }
 
-export interface Categories {
+export interface CategoriesProps {
   id: string;
   name: string;
+  group: number;
 }
 export interface GetSubCateProps {
   subName: string;

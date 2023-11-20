@@ -9,7 +9,6 @@ const ProductDetailDesc = () => {
   const handleRating = (rate: number) => {
     setRating(rate);
   };
-  console.log(rating);
 
   return (
     <div className="col-span-5 px-4">

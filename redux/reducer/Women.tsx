@@ -23,7 +23,6 @@ export const getWomenClothesThunk = createAsyncThunk(
       const response = await WomenApi.getWomenClothes(categoryId);
       return response;
     } catch (error: any) {
-      console.log(error);
       if (error.response && error.response.data.message) {
         return rejectWithValue(error.response.data.message);
       } else {

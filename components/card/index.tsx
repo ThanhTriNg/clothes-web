@@ -5,13 +5,7 @@ import PickColor from "../pickColor";
 import { formatPrice } from "@/pages";
 import Link from "next/link";
 
-export interface ProductCardProps {
-  id: string;
-  img: string;
-  name: string;
-  price: number;
-  colors: string[];
-}
+import { ProductCardProps } from "@/common/type";
 
 const Card = ({ id, img, name, price, colors }: ProductCardProps) => {
   const { convertPrice } = formatPrice(price);

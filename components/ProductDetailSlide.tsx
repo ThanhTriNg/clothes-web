@@ -12,12 +12,8 @@ import "swiper/css";
 import "swiper/css/pagination";
 import Image from "next/image";
 import { Rating } from "react-simple-star-rating";
+import { ProductDetailSlide } from "@/common/type";
 
-interface ProductDetailSlide {
-  thumbnail: {
-    img: string;
-  }[];
-}
 const ProductDetailSlide = ({ thumbnail }: ProductDetailSlide) => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const sliderRef = useRef<any>(null);
