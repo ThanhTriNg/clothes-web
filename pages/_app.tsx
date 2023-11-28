@@ -8,11 +8,16 @@ export const noto = Noto_Sans({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
 });
+import Head from "next/head";
 
 function LandingPage({ Component, pageProps }: AppProps) {
   return (
     <Provider store={store}>
       <div className={`${noto.className} bg-slate-200`}>
+        <Head>
+          <title>TShop</title>
+          <link rel="shortcut icon" href="/svg/logo.svg" type="image/x-icon" />
+        </Head>
         <Header />
         <main>
           <div className=" mx-auto lg:max-w-[1300px]">
