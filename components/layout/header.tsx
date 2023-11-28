@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { NavMenu } from "./NavMenu";
 import Nav from "./Nav";
 import Image from "next/image";
 import { MagnifyingGlass, User, ShoppingCart } from "@phosphor-icons/react";
@@ -15,7 +14,7 @@ const Header = () => {
   //   else setIsScrollDown(false);
   // }, [scrollDirection]);
   // console.log(isScrollDown);
-  
+
   return (
     <header className="h-20 mb-4 sticky top-0 z-20 bg-white/90">
       <div className="flex justify-between items-center h-full lg:max-w-[1300px] mx-auto">

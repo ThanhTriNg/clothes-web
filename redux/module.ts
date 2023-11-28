@@ -16,6 +16,7 @@ export interface CategoriesProps {
   id: string;
   name: string;
   group: number;
+  data?: SubCateProps[];
 }
 export interface GetSubCateProps {
   subName: string;
