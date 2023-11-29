@@ -22,7 +22,6 @@ const Nav = () => {
   const dispatch = useDispatch<AppDispatch>();
   const [womenCate, setWomenCate] = useState<CategoriesProps[]>();
   const [menCate, setMenCate] = useState<CategoriesProps[]>();
-
   const { categoriesInfo, menSubCateInfo, womenSubCateInfo } = useSelector(
     (state: RootState) => state.categories
   );
@@ -94,8 +93,7 @@ const Nav = () => {
                                     <ListItem
                                       href="/"
                                       className="capitalize"
-                                      // title={name}
-                                      key={`${name}-${idx}`}
+                                      key={`${item.name}-${idx}`}
                                       title={item.name}
                                     />
                                   );

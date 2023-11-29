@@ -1,6 +1,4 @@
-
 import React, { useEffect, useState } from "react";
-import { Clothes } from "@/redux/reducer/Clothes";
 import Image from "next/image";
 
 import SlideShow from "@/components/swiper";
@@ -23,7 +21,6 @@ export default function HomePage() {
   useEffect(() => {
     dispatch(getClothesThunk());
   }, [dispatch]);
-  // console.log(clothesInfo);
 
   return (
     <div className="">

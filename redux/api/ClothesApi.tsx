@@ -4,6 +4,9 @@ const ClothesApi = {
   getClothes: () => {
     return AxiosClient.get("/clothes");
   },
+  getClothesById: (id: string) => {
+    return AxiosClient.get(`/clothes/${id}`);
+  },
   getColorName: (hex: string) => {
     return TheColorAPI.get(`/id?hex=${hex}`);
   },

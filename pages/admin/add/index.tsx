@@ -1,16 +1,13 @@
-import { Button } from "@/components/ui/button";
-import React, { ChangeEvent, FormEvent, useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, RootState } from "@/redux/store/Store";
-import { addClothesThunk } from "@/redux/reducer/Clothes";
+import { AddClothesProps, GetSubCateProps } from "@/redux/module";
 import {
   getCategoriesThunk,
   getSubCateByCategoryIdThunk,
 } from "@/redux/reducer/Categories";
+import { addClothesThunk } from "@/redux/reducer/Clothes";
 import { getGenderThunk } from "@/redux/reducer/Gender";
-import { AddClothesProps } from "@/redux/module";
-import { getWomenClothesThunk } from "@/redux/reducer/Women";
-import { GetSubCateProps, SubCateProps } from "@/redux/module";
+import { AppDispatch, RootState } from "@/redux/store/Store";
+import { ChangeEvent, FormEvent, useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 const Add = () => {
   const dispatch = useDispatch<AppDispatch>();
   const [formData, setFormData] = useState<AddClothesProps>({
@@ -71,7 +68,11 @@ const Add = () => {
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target;
-    setFormData((prevData) => ({ ...prevData, [name]: value }));
+    console.log(name);
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: name === "price" ? Number(value) : value,
+    }));
   };
   const handleCategoryChange = (e: ChangeEvent<HTMLSelectElement>) => {
     setFormData((prevData) => ({ ...prevData, categoryId: e.target.value }));
@@ -85,19 +86,21 @@ const Add = () => {
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     // Add your form submission logic here, for example, send formData to a server
-    dispatch(addClothesThunk(formData));
+    console.log(formData);
+    // dispatch(addClothesThunk(formData));
   };
 
-  const { categoriesInfo, subCateInfo } = useSelector(
-    (state: RootState) => state.categories
-  );
+  const { categoriesInfo, menSubCateInfo, womenSubCateInfo, subCateByIdInfo } =
+    useSelector((state: RootState) => state.categories);
   const { genderInfo } = useSelector((state: RootState) => state.gender);
 
   useEffect(() => {
     dispatch(getCategoriesThunk());
     dispatch(getGenderThunk());
-  }, [dispatch]);
 
+    // dispatch(getSubCateByCategoryIdThunk({ subName: "men", categoryId: "1" }));
+  }, [dispatch]);
+  console.log(subCateByIdInfo);
   useEffect(() => {
     subCate.categoryId = formData.categoryId;
     if (formData.genderId === "1") {
@@ -107,8 +110,7 @@ const Add = () => {
     }
 
     dispatch(getSubCateByCategoryIdThunk(subCate));
-  }, [dispatch, formData.categoryId, formData.genderId,]);
-
+  }, [dispatch, formData.categoryId, formData.genderId]);
   return (
     <div>
       <h1 className="uppercase font-bold text-2xl">Add clothes</h1>
@@ -157,8 +159,8 @@ const Add = () => {
             value={formData.subCategoryId}
             onChange={handleSubCateChange}
           >
-            {subCateInfo &&
-              subCateInfo.map((item, idx: number) => {
+            {subCateByIdInfo &&
+              subCateByIdInfo.map((item, idx: number) => {
                 return (
                   <option key={`${item.categoryId}-${idx}`} value={item.id}>
                     {item.name}

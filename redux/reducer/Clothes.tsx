@@ -1,22 +1,13 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import ClothesApi from "../api/ClothesApi";
-import { AddClothesProps } from "../module";
-export interface Clothes {
-  id: string;
-  name: string;
-  price: string;
-  desc_sort: string;
-  desc: string;
-  img: {
-    main: string;
-  };
-}
+import { AddClothesProps, ClothesProps } from "../module";
 
 interface myState {
   loading: boolean;
   successLogin: boolean;
   errorLogin: any;
-  clothesInfo: Clothes | null;
+  clothesInfo: ClothesProps[] | null;
+  clothesById: ClothesProps | null;
   successLogout: boolean;
   errorLogout: string | null;
 
@@ -28,7 +19,7 @@ const initialState: myState = {
   successLogin: false,
   errorLogin: null,
   clothesInfo: null,
-
+  clothesById: null,
   successLogout: false,
   errorLogout: null,
 
@@ -57,7 +48,21 @@ export const getClothesThunk = createAsyncThunk(
     }
   }
 );
-
+export const getClothesByIdThunk = createAsyncThunk(
+  "getClothesById",
+  async (id: string, { rejectWithValue }) => {
+    try {
+      const response = await ClothesApi.getClothesById(id);
+      return response;
+    } catch (error: any) {
+      if (error.response && error.response.data.message) {
+        return rejectWithValue(error.response.data.message);
+      } else {
+        return rejectWithValue(error.message);
+      }
+    }
+  }
+);
 export const getColorNameThunk = createAsyncThunk(
   "getColorName",
   async (colors: colors, { rejectWithValue }) => {
@@ -74,7 +79,6 @@ export const getColorNameThunk = createAsyncThunk(
     }
   }
 );
-
 
 export const addClothesThunk = createAsyncThunk(
   "addClothes",
@@ -98,21 +102,23 @@ export const clothesSlice = createSlice({
   reducers: {},
 
   extraReducers: (builder) => {
-    //log in
+    //get all clothes
     builder.addCase(getClothesThunk.pending, (state) => {});
     builder.addCase(getClothesThunk.fulfilled, (state, action) => {
       state.clothesInfo = action.payload.data;
     });
-
     builder.addCase(getClothesThunk.rejected, (state, action) => {});
-
+    //get clothes by id
+    builder.addCase(getClothesByIdThunk.pending, (state) => {});
+    builder.addCase(getClothesByIdThunk.fulfilled, (state, action) => {
+      state.clothesById = action.payload.data;
+    });
+    builder.addCase(getClothesByIdThunk.rejected, (state, action) => {});
     //get color name
-
     builder.addCase(getColorNameThunk.pending, (state) => {});
     builder.addCase(getColorNameThunk.fulfilled, (state, action) => {
       state.colorAPI = action.payload.data;
     });
-
     builder.addCase(getColorNameThunk.rejected, (state, action) => {});
   },
 });

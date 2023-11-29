@@ -6,8 +6,9 @@ import { formatPrice } from "@/pages";
 import Link from "next/link";
 
 import { ProductCardProps } from "@/common/type";
+import { ClothesProps } from "@/redux/module";
 
-const Card = ({ id, img, name, price, colors }: ProductCardProps) => {
+const Card = ({ id, img, name, price }: ClothesProps) => {
   const { convertPrice } = formatPrice(price);
   const [isLike, setIsLike] = useState<boolean>(false);
   const handleClickLike = () => {
@@ -31,9 +32,9 @@ const Card = ({ id, img, name, price, colors }: ProductCardProps) => {
           onClick={() => handleClickLike()}
         />
       )}
-      <Link href={`/tops/${id}`} className="space-y-4">
+      <Link href={`/store/tops/detail/${id}`} className="space-y-4">
         <Image
-          src={img}
+          src={img.main}
           width="0"
           height="0"
           sizes="100vw"
@@ -41,7 +42,7 @@ const Card = ({ id, img, name, price, colors }: ProductCardProps) => {
           className="w-full h-auto !mt-0"
         />
 
-        <PickColor colors={colors} />
+        {/* <PickColor colors={colors} /> */}
         <p className={`truncate-2  font-semibold text-base h-[3rem]`}>{name}</p>
         <p className={`truncate-2  font-bold text-primary`}>{convertPrice}</p>
       </Link>

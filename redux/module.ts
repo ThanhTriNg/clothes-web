@@ -11,7 +11,17 @@ export interface AddClothesProps {
     sub: string[];
   };
 }
-
+export interface ClothesProps {
+  id: string;
+  name: string;
+  price: number;
+  desc_sort?: string;
+  desc?: string;
+  img: {
+    main: string;
+    sub?: string[];
+  };
+}
 export interface CategoriesProps {
   id: string;
   name: string;

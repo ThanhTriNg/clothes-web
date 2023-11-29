@@ -3,30 +3,40 @@ import ProductNav from "@/components/productNav";
 import { Combobox } from "@/components/selectBox";
 import { GetStaticPaths, GetStaticProps } from "next";
 import { useRouter } from "next/router";
-import React, { useState } from "react";
 import { ProductProps } from "@/common/type";
+import { getGenderThunk } from "@/redux/reducer/Gender";
+import { AppDispatch, RootState } from "@/redux/store/Store";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { getClothesThunk } from "@/redux/reducer/Clothes";
+import { getCategoriesThunk } from "@/redux/reducer/Categories";
 const imgMenVar = "/img/men";
+
 const Category = () => {
+  const dispatch = useDispatch<AppDispatch>();
+
   const router = useRouter();
   const { category } = router.query;
-  // console.log(category);
   let products;
-  if (category) {
-    products = getCategoryData(category);
-  }
-  // console.log(category);
-  // // You can handle the allowed categories here
-  // const allowedCategories = ["tops", "bottoms"];
-  // const a = allowedCategories.includes("top");
-  // console.log(a);
-  // if (!allowedCategories.includes(category as string)) {
-  //   return <div>Not Found</div>;
+  // if (category) {
+  //   products = getCategoryData(category);
   // }
+  const { clothesInfo } = useSelector((state: RootState) => state.clothes);
+  const { categoriesInfo } = useSelector(
+    (state: RootState) => state.categories
+  );
+
+
+  useEffect(() => {
+    dispatch(getClothesThunk());
+    dispatch(getCategoriesThunk());
+  }, [dispatch]);
+  console.log(clothesInfo);
 
   return (
     <div className="min-h-screen">
       <div className=" bg-white p-6 space-y-10">
-        <h1 className="uppercase font-bold text-3xl p-10">Áo giả lông cừu</h1>
+        <h1 className="uppercase font-bold text-3xl p-10">Tất cả</h1>
 
         <div className="flex justify-between">
           <div className="space-y-3">
@@ -40,10 +50,10 @@ const Category = () => {
         </div>
         <div className="grid grid-cols-12 gap-x-8">
           <ProductNav className="col-span-4" />
-          {products && (
+          {clothesInfo && (
             <ProductList
               className="col-span-8"
-              products={products}
+              products={clothesInfo}
               colors={colors}
             />
           )}
@@ -69,7 +79,6 @@ const textFilters = [
     label: "Từ cao đến thấp",
   },
 ];
-
 
 const getCategoryData = (category: string | string[]): ProductProps[] => {
   // Implement logic to fetch or return data based on the category

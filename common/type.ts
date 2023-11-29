@@ -5,10 +5,15 @@ export interface ProductProps {
   price: number;
 }
 export interface ProductDetailSlide {
+  // thumbnail: {
+  //   img: string;
+  // }[];
   thumbnail: {
-    img: string;
-  }[];
+    main: string;
+    sub?: string[];
+  };
 }
+//ko xai
 export interface ProductCardProps {
   id: string;
   img: string;
@@ -38,6 +43,6 @@ export interface ComboBoxProps {
 }
 
 export interface SlideShowProps {
-    listImg?: any;
-    className?: string;
-  }
+  listImg?: any;
+  className?: string;
+}

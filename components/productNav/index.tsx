@@ -13,7 +13,6 @@ const ProductNav = ({ className }: ProductNavProps) => {
   return (
     <div className={className}>
       <div>
-        <h1 className="uppercase font-bold text-3xl">Nam</h1>
         <div>
           <Accordion type="single" collapsible>
             {/* <AccordionItem value="item-1">
