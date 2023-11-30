@@ -86,8 +86,8 @@ const Add = () => {
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     // Add your form submission logic here, for example, send formData to a server
-    console.log(formData);
-    // dispatch(addClothesThunk(formData));
+    // console.log(formData);
+    dispatch(addClothesThunk(formData));
   };
 
   const { categoriesInfo, menSubCateInfo, womenSubCateInfo, subCateByIdInfo } =
@@ -100,7 +100,7 @@ const Add = () => {
 
     // dispatch(getSubCateByCategoryIdThunk({ subName: "men", categoryId: "1" }));
   }, [dispatch]);
-  console.log(subCateByIdInfo);
+  // console.log(subCateByIdInfo);
   useEffect(() => {
     subCate.categoryId = formData.categoryId;
     if (formData.genderId === "1") {

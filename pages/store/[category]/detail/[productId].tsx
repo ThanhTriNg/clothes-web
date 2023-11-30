@@ -24,48 +24,38 @@ const slidesPerView = 3;
 const DetailPage = () => {
   const router = useRouter();
   const dispatch = useDispatch<AppDispatch>();
-
   const { productId } = router.query;
 
-  //new
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const [isLike, setIsLike] = useState<boolean>(false);
+  const [maxSlidePage, setMaxSlidePage] = useState<number>();
+
   const { clothesInfo, clothesById } = useSelector(
     (state: RootState) => state.clothes
   );
+
   useEffect(() => {
     dispatch(getClothesThunk());
     if (typeof productId === "string") {
       dispatch(getClothesByIdThunk(productId));
     }
   }, [dispatch, productId]);
-  //new
-
-  const [isLike, setIsLike] = useState<boolean>(false);
-  const [maxSlidePage, setMaxSlidePage] = useState<number>();
-  const handleClickLike = () => {
-    setIsLike((prev) => !prev);
-  };
   useEffect(() => {
     if (clothesInfo) {
       setMaxSlidePage(clothesInfo.length - 1 - slidesPerView);
     }
   }, [clothesInfo]);
-  const [currentSlide, setCurrentSlide] = useState(0);
   const sliderRef = useRef<any>(null);
   const updateIndex = () => {
     setCurrentSlide(sliderRef.current.swiper.realIndex);
   };
+  useEffect(() => {
+    setCurrentSlide(0);
+    if (clothesById && clothesInfo) sliderRef.current.swiper.slideTo(0);
+  }, [productId]);
 
-  const slidePrev = () => {
-    sliderRef.current.swiper.slidePrev();
-  };
-  const slideNext = () => {
-    sliderRef.current.swiper.slideNext();
-  };
   useEffect(() => {
-    // console.log(currentSlide);
-  }, [currentSlide]);
-  useEffect(() => {
-    if (clothesById) {
+    if (clothesById && clothesInfo) {
       const swiperInstance = sliderRef.current.swiper;
 
       if (swiperInstance) {
@@ -78,8 +68,16 @@ const DetailPage = () => {
         }
       };
     }
-  }, [clothesById]);
-
+  }, [clothesById, clothesInfo]);
+  const slidePrev = () => {
+    sliderRef.current.swiper.slidePrev();
+  };
+  const slideNext = () => {
+    sliderRef.current.swiper.slideNext();
+  };
+  const handleClickLike = () => {
+    setIsLike((prev) => !prev);
+  };
   return (
     clothesById &&
     clothesInfo && (
@@ -102,7 +100,7 @@ const DetailPage = () => {
               const img = item.img.main;
               const href = `/store/tops/detail/${item.id}`;
               const currentProduct = item.id.toString() === productId;
-              console.log(item.id, productId);
+              // console.log(item.id, productId);
               return (
                 !currentProduct && (
                   <SwiperSlide key={`slide-${idx}`} className="h-full">

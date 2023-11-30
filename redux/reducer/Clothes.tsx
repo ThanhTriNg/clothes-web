@@ -8,6 +8,8 @@ interface myState {
   errorLogin: any;
   clothesInfo: ClothesProps[] | null;
   clothesById: ClothesProps | null;
+  clothesByCategoryId: ClothesProps[] | null;
+
   successLogout: boolean;
   errorLogout: string | null;
 
@@ -20,6 +22,7 @@ const initialState: myState = {
   errorLogin: null,
   clothesInfo: null,
   clothesById: null,
+  clothesByCategoryId: null,
   successLogout: false,
   errorLogout: null,
 
@@ -38,6 +41,21 @@ export const getClothesThunk = createAsyncThunk(
   async (arg, { rejectWithValue }) => {
     try {
       const response = await ClothesApi.getClothes();
+      return response;
+    } catch (error: any) {
+      if (error.response && error.response.data.message) {
+        return rejectWithValue(error.response.data.message);
+      } else {
+        return rejectWithValue(error.message);
+      }
+    }
+  }
+);
+export const getClothesByCategoryThunk = createAsyncThunk(
+  "getClothesByCategory",
+  async (categoryId: string, { rejectWithValue }) => {
+    try {
+      const response = await ClothesApi.getClothesByCategory(categoryId);
       return response;
     } catch (error: any) {
       if (error.response && error.response.data.message) {
@@ -114,6 +132,12 @@ export const clothesSlice = createSlice({
       state.clothesById = action.payload.data;
     });
     builder.addCase(getClothesByIdThunk.rejected, (state, action) => {});
+    //get clothes by category id
+    builder.addCase(getClothesByCategoryThunk.pending, (state) => {});
+    builder.addCase(getClothesByCategoryThunk.fulfilled, (state, action) => {
+      state.clothesByCategoryId = action.payload.data;
+    });
+    builder.addCase(getClothesByCategoryThunk.rejected, (state, action) => {});
     //get color name
     builder.addCase(getColorNameThunk.pending, (state) => {});
     builder.addCase(getColorNameThunk.fulfilled, (state, action) => {

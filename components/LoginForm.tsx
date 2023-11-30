@@ -40,7 +40,7 @@ export default function LoginForm() {
   const SelectedIconPassword = passwordShown ? EyeIcon : EyeOffIcon;
 
   async function onSubmit(data: LoginFormValues) {
-    console.log(data);
+    // console.log(data);
     try {
       const username = data.email;
       const password = data.password;

@@ -17,10 +17,15 @@ export interface ClothesProps {
   price: number;
   desc_sort?: string;
   desc?: string;
+  genderId?: string;
+  subCategoryId?: string;
+  categoryId?: string;
   img: {
     main: string;
     sub?: string[];
   };
+  size?: string[];
+  color: string[];
 }
 export interface CategoriesProps {
   id: string;

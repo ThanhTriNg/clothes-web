@@ -7,13 +7,21 @@ import Link from "next/link";
 
 import { ProductCardProps } from "@/common/type";
 import { ClothesProps } from "@/redux/module";
+import { useRouter } from "next/router";
+interface CardProps extends ClothesProps {
+  link?: string | undefined;
+}
 
-const Card = ({ id, img, name, price }: ClothesProps) => {
+const Card = ({ id, img, name, price, color, link }: CardProps) => {
   const { convertPrice } = formatPrice(price);
   const [isLike, setIsLike] = useState<boolean>(false);
   const handleClickLike = () => {
     setIsLike((prev) => !prev);
   };
+  const router = useRouter();
+  const { category } = router.query;
+
+  const href = link ? `${link}/detail/${id}` : `${category}/detail/${id}`;
   return (
     <div className="relative col-span-1  transition-all hover:scale-105 cursor-pointer select-none">
       {isLike ? (
@@ -32,7 +40,7 @@ const Card = ({ id, img, name, price }: ClothesProps) => {
           onClick={() => handleClickLike()}
         />
       )}
-      <Link href={`/store/tops/detail/${id}`} className="space-y-4">
+      <Link href={href} className="space-y-4">
         <Image
           src={img.main}
           width="0"
@@ -42,7 +50,7 @@ const Card = ({ id, img, name, price }: ClothesProps) => {
           className="w-full h-auto !mt-0"
         />
 
-        {/* <PickColor colors={colors} /> */}
+        <PickColor colors={color} />
         <p className={`truncate-2  font-semibold text-base h-[3rem]`}>{name}</p>
         <p className={`truncate-2  font-bold text-primary`}>{convertPrice}</p>
       </Link>

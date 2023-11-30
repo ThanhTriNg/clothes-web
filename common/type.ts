@@ -1,3 +1,5 @@
+import { CategoriesProps } from "@/redux/module";
+
 export interface ProductProps {
   id: string;
   name: string;
@@ -29,6 +31,7 @@ export interface PickSizeProps {
 }
 export interface ProductNavProps {
   className?: string;
+  category: CategoriesProps[];
 }
 export interface listItemProps {
   href: string;

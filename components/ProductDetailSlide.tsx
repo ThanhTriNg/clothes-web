@@ -13,18 +13,25 @@ import "swiper/css/pagination";
 import Image from "next/image";
 import { Rating } from "react-simple-star-rating";
 import { ProductDetailSlide } from "@/common/type";
+import { useRouter } from "next/router";
 
 const ProductDetailSlide = ({ thumbnail }: ProductDetailSlide) => {
+  const router = useRouter();
+
   const [convertThumbnail, setConvertThumbnail] = useState<string[]>();
+  const { productId } = router.query;
 
   useEffect(() => {
     if (thumbnail) {
       setConvertThumbnail([thumbnail.main, ...(thumbnail.sub ?? [])]);
     }
   }, [thumbnail]);
+  useEffect(() => {
+    setCurrentSlide(0);
+    if (convertThumbnail) sliderRef.current.swiper.slideTo(0);
+  }, [productId]);
   const [currentSlide, setCurrentSlide] = useState(0);
   const sliderRef = useRef<any>(null);
-
   const updateIndex = () => {
     setCurrentSlide(sliderRef.current.swiper.realIndex);
   };

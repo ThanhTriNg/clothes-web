@@ -1,5 +1,6 @@
 import React from "react";
 import Image from "next/image";
+import Link from "next/link";
 const imgMenVar = "/img/men";
 
 const OutStanding = () => {
@@ -9,9 +10,10 @@ const OutStanding = () => {
         <h1 className="text-4xl font-bold uppercase">Danh mục nổi bật</h1>
         <div className="grid grid-cols-12 gap-y-6">
           {ListOutstanding.map((item, idx) => (
-            <div
+            <Link
               key={`outstanding-${idx}`}
-              className="col-span-3 mx-auto space-y-2 transition-all hover:scale-105 cursor-pointer "
+              href="/store/tops"
+              className="col-span-3 mx-auto space-y-2 transition-all hover:scale-105"
             >
               <Image
                 src={item.img}
@@ -19,11 +21,11 @@ const OutStanding = () => {
                 height="0"
                 sizes="100vw"
                 alt=""
-                // className="w-[260px] h-auto mx-auto "
                 className="w-4/5 h-auto mx-auto "
+                
               />
               <p className="truncate-2"> {item.name} </p>
-            </div>
+            </Link>
           ))}
         </div>
       </div>

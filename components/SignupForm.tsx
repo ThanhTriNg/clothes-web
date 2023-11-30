@@ -46,7 +46,7 @@ export default function SignUpForm() {
   const SelectedIconPassword = passwordShown ? EyeIcon : EyeOffIcon;
 
   async function onSubmit(data: SignUpFormValues) {
-    console.log(data);
+    // console.log(data);
     try {
       const username = data.email;
       const password = data.password;

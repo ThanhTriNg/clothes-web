@@ -5,6 +5,7 @@ import PickSize from "./pickSize";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { ClothesProps } from "@/redux/module";
+import { formatPrice } from "@/pages";
 interface ProductDetailProps {
   clothes: ClothesProps;
 }
@@ -13,6 +14,8 @@ const ProductDetailDesc = ({ clothes }: ProductDetailProps) => {
   const handleRating = (rate: number) => {
     setRating(rate);
   };
+  const { convertPrice } = formatPrice(clothes.price);
+
   return (
     <div className="col-span-5 px-4">
       <div className="space-y-4">
@@ -22,7 +25,7 @@ const ProductDetailDesc = ({ clothes }: ProductDetailProps) => {
 
         <div className="grid items-center grid-cols-4">
           <div className="col-span-2 space-y-2">
-            <h1 className="text-lg font-bold">{clothes.price} </h1>
+            <h1 className="text-lg font-bold">{convertPrice} </h1>
             {/* <h1 className="text-primary text-3xl font-bold">391.000VND</h1> */}
             {/* <h1 className="text-primary text-base font-medium">
               Limited Offer Từ 17 Nov 2023 - 23 Nov 2023
@@ -42,10 +45,15 @@ const ProductDetailDesc = ({ clothes }: ProductDetailProps) => {
         </div>
         <div className="border border-solid border-black/10" />
         <div>
-          <PickColor colors={colors} size={40} spaceBetween={8} showName />
+          <PickColor
+            colors={clothes.color}
+            size={40}
+            spaceBetween={8}
+            showName
+          />
         </div>
         <div className="border border-solid border-black/10" />
-        <PickSize />
+        <PickSize size={clothes.size} />
         <div className="border border-solid border-black/10" />
         <div className="space-y-2">
           <h1 className="uppercase">Số lượng</h1>

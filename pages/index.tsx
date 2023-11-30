@@ -8,20 +8,12 @@ import { getClothesThunk } from "@/redux/reducer/Clothes";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/redux/store/Store";
 import OutStanding from "@/components/OutStanding";
-import LimitedPromotion from "@/components/Promotion";
+import LimitedPromotion from "@/components/LimitedPromotion";
 
 export const imgMenVar = "/img/men";
 export const imgWomenVar = "/img/women";
 
 export default function HomePage() {
-  const dispatch = useDispatch<AppDispatch>();
-  const { clothesInfo } = useSelector((state: RootState) => state.clothes);
-  // console.log(clothesInfo);
-
-  useEffect(() => {
-    dispatch(getClothesThunk());
-  }, [dispatch]);
-
   return (
     <div className="">
       <div className="space-y-5">
@@ -77,20 +69,6 @@ export default function HomePage() {
                 </div>
                 <div className="grid grid-cols-12">
                   {listDeal.map((item, idx) => {
-                    // const price: number = item.price;
-                    // const discount: number = item.discount / 100;
-                    // const priceDiscount: number = price * (1 - discount);
-
-                    // const convertPrice: string = price.toLocaleString("it-IT", {
-                    //   style: "currency",
-                    //   currency: "VND",
-                    // });
-
-                    // const convertPriceDiscount: string =
-                    //   priceDiscount.toLocaleString("it-IT", {
-                    //     style: "currency",
-                    //     currency: "VND",
-                    //   });
                     const { convertPrice, convertPriceDiscount } = formatPrice(
                       item.price,
                       item.discount
@@ -101,7 +79,7 @@ export default function HomePage() {
                         className="col-span-4 mx-auto transition-all hover:scale-105"
                         key={`deal-${idx}`}
                       >
-                        <Link href="/" className="space-y-0.5">
+                        <Link href="/store/tops" className="space-y-0.5">
                           <div className="relative">
                             <p className="text-xs font-bold text-primary absolute p-2 rounded-s-sm bg-primary-foreground right-[10%]">
                               -{item.discount}%
