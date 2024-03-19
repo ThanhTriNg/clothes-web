@@ -15,6 +15,7 @@ import Link from "next/link";
 
 const LoginPage = () => {
   return (
+    
     <div className="h-[calc(100vh-80px-1rem)] bg-white">
       <div className="grid grid-cols-12 p-6 gap-10">
         <div className="col-span-5  ">

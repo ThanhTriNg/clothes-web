@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -17,6 +19,10 @@ import { getGenderThunk } from "@/redux/reducer/Gender";
 import { AppDispatch, RootState } from "@/redux/store/Store";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { convertNameCate } from "../LimitedPromotion";
+
+import { getClothesByNameThunk } from "@/redux/reducer/Clothes";
+
 
 const Nav = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -33,6 +39,8 @@ const Nav = () => {
     dispatch(getCategoriesThunk());
     dispatch(getGenderThunk());
   }, [dispatch]);
+
+  
 
   useEffect(() => {
     if (categoriesInfo) {
@@ -81,6 +89,7 @@ const Nav = () => {
                     {cate &&
                       cate.map((item, idx) => {
                         const data = item.data;
+                        const cateName = convertNameCate(item.name);
                         return (
                           <div key={`clothes-${idx}`} className="space-y-3">
                             <p className="font-semibold uppercase text-base">
@@ -91,7 +100,7 @@ const Nav = () => {
                                 data.map((item, idx) => {
                                   return (
                                     <ListItem
-                                      href="/"
+                                      href={`/store/${cateName}`}
                                       className="capitalize"
                                       key={`${item.name}-${idx}`}
                                       title={item.name}
@@ -115,13 +124,13 @@ const Nav = () => {
 export default Nav;
 
 const ListItem = React.forwardRef<
-  React.ElementRef<"a">,
-  React.ComponentPropsWithoutRef<"a">
+  React.ElementRef<typeof Link>,
+  React.ComponentPropsWithoutRef<typeof Link>
 >(({ className, title, children, ...props }, ref) => {
   return (
     <li>
       <NavigationMenuLink asChild>
-        <a
+        <Link
           ref={ref}
           className={cn(
             "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground",
@@ -133,7 +142,7 @@ const ListItem = React.forwardRef<
           <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
             {children}
           </p>
-        </a>
+        </Link>
       </NavigationMenuLink>
     </li>
   );

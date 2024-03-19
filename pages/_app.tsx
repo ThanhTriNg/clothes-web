@@ -1,7 +1,7 @@
 import type { AppProps } from "next/app";
 import { Noto_Sans } from "next/font/google";
 import "../style/globals.css";
-import Header from "@/components/layout/Header";
+import Header from "@/components/layout/header";
 import { Provider } from "react-redux";
 import { store } from "@/redux/store/Store";
 export const noto = Noto_Sans({

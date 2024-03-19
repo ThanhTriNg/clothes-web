@@ -8,6 +8,7 @@ interface myState {
   errorLogin: any;
   clothesInfo: ClothesProps[] | null;
   clothesById: ClothesProps | null;
+  clothesByName: ClothesProps | null;
   clothesByCategoryId: ClothesProps[] | null;
 
   successLogout: boolean;
@@ -22,6 +23,7 @@ const initialState: myState = {
   errorLogin: null,
   clothesInfo: null,
   clothesById: null,
+  clothesByName: null,
   clothesByCategoryId: null,
   successLogout: false,
   errorLogout: null,
@@ -81,6 +83,22 @@ export const getClothesByIdThunk = createAsyncThunk(
     }
   }
 );
+export const getClothesByNameThunk = createAsyncThunk(
+  "getClothesByName",
+  async (name: string, { rejectWithValue }) => {
+    try {
+      const response = await ClothesApi.getClothesByName(name);
+      return response;
+    } catch (error: any) {
+      if (error.response && error.response.data.message) {
+        return rejectWithValue(error.response.data.message);
+      } else {
+        return rejectWithValue(error.message);
+      }
+    }
+  }
+);
+
 export const getColorNameThunk = createAsyncThunk(
   "getColorName",
   async (colors: colors, { rejectWithValue }) => {
@@ -126,12 +144,17 @@ export const clothesSlice = createSlice({
       state.clothesInfo = action.payload.data;
     });
     builder.addCase(getClothesThunk.rejected, (state, action) => {});
-    //get clothes by id
+    //get clothes by clothes id
     builder.addCase(getClothesByIdThunk.pending, (state) => {});
     builder.addCase(getClothesByIdThunk.fulfilled, (state, action) => {
       state.clothesById = action.payload.data;
     });
-    builder.addCase(getClothesByIdThunk.rejected, (state, action) => {});
+    //get clothes by clothes name
+    builder.addCase(getClothesByNameThunk.pending, (state) => {});
+    builder.addCase(getClothesByNameThunk.fulfilled, (state, action) => {
+      state.clothesByName = action.payload.data;
+    });
+    builder.addCase(getClothesByNameThunk.rejected, (state, action) => {});
     //get clothes by category id
     builder.addCase(getClothesByCategoryThunk.pending, (state) => {});
     builder.addCase(getClothesByCategoryThunk.fulfilled, (state, action) => {

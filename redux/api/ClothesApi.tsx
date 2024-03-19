@@ -7,6 +7,9 @@ const ClothesApi = {
   getClothesById: (id: string) => {
     return AxiosClient.get(`/clothes/${id}`);
   },
+  getClothesByName: (name: string) => {
+    return AxiosClient.get(`/clothes/?name_like=${name}`);
+  },
   getClothesByCategory: (categoryId: string) => {
     return AxiosClient.get(`/clothes/?categoryId=${categoryId}`);
   },
