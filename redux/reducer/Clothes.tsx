@@ -8,7 +8,9 @@ interface myState {
   errorLogin: any;
   clothesInfo: ClothesProps[] | null;
   clothesById: ClothesProps | null;
-  clothesByName: ClothesProps | null;
+  clothesByName: ClothesProps[] | null;
+  loadingClothesByName: boolean;
+
   clothesByCategoryId: ClothesProps[] | null;
 
   successLogout: boolean;
@@ -24,6 +26,7 @@ const initialState: myState = {
   clothesInfo: null,
   clothesById: null,
   clothesByName: null,
+  loadingClothesByName: false,
   clothesByCategoryId: null,
   successLogout: false,
   errorLogout: null,
@@ -150,11 +153,16 @@ export const clothesSlice = createSlice({
       state.clothesById = action.payload.data;
     });
     //get clothes by clothes name
-    builder.addCase(getClothesByNameThunk.pending, (state) => {});
+    builder.addCase(getClothesByNameThunk.pending, (state) => {
+      state.loadingClothesByName = true;
+    });
     builder.addCase(getClothesByNameThunk.fulfilled, (state, action) => {
       state.clothesByName = action.payload.data;
+      state.loadingClothesByName = false;
     });
-    builder.addCase(getClothesByNameThunk.rejected, (state, action) => {});
+    builder.addCase(getClothesByNameThunk.rejected, (state, action) => {
+      state.loadingClothesByName = false;
+    });
     //get clothes by category id
     builder.addCase(getClothesByCategoryThunk.pending, (state) => {});
     builder.addCase(getClothesByCategoryThunk.fulfilled, (state, action) => {

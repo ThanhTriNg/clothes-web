@@ -75,7 +75,7 @@ export default function LoginForm() {
                     <FormControl>
                       <Input
                         // variant="default"
-                        placeholder="Enter your email"
+                        placeholder="Nhập mail của bạn"
                         {...field}
                       />
                     </FormControl>
@@ -97,7 +97,7 @@ export default function LoginForm() {
                           // variant="default"
                           type={passwordShown ? "text" : "password"}
                           autoComplete="on"
-                          placeholder="Re-enter your password"
+                          placeholder="Nhâp mật khẩu"
                           {...field}
                         />
                       </FormControl>

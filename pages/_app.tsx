@@ -2,6 +2,7 @@ import type { AppProps } from "next/app";
 import { Noto_Sans } from "next/font/google";
 import "../style/globals.css";
 import Header from "@/components/layout/header";
+import Footer from "@/components/layout/footer";
 import { Provider } from "react-redux";
 import { store } from "@/redux/store/Store";
 export const noto = Noto_Sans({
@@ -24,6 +25,7 @@ function LandingPage({ Component, pageProps }: AppProps) {
             <Component {...pageProps} />
           </div>
         </main>
+        <Footer/>
       </div>
     </Provider>
   );

@@ -81,7 +81,7 @@ export default function SignUpForm() {
                     <FormControl>
                       <Input
                         // variant="default"
-                        placeholder="Enter your email"
+                        placeholder="Nhập email của bạn"
                         {...field}
                       />
                     </FormControl>
@@ -103,7 +103,7 @@ export default function SignUpForm() {
                           // variant="default"
                           type={passwordShown ? "text" : "password"}
                           autoComplete="on"
-                          placeholder="Re-enter your password"
+                          placeholder="Nhập mật khẩu"
                           {...field}
                         />
                       </FormControl>
@@ -132,7 +132,7 @@ export default function SignUpForm() {
                           // variant="default"
                           type={passwordShown ? "text" : "password"}
                           autoComplete="on"
-                          placeholder="Re-enter your password"
+                          placeholder="Nhập lại mật khẩu"
                           {...field}
                         />
                       </FormControl>
@@ -152,7 +152,7 @@ export default function SignUpForm() {
                 type="submit"
                 className="btn-aware w-full text-white uppercase font-bold rounded-[6px] "
               >
-                Đăng nhập
+                Đăng ký
                 <span className={`bg-[#00668F]   !duration-[800ms]`}></span>
               </Button>
             </form>
