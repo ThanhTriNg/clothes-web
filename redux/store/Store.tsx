@@ -1,6 +1,6 @@
 "use client";
 
-import { configureStore, createListenerMiddleware } from "@reduxjs/toolkit";
+import { configureStore } from "@reduxjs/toolkit";
 import ClothesReducer from "../reducer/Clothes";
 import CategoriesReducer from "../reducer/Categories";
 import GenderReducer from "../reducer/Gender";
@@ -35,7 +35,6 @@ const cartPersistConfig = {
   storage,
 };
 const cartPersistedReducer = persistReducer(cartPersistConfig, CartReducer);
-const listenerMiddleware = createListenerMiddleware();
 
 export const store = configureStore({
   reducer: {

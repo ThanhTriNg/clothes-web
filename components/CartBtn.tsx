@@ -20,7 +20,7 @@ const CartBtn = () => {
       {!!totalItems && (
         <div
           key={totalItems}
-          className="text-white bg-slate-600 rounded-full w-6 text-center absolute -top-2 -right-3 animate-pingOnce "
+          className="text-white bg-primary rounded-full w-6 text-center absolute -top-2 -right-3 animate-pingOnce "
         >
           {totalItems}
         </div>
