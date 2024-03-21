@@ -14,6 +14,7 @@ import { getCategoriesThunk } from "@/redux/reducer/Categories";
 import { useRouter } from "next/router";
 import { Divide } from "lucide-react";
 import ReactLoading from "react-loading";
+import CartBtn from "../CartBtn";
 
 const Header = () => {
   // const [isScrollDown, setIsScrollDown] = useState<boolean>();
@@ -40,7 +41,7 @@ const Header = () => {
             <User size={30} className="cursor-pointer focus:" />
           </Link>
 
-          <ShoppingCart size={30} className="cursor-pointer" />
+          <CartBtn />
         </div>
       </div>
     </header>
@@ -148,8 +149,6 @@ const Search = () => {
             })}
           </div>
         )}
-
-
       </div>
     </>
   );

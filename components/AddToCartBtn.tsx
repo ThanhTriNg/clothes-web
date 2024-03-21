@@ -17,9 +17,7 @@ interface Props {
 
 const AddToCartBtn = (props: Props) => {
   const dispatch = useAppDispatch();
-  const handleOnClick = () => {
-    dispatch(increment(props.product));
-  };
+
   const qty = useAppSelector((state) =>
     productQtyInCartSelector(state, props.product.id)
   );
