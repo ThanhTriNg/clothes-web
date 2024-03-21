@@ -45,6 +45,17 @@ export const cartSlice = createSlice({
         }
       }
     },
+    remove: (state, action: PayloadAction<ClothesProps>) => {
+      const item = state.cartItems.find(
+        (el) => el.product.id === action.payload.id
+      );
+      if (item) {
+        item.qty = 0;
+        state.cartItems = state.cartItems.filter(
+          (el) => el.product.id !== action.payload.id
+        );
+      }
+    },
   },
 
   extraReducers: (builder) => {
@@ -79,5 +90,5 @@ export const productQtyInCartSelector = createSelector(
     cartItems.find((el) => el.product.id === productId)?.qty
 );
 
-export const { increment, decrement } = cartSlice.actions;
+export const { increment, decrement, remove } = cartSlice.actions;
 export default cartSlice.reducer;

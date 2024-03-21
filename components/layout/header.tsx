@@ -4,7 +4,7 @@ import Link from "next/link";
 import CartBtn from "../CartBtn";
 import Nav from "./nav";
 import Search from "./searchBtn";
-import { ShoppingCart } from "lucide-react";
+import { ShoppingCart, Trash2 } from "lucide-react";
 import { CartItem } from "@/redux/module";
 import { AppDispatch, RootState, useAppSelector } from "@/redux/store/Store";
 import { formatPrice } from "@/pages";
@@ -15,6 +15,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { findCategory } from "./searchBtn";
 import { convertNameCate } from "../LimitedPromotion";
 import { useRouter } from "next/router";
+
+//test
+import { remove } from "@/redux/reducer/Cart";
+import { Button } from "../ui/button";
+
 const Header = () => {
   // const [isScrollDown, setIsScrollDown] = useState<boolean>();
 
@@ -24,7 +29,7 @@ const Header = () => {
   //   else setIsScrollDown(false);
   // }, [scrollDirection]);
   // console.log(isScrollDown);
-  
+
   const router = useRouter();
 
   const [activeCart, setActiveCart] = useState<boolean>(false);
@@ -38,9 +43,11 @@ const Header = () => {
     (state) => state.cartPersistedReducer.cartItems
   );
 
-  const handClickCart = (event: React.MouseEvent<HTMLDivElement>) => {
+  const handClickCart = () => {
     setActiveCart((cur) => !cur);
   };
+
+  console.log(totalItems);
 
   return (
     <header className="h-20 mb-4 sticky top-0 z-20 bg-white/90">
@@ -56,32 +63,36 @@ const Header = () => {
           <Link href="/login">
             <User size={30} className="cursor-pointer focus:" />
           </Link>
-          <div onClick={(e) => handClickCart(e)} className="relative ">
-            <ShoppingCart size={30} className="cursor-pointer" />
-            {!!totalItems && (
+          {totalItems ? (
+            <div onClick={handClickCart} className="relative ">
+              <ShoppingCart size={30} className="cursor-pointer" />
+              {!!totalItems && (
+                <div
+                  key={totalItems}
+                  className="select-none text-white bg-primary rounded-full w-6 text-center absolute -top-2 -right-3 animate-pingOnce "
+                >
+                  {totalItems}
+                </div>
+              )}
               <div
-                key={totalItems}
-                className="select-none text-white bg-primary rounded-full w-6 text-center absolute -top-2 -right-3 animate-pingOnce "
+                onClick={(e) => e.stopPropagation()}
+                className={`${
+                  activeCart ? "block" : "hidden"
+                }   absolute shadow-md bg-orange-200 rounded-md w-[600px] mt-2 top-full right-0 z-10 `}
               >
-                {totalItems}
+                {cartItems.map((item, idx: number) => {
+                  return <Cart key={`cart-item-${idx}`} cartItem={item} />;
+                })}
+                <Link href="/cart" className="w-[200px] block mx-auto ">
+                  <p className="text-center bg-white mt-2 mb-1 p-2 rounded-md text-primary hover:bg-primary hover:text-white">
+                    Đến giỏ hàng
+                  </p>
+                </Link>
               </div>
-            )}
-            <div
-              onClick={(e) => e.stopPropagation()}
-              className={`${
-                activeCart ? "block" : "hidden"
-              }   absolute shadow-md bg-orange-200 rounded-md w-[500px] mt-2 top-full right-0 z-10 `}
-            >
-              {cartItems.map((item, idx: number) => {
-                return <Cart key={`cart-item-${idx}`} cartItem={item} />;
-              })}
-              <Link href="/cart" className="w-[200px] block mx-auto ">
-                <p className="text-center bg-white mt-2 mb-1 p-2 rounded-md text-primary hover:bg-primary hover:text-white">
-                  Đến giỏ hàng
-                </p>
-              </Link>
             </div>
-          </div>
+          ) : (
+            ""
+          )}
         </div>
       </div>
     </header>
@@ -114,10 +125,13 @@ const Cart = ({ cartItem }: Props) => {
     setHref(findHref());
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
+  const handleClickRemove = (event: any) => {
+    event.preventDefault();
+    dispatch(remove(cartItem.product));
+  };
   return (
     <Link href={href ? href : ""}>
-      <div className="grid grid-cols-5 bg-white items-center justify-center gap-x-4 m-1">
+      <div className="grid grid-cols-6 bg-white items-center justify-center gap-x-4 m-1">
         <Image
           src={cartItem.product.img.main}
           width="200"
@@ -129,6 +143,9 @@ const Cart = ({ cartItem }: Props) => {
           <p>{price} </p>
         </div>
         <p className="text-center">{cartItem.qty} cái </p>
+        <Button className="w-2/3" variant="destructive" onClick={(e) => handleClickRemove(e)}>
+          <Trash2 size={20} />
+        </Button>
       </div>
     </Link>
   );
