@@ -36,9 +36,7 @@ const LimitedPromotion = () => {
       }
     });
   };
-  useEffect(() => {
-    console.log(category);
-  }, [category]);
+
   return (
     <div className="bg-white p-3 rounded">
       <div className="space-y-10">

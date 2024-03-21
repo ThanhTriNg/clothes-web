@@ -21,7 +21,6 @@ const AddToCartBtn = (props: Props) => {
   const qty = useAppSelector((state) =>
     productQtyInCartSelector(state, props.product.id)
   );
-  console.log(qty);
   if (!qty)
     return (
       <div>
