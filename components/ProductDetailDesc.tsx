@@ -6,6 +6,7 @@ import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { ClothesProps } from "@/redux/module";
 import { formatPrice } from "@/pages";
+import AddToCartBtn from "./AddToCartBtn";
 interface ProductDetailProps {
   clothes: ClothesProps;
 }
@@ -55,12 +56,10 @@ const ProductDetailDesc = ({ clothes }: ProductDetailProps) => {
         <div className="border border-solid border-black/10" />
         <PickSize size={clothes.size} />
         <div className="border border-solid border-black/10" />
-        <div className="space-y-2">
-          <h1 className="uppercase">Số lượng</h1>
-          <Input type="number" min={0} defaultValue={1} className="w-1/3" />
-        </div>
+      
         <div>
-          <Button className="uppercase w-full">Thêm vào giỏ hàng</Button>
+          {/* <Button className="uppercase w-full">Thêm vào giỏ hàng</Button> */}
+          <AddToCartBtn product={clothes} />
         </div>
       </div>
     </div>

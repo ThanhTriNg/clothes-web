@@ -43,3 +43,8 @@ export interface SubCateProps {
   categoryId: string;
   name: string;
 }
+
+export interface CartItem {
+  product: ClothesProps;
+  qty: number;
+}
