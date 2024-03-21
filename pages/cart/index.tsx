@@ -5,7 +5,7 @@ import { totalPriceSelector } from "@/redux/reducer/Cart";
 import { useAppSelector } from "@/redux/store/Store";
 
 const Cart = () => {
-  const cartItems = useAppSelector((state) => state.cart.cartItems);
+  const cartItems = useAppSelector((state) => state.cartPersistedReducer.cartItems);
   const totalPrice = useAppSelector(totalPriceSelector);
   const { convertPrice } = formatPrice(totalPrice);
   return totalPrice === 0 ? (

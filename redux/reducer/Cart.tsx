@@ -60,7 +60,7 @@ export const cartSlice = createSlice({
   },
 });
 
-const cartItems = (state: RootState) => state.cart.cartItems;
+const cartItems = (state: RootState) => state.cartPersistedReducer.cartItems;
 
 export const totalCartItemSelector = createSelector([cartItems], (cartItems) =>
   cartItems.reduce((total: number, cur: CartItem) => (total += cur.qty), 0)
