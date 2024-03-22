@@ -1,14 +1,9 @@
-import React, { useEffect, useState } from "react";
 import Image from "next/image";
-
-import SlideShow from "@/components/swiper";
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { getClothesThunk } from "@/redux/reducer/Clothes";
-import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, RootState } from "@/redux/store/Store";
-import OutStanding from "@/components/OutStanding";
 import LimitedPromotion from "@/components/LimitedPromotion";
+import OutStanding from "@/components/OutStanding";
+import SlideShow from "@/components/swiper";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 export const imgMenVar = "/img/men";
 export const imgWomenVar = "/img/women";

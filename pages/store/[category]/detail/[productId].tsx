@@ -1,21 +1,19 @@
-import { useState, useRef, useEffect } from "react";
-import { useRouter } from "next/router";
 import ProductDetailDesc from "@/components/ProductDetailDesc";
 import ProductDetailSlide from "@/components/ProductDetailSlide";
+import { useRouter } from "next/router";
+import { useEffect, useRef, useState } from "react";
 
-import { Swiper, SwiperSlide, useSwiper } from "swiper/react";
-import { Pagination, Autoplay } from "swiper/modules";
+import { Button } from "@/components/ui/button";
+import { getClothesByIdThunk, getClothesThunk } from "@/redux/reducer/Clothes";
+import { AppDispatch, RootState } from "@/redux/store/Store";
+import { ArrowLeft, ArrowRight } from "@phosphor-icons/react";
+import Image from "next/image";
+import Link from "next/link";
+import { useDispatch, useSelector } from "react-redux";
 import "swiper/css";
 import "swiper/css/pagination";
-import Image from "next/image";
-import { Button } from "@/components/ui/button";
-import { ArrowLeft, ArrowRight } from "@phosphor-icons/react";
-import { useDispatch, useSelector } from "react-redux";
-import { getClothesByIdThunk, getClothesThunk } from "@/redux/reducer/Clothes";
-import { getCategoriesThunk } from "@/redux/reducer/Categories";
-import { RootState, AppDispatch } from "@/redux/store/Store";
-import { Divide } from "lucide-react";
-import Link from "next/link";
+import { Autoplay, Pagination } from "swiper/modules";
+import { Swiper, SwiperSlide } from "swiper/react";
 const imgMenVar = "/img/men";
 const imgWomenVar = "/img/women";
 

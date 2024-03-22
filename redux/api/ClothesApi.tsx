@@ -1,5 +1,5 @@
-import AxiosClient, { TheColorAPI } from "./AxiosClient";
 import { AddClothesProps } from "../module";
+import AxiosClient, { TheColorAPI } from "./AxiosClient";
 const ClothesApi = {
   getClothes: () => {
     return AxiosClient.get("/clothes");

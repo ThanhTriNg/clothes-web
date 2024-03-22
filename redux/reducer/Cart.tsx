@@ -1,13 +1,11 @@
 import {
   PayloadAction,
-  createAsyncThunk,
   createSelector,
-  createSlice,
+  createSlice
 } from "@reduxjs/toolkit";
 // import CategoriesApi from "../api/CategoriesApi";
 import { CartItem, ClothesProps } from "../module";
 import { RootState } from "../store/Store";
-import { number } from "zod";
 
 interface myState {
   loading: boolean;

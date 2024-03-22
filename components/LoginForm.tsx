@@ -1,3 +1,9 @@
+import { zodResolver } from "@hookform/resolvers/zod";
+import { EyeIcon, EyeOffIcon } from "lucide-react";
+import Link from "next/link";
+import { ChangeEvent, useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 import { Button } from "./ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import {
@@ -9,58 +15,115 @@ import {
   FormMessage,
 } from "./ui/form";
 import { Input } from "./ui/input";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { EyeIcon, EyeOffIcon } from "lucide-react";
-import Link from "next/link";
-import { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
 
+import { loginThunk, resetErrorLogin } from "@/redux/reducer/User";
 import { AppDispatch, RootState } from "@/redux/store/Store";
-import { useRouter } from "next/router";
+import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
-import { loginThunk } from "@/redux/reducer/User";
 
+import CryptoJS from "crypto-js";
 const loginFormSchema = z.object({
-  email: z.string({ required_error: "" }).min(1, " "),
-  password: z.string({ required_error: "" }).min(1, " "),
+  email: z
+    .string({ required_error: "Bắt buộc" })
+    .min(0)
+    .email("Vui vòng nhập địa chỉ email hợp lệ"),
+  password: z.string().min(8, "Tối thiểu 8 kí tự"),
 });
 
 type LoginFormValues = z.infer<typeof loginFormSchema>;
 
 export default function LoginForm() {
-  const router = useRouter();
-
+  const [passwordShown, setPasswordShown] = useState(false);
+  const [isChecked, setIsChecked] = useState<boolean>(false);
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginFormSchema),
-    mode: "onChange",
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+    mode: "onSubmit",
   });
+  const { errorLogin, successLogin } = useSelector(
+    (state: RootState) => state.users
+  );
+  const key = "jlasdfuy6mnqweo@#$_)d41414141sf123456";
   const dispatch = useDispatch<AppDispatch>();
+  useEffect(() => {
+    const rememberMeFlag = localStorage.getItem("rememberMe");
 
-  useEffect(() => {}, [dispatch]);
-  const [passwordShown, setPasswordShown] = useState(false);
-  const SelectedIconPassword = passwordShown ? EyeIcon : EyeOffIcon;
+    if (rememberMeFlag === "true") {
+      const savedEmail = localStorage.getItem("email");
+      const encryptedPassword = localStorage.getItem("password");
+      setIsChecked(true);
+      if (encryptedPassword) {
+        const decryptedPassword = CryptoJS.AES.decrypt(
+          encryptedPassword,
+          key
+        ).toString(CryptoJS.enc.Utf8);
 
-  const { errorLogin } = useSelector((state: RootState) => state.users);
-
+        if (savedEmail && decryptedPassword) {
+          form.setValue("email", savedEmail);
+          form.setValue("password", decryptedPassword);
+        }
+      }
+    }
+  }, []);
+  useEffect(() => {
+    if (successLogin) {
+      const email = form.getValues().email;
+      const password = form.getValues().password;
+      handleRememberMeChange(email, password, isChecked);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [form, successLogin]);
+  useEffect(() => {
+    if (errorLogin) {
+      toast.error("Sai tài khoản hoặc mật khẩu");
+      dispatch(resetErrorLogin());
+    }
+  }, [errorLogin, dispatch]);
+  useEffect(() => {
+    if (successLogin) {
+      toast.success("Đăng nhập thành công");
+    }
+  }, [successLogin, dispatch]);
+  console.log(process.env.ENV_KEY_CryptoJS);
+  useEffect(() => {
+    if (process.env.NUMBER_TEST)
+      console.log(parseInt(process.env.NUMBER_TEST) + 10);
+  }, []);
+  const handleRememberMeChange = (
+    email: string,
+    password: string,
+    isChecked: boolean
+  ) => {
+    if (isChecked) {
+      localStorage.setItem("rememberMe", "true");
+      localStorage.setItem("email", email);
+      const encryptedPassword = CryptoJS.AES.encrypt(password, key).toString();
+      localStorage.setItem("password", encryptedPassword);
+    } else {
+      localStorage.removeItem("rememberMe");
+      localStorage.removeItem("email");
+      localStorage.removeItem("password");
+    }
+  };
+  const handleCheckboxChange = (event: ChangeEvent<HTMLInputElement>) => {
+    setIsChecked(event.target.checked);
+  };
   async function onSubmit(data: LoginFormValues) {
     // console.log(data);
     try {
       const email = data.email;
       const password = data.password;
       dispatch(loginThunk({ email, password }));
-      localStorage.setItem("email", email);
-      localStorage.setItem("password", password);
     } catch (error) {}
   }
   const togglePassword = () => {
     setPasswordShown(!passwordShown);
   };
+  const SelectedIconPassword = passwordShown ? EyeIcon : EyeOffIcon;
 
-  console.log(errorLogin);
-  useEffect(() => {
-    if (errorLogin) alert("Lỗi");
-  }, [errorLogin]);
   return (
     <>
       <Card id="card" className="grid gap-6 bg-transparent border-none ">
@@ -128,6 +191,8 @@ export default function LoginForm() {
                   <input
                     type="checkbox"
                     id="rememberMe"
+                    checked={isChecked}
+                    onChange={handleCheckboxChange}
                     className="w-[18px] h-[18px] cursor-pointer rounded-[4px]"
                   />
                   <label
@@ -144,7 +209,6 @@ export default function LoginForm() {
                   Quên mật khẩu
                 </Link>
               </div>
-
               <Button
                 type="submit"
                 className="btn-aware w-full text-white uppercase font-bold rounded-[6px] "

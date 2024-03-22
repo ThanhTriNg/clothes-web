@@ -1,17 +1,18 @@
+import Footer from "@/components/layout/footer";
+import Header from "@/components/layout/header";
+import { persistor, store } from "@/redux/store/Store";
 import type { AppProps } from "next/app";
 import { Noto_Sans } from "next/font/google";
-import "../style/globals.css";
-import Header from "@/components/layout/header";
-import Footer from "@/components/layout/footer";
+import { Toaster } from "react-hot-toast";
 import { Provider } from "react-redux";
-import { persistor, store } from "@/redux/store/Store";
+import "../style/globals.css";
 export const noto = Noto_Sans({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
 });
 
-import { PersistGate } from "redux-persist/integration/react";
 import Head from "next/head";
+import { PersistGate } from "redux-persist/integration/react";
 
 function LandingPage({ Component, pageProps }: AppProps) {
   return (
@@ -33,6 +34,7 @@ function LandingPage({ Component, pageProps }: AppProps) {
             </div>
           </main>
           <Footer />
+          <Toaster position="top-right"/>
         </div>
       </PersistGate>
     </Provider>

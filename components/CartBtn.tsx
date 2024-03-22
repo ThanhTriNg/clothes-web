@@ -1,13 +1,12 @@
 "use client";
 
+import { formatPrice } from "@/pages";
 import {
   totalCartItemSelector,
   totalPriceSelector,
 } from "@/redux/reducer/Cart";
 import { useAppSelector } from "@/redux/store/Store";
 import { ShoppingCart } from "lucide-react";
-import React from "react";
-import { formatPrice } from "@/pages";
 import Link from "next/link";
 const CartBtn = () => {
   const totalPrices = useAppSelector(totalPriceSelector);

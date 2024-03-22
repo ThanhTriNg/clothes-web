@@ -17,6 +17,7 @@ const Search = () => {
   const [inputValue, setInputValue] = useState<string>("");
   const [debouncedInputValue, setDebouncedInputValue] =
     useState<string>("null");
+    
   const { clothesByName, loadingClothesByName } = useSelector(
     (state: RootState) => state.clothes
   );

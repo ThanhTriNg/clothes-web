@@ -15,10 +15,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { findCategory } from "./searchBtn";
 import { convertNameCate } from "../LimitedPromotion";
 import { useRouter } from "next/router";
-
-//test
 import { remove } from "@/redux/reducer/Cart";
 import { Button } from "../ui/button";
+
+interface Props {
+  cartItem: CartItem;
+}
 
 const Header = () => {
   // const [isScrollDown, setIsScrollDown] = useState<boolean>();
@@ -97,10 +99,6 @@ const Header = () => {
   );
 };
 
-interface Props {
-  cartItem: CartItem;
-}
-
 const Cart = ({ cartItem }: Props) => {
   const { convertPrice: price } = formatPrice(cartItem.product.price);
   const [href, setHref] = useState<string>();
@@ -113,20 +111,23 @@ const Cart = ({ cartItem }: Props) => {
     (state: RootState) => state.categories
   );
 
+  useEffect(() => {
+    setHref(findHref());
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const findHref = () => {
     const category = findCategory(cartItem.product.categoryId, categoriesInfo);
     const cateName = convertNameCate(category?.name as any);
     const href: string = `/store/${cateName}/detail/${cartItem.product.id}`;
     return href;
   };
-  useEffect(() => {
-    setHref(findHref());
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+
   const handleClickRemove = (event: any) => {
     event.preventDefault();
     dispatch(remove(cartItem.product));
   };
+
   return (
     <Link href={href ? href : ""}>
       <div className="grid grid-cols-6 bg-white items-center justify-center gap-x-4 m-1">
@@ -141,7 +142,11 @@ const Cart = ({ cartItem }: Props) => {
           <p>{price} </p>
         </div>
         <p className="text-center">{cartItem.qty} cái </p>
-        <Button className="w-2/3" variant="destructive" onClick={(e) => handleClickRemove(e)}>
+        <Button
+          className="w-2/3"
+          variant="destructive"
+          onClick={(e) => handleClickRemove(e)}
+        >
           <Trash2 size={20} />
         </Button>
       </div>

@@ -1,11 +1,10 @@
-import React from "react";
 import Image from "next/image";
 
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Pagination, Autoplay } from "swiper/modules";
+import { SlideShowProps } from "@/common/type";
 import "swiper/css";
 import "swiper/css/pagination";
-import { SlideShowProps } from "@/common/type";
+import { Autoplay, Pagination } from "swiper/modules";
+import { Swiper, SwiperSlide } from "swiper/react";
 
 const SlideShow = ({ listImg, className }: SlideShowProps) => {
   return (

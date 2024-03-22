@@ -1,43 +1,41 @@
-import React, { useRef, useEffect, useState, useCallback } from "react";
-import { Swiper, SwiperSlide, useSwiper } from "swiper/react";
-import { Pagination, Autoplay } from "swiper/modules";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { useEffect, useRef, useState } from "react";
+import { Autoplay, Pagination } from "swiper/modules";
+import { Swiper, SwiperSlide } from "swiper/react";
 
+import { ProductDetailSlide } from "@/common/type";
+import Image from "next/image";
+import { useRouter } from "next/router";
+import { Rating } from "react-simple-star-rating";
 import "swiper/css";
 import "swiper/css/pagination";
-import Image from "next/image";
-import { Rating } from "react-simple-star-rating";
-import { ProductDetailSlide } from "@/common/type";
-import { useRouter } from "next/router";
 
 const ProductDetailSlide = ({ thumbnail }: ProductDetailSlide) => {
   const router = useRouter();
 
+  const [rating, setRating] = useState<number>();
   const [convertThumbnail, setConvertThumbnail] = useState<string[]>();
+  const [currentSlide, setCurrentSlide] = useState(0);
+
   const { productId } = router.query;
+  const sliderRef = useRef<any>(null);
 
   useEffect(() => {
     if (thumbnail) {
       setConvertThumbnail([thumbnail.main, ...(thumbnail.sub ?? [])]);
     }
   }, [thumbnail]);
+
   useEffect(() => {
     setCurrentSlide(0);
     if (convertThumbnail) sliderRef.current.swiper.slideTo(0);
   }, [productId]);
-  const [currentSlide, setCurrentSlide] = useState(0);
-  const sliderRef = useRef<any>(null);
-  const updateIndex = () => {
-    setCurrentSlide(sliderRef.current.swiper.realIndex);
-  };
-  const slideTo = (idx: number) => {
-    setCurrentSlide(idx);
-  };
+
   useEffect(() => {
     if (convertThumbnail) {
       const swiperInstance = sliderRef.current.swiper;
@@ -61,7 +59,15 @@ const ProductDetailSlide = ({ thumbnail }: ProductDetailSlide) => {
       };
     }
   }, [convertThumbnail]);
-  const [rating, setRating] = useState<number>();
+
+  const updateIndex = () => {
+    setCurrentSlide(sliderRef.current.swiper.realIndex);
+  };
+
+  const slideTo = (idx: number) => {
+    setCurrentSlide(idx);
+  };
+
   const handleRating = (rate: number) => {
     setRating(rate);
   };

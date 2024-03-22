@@ -1,8 +1,7 @@
-import React from "react";
-import { formatPrice } from "..";
 import CartItemCard from "@/components/CartItemCard";
 import { totalPriceSelector } from "@/redux/reducer/Cart";
 import { RootState, useAppSelector } from "@/redux/store/Store";
+import { formatPrice } from "..";
 
 const Cart = () => {
   const cartItems = useAppSelector((state:RootState) => state.cartPersistedReducer.cartItems);

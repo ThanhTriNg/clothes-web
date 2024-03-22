@@ -1,12 +1,10 @@
-import React, { useState, useEffect } from "react";
+import { formatPrice } from "@/pages";
+import { ClothesProps } from "@/redux/module";
+import { useState } from "react";
 import { Rating } from "react-simple-star-rating";
+import AddToCartBtn from "./AddToCartBtn";
 import PickColor from "./pickColor";
 import PickSize from "./pickSize";
-import { Input } from "./ui/input";
-import { Button } from "./ui/button";
-import { ClothesProps } from "@/redux/module";
-import { formatPrice } from "@/pages";
-import AddToCartBtn from "./AddToCartBtn";
 interface ProductDetailProps {
   clothes: ClothesProps;
 }

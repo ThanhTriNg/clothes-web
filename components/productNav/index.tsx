@@ -16,21 +16,22 @@ import {
   getMenSubCateThunk,
   getWomenSubCateThunk,
 } from "@/redux/reducer/Categories";
-import { filterData } from "../layout/Nav";
+import { filterData } from "../layout/nav";
 import { CategoriesProps, SubCateProps } from "@/redux/module";
+
 const ProductNav = ({ className, category }: ProductNavProps) => {
   const dispatch = useDispatch<AppDispatch>();
   const { menSubCateInfo, womenSubCateInfo } = useSelector(
     (state: RootState) => state.categories
   );
+  const [womenCate, setWomenCate] = useState<CategoriesProps[]>();
+  const [menCate, setMenCate] = useState<CategoriesProps[]>();
 
   useEffect(() => {
     dispatch(getMenSubCateThunk());
     dispatch(getWomenSubCateThunk());
   }, [dispatch]);
 
-  const [womenCate, setWomenCate] = useState<CategoriesProps[]>();
-  const [menCate, setMenCate] = useState<CategoriesProps[]>();
   useEffect(() => {
     if (category) {
       //women handle
@@ -56,7 +57,6 @@ const ProductNav = ({ className, category }: ProductNavProps) => {
       setMenCate(addDataMen);
     }
   }, [category]);
-
 
   return (
     <div className={className}>

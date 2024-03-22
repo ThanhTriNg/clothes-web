@@ -7,9 +7,8 @@ import {
   productQtyInCartSelector,
 } from "@/redux/reducer/Cart";
 import { useAppDispatch, useAppSelector } from "@/redux/store/Store";
-import React from "react";
-import { Button } from "./ui/button";
 import QtyBtn from "./QtyBtn";
+import { Button } from "./ui/button";
 
 interface Props {
   product: ClothesProps;

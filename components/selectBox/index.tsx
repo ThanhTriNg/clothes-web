@@ -1,33 +1,25 @@
 "use client";
 
-import * as React from "react";
 import { Check, ChevronsUpDown } from "lucide-react";
+import * as React from "react";
 
-import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import {
   Command,
-  CommandEmpty,
   CommandGroup,
-  CommandInput,
-  CommandItem,
+  CommandItem
 } from "@/components/ui/command";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { cn } from "@/lib/utils";
 
-import { TextFilter, ComboBoxProps } from "@/common/type";
+import { ComboBoxProps } from "@/common/type";
 
 export function Combobox({ textFilters }: ComboBoxProps) {
-  const addValue = () => {
-    if (textFilters) {
-      textFilters.forEach((item, idx) => {
-        item.value = idx.toString();
-      });
-    }
-  };
+
   React.useEffect(() => {
     addValue();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -48,7 +40,14 @@ export function Combobox({ textFilters }: ComboBoxProps) {
   React.useEffect(() => {
     // console.log(label);
   }, [label]);
-
+  
+  const addValue = () => {
+    if (textFilters) {
+      textFilters.forEach((item, idx) => {
+        item.value = idx.toString();
+      });
+    }
+  };
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>

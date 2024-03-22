@@ -17,28 +17,35 @@ const PickColor = ({
   showName = false,
 }: PickColorProps) => {
   const dispatch = useDispatch<AppDispatch>();
+
   const [colorHex, setColorHex] = useState<string>(
     removeHashFromColorCode(colors[0])
   );
   const [colorName, setColorName] = useState<string>();
+
   const { colorAPI } = useSelector((state: RootState) => state.clothes);
+
   useEffect(() => {
     setColorHex(removeHashFromColorCode(colors[0]));
   }, [colors]);
+
   useEffect(() => {
     if (colorHex) {
       dispatch(getColorNameThunk({ hex: colorHex }));
     }
   }, [colorHex, dispatch]);
+
   useEffect(() => {
     if (colorAPI) {
       setColorName(colorAPI?.name?.value);
     }
   }, [colorAPI]);
+
   const handleClick = (color: string) => {
     const removeHash = removeHashFromColorCode(color);
     setColorHex(removeHash);
   };
+  
   const sizeText = `${size}px`;
   const spaceBetweenText = `${spaceBetween}px`;
 

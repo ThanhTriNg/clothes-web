@@ -1,41 +1,28 @@
-import React, { useEffect, useState } from "react";
 import Image from "next/image";
-import { Heart } from "@phosphor-icons/react";
-import PickColor from "./pickColor";
-import { formatPrice } from "@/pages";
+import { useEffect } from "react";
 
-import Card from "./card";
-import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, RootState } from "@/redux/store/Store";
-import { getClothesThunk } from "@/redux/reducer/Clothes";
 import {
   getCategoriesThunk,
   getMenSubCateThunk,
 } from "@/redux/reducer/Categories";
+import { getClothesThunk } from "@/redux/reducer/Clothes";
+import { AppDispatch, RootState } from "@/redux/store/Store";
+import { useDispatch, useSelector } from "react-redux";
+import Card from "./card";
 const imgMenVar = "/img/men";
 
 const LimitedPromotion = () => {
   const dispatch = useDispatch<AppDispatch>();
 
   const { clothesInfo } = useSelector((state: RootState) => state.clothes);
-  const { menSubCateInfo, categoriesInfo } = useSelector(
+  const { categoriesInfo } = useSelector(
     (state: RootState) => state.categories
   );
-  const [category, setCategory] = useState<string>();
   useEffect(() => {
     dispatch(getClothesThunk());
     dispatch(getMenSubCateThunk());
     dispatch(getCategoriesThunk());
   }, [dispatch]);
-
-  const handleClick = (categoryId: string | undefined) => {
-    categoriesInfo?.forEach((item2) => {
-      if (categoryId === item2.id.toString()) {
-        const cate = convertNameCate(item2.name);
-        setCategory(cate);
-      }
-    });
-  };
 
   return (
     <div className="bg-white p-3 rounded">

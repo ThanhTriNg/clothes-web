@@ -1,5 +1,5 @@
-import AxiosClient from "./AxiosClient";
 import { GetSubCateProps } from "../module";
+import AxiosClient from "./AxiosClient";
 const CategoriesApi = {
   getCategories: () => {
     return AxiosClient.get("/categories");

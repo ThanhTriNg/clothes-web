@@ -1,4 +1,3 @@
-import LoginForm from "@/components/LoginForm";
 import SignUpForm from "@/components/SignupForm";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";

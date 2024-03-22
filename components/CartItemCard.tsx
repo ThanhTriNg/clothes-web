@@ -1,12 +1,11 @@
-import { CartItem } from "@/redux/module";
-import Image from "next/image";
-import React from "react";
-import QtyBtn from "./QtyBtn";
-import { useAppDispatch, useAppSelector } from "@/redux/store/Store";
-import { decrement, increment, remove, totalPriceSelector } from "@/redux/reducer/Cart";
 import { formatPrice } from "@/pages";
-import { Button } from "./ui/button";
+import { CartItem } from "@/redux/module";
+import { decrement, increment, remove } from "@/redux/reducer/Cart";
+import { useAppDispatch } from "@/redux/store/Store";
 import { Trash2 } from "lucide-react";
+import Image from "next/image";
+import QtyBtn from "./QtyBtn";
+import { Button } from "./ui/button";
 
 interface Props {
   cartItem: CartItem;

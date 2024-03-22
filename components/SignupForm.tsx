@@ -1,3 +1,8 @@
+import { zodResolver } from "@hookform/resolvers/zod";
+import { EyeIcon, EyeOffIcon } from "lucide-react";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 import { Button } from "./ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import {
@@ -9,25 +14,20 @@ import {
   FormMessage,
 } from "./ui/form";
 import { Input } from "./ui/input";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { EyeIcon, EyeOffIcon } from "lucide-react";
-import Link from "next/link";
-import { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
 
-import { AppDispatch } from "@/redux/store/Store";
-import { useRouter } from "next/router";
-import { useDispatch, useSelector } from "react-redux";
 import { signUpThunk } from "@/redux/reducer/User";
+import { AppDispatch } from "@/redux/store/Store";
+import { useDispatch } from "react-redux";
 
 const signUpFormSchema = z
   .object({
     email: z
       .string({ required_error: "Bắt buộc" })
       .min(1, " ")
-      .email("Vui vòng nhập đúng email"),
-    password: z.string({ required_error: "Bắt buộc" }).min(8, "Tối thiểu 8 kí tự"),
+      .email("Vui vòng nhập địa chỉ email hợp lệ"),
+    password: z
+      .string({ required_error: "Bắt buộc" })
+      .min(8, "Tối thiểu 8 kí tự"),
     confirmPassword: z.string({ required_error: "" }).min(8, " "),
   })
   .refine((data) => data.password === data.confirmPassword, {
@@ -38,7 +38,8 @@ const signUpFormSchema = z
 type SignUpFormValues = z.infer<typeof signUpFormSchema>;
 
 export default function SignUpForm() {
-  const router = useRouter();
+  const [passwordShown, setPasswordShown] = useState(false);
+  const [rePasswordShown, setRePasswordShown] = useState(false);
 
   const form = useForm<SignUpFormValues>({
     resolver: zodResolver(signUpFormSchema),
@@ -46,25 +47,24 @@ export default function SignUpForm() {
   });
   const dispatch = useDispatch<AppDispatch>();
 
-  const [passwordShown, setPasswordShown] = useState(false);
-  const [rePasswordShown, setRePasswordShown] = useState(false);
-  const IconPassword = passwordShown ? EyeIcon : EyeOffIcon;
-  const IconRePassword = rePasswordShown ? EyeIcon : EyeOffIcon;
-
-  async function onSubmit(data: SignUpFormValues) {
-    console.log(data);
-    try {
-      const email = data.email;
-      const password = data.password;
-      dispatch(signUpThunk({ email, password }));
-    } catch (error) {}
-  }
   const togglePassword = () => {
     setPasswordShown(!passwordShown);
   };
   const toggleRePassword = () => {
     setRePasswordShown(!rePasswordShown);
   };
+
+  const IconPassword = passwordShown ? EyeIcon : EyeOffIcon;
+  const IconRePassword = rePasswordShown ? EyeIcon : EyeOffIcon;
+
+  async function onSubmit(data: SignUpFormValues) {
+    // console.log(data);
+    try {
+      const email = data.email;
+      const password = data.password;
+      dispatch(signUpThunk({ email, password }));
+    } catch (error) {}
+  }
   return (
     <>
       <Card id="card" className="grid gap-6 bg-transparent border-none ">
