@@ -2,14 +2,14 @@ import React from "react";
 import { formatPrice } from "..";
 import CartItemCard from "@/components/CartItemCard";
 import { totalPriceSelector } from "@/redux/reducer/Cart";
-import { useAppSelector } from "@/redux/store/Store";
+import { RootState, useAppSelector } from "@/redux/store/Store";
 
 const Cart = () => {
-  const cartItems = useAppSelector((state) => state.cartPersistedReducer.cartItems);
+  const cartItems = useAppSelector((state:RootState) => state.cartPersistedReducer.cartItems);
   const totalPrice = useAppSelector(totalPriceSelector);
   const { convertPrice } = formatPrice(totalPrice);
   return totalPrice === 0 ? (
-    <div className=" h-96 flex items-center justify-center">
+    <div className=" min-h-[calc(100vh-96px-96px)] flex items-center justify-center">
       <h1 className="text-2xl text-primary text-center ">
         Giỏ hàng đang trống!
       </h1>

@@ -1,21 +1,9 @@
-
-import React from "react";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
 import LoginForm from "@/components/LoginForm";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
 const LoginPage = () => {
   return (
-    
     <div className="h-[calc(100vh-80px-1rem)] bg-white">
       <div className="grid grid-cols-12 px-12 py-6 gap-10">
         <div className="col-span-5  ">

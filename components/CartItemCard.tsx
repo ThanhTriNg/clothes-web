@@ -3,8 +3,10 @@ import Image from "next/image";
 import React from "react";
 import QtyBtn from "./QtyBtn";
 import { useAppDispatch, useAppSelector } from "@/redux/store/Store";
-import { decrement, increment, totalPriceSelector } from "@/redux/reducer/Cart";
+import { decrement, increment, remove, totalPriceSelector } from "@/redux/reducer/Cart";
 import { formatPrice } from "@/pages";
+import { Button } from "./ui/button";
+import { Trash2 } from "lucide-react";
 
 interface Props {
   cartItem: CartItem;
@@ -12,21 +14,24 @@ interface Props {
 
 const CartItemCard = ({ cartItem }: Props) => {
   const dispatch = useAppDispatch();
-  const totalPrices = useAppSelector(totalPriceSelector);
-  const { convertPrice: totalPrice } = formatPrice(totalPrices);
   const { convertPrice: price } = formatPrice(cartItem.product.price);
 
+  const handleClickRemove = (event: any) => {
+    event.preventDefault();
+    dispatch(remove(cartItem.product));
+  };
   return (
     <div>
-      <div className="grid grid-cols-3 items-center py-2 gap-x-2">
+      <div className="grid grid-cols-7 items-center py-2 gap-x-2">
         <Image
           src={cartItem.product.img.main}
           width="200"
           height="150"
           alt={cartItem.product.name}
+          className="col-span-1"
         />
-        <p className="">{cartItem.product.name} </p>
-        <div className="flex gap-x-2 items-center">
+        <p className="col-span-3 text-center">{cartItem.product.name} </p>
+        <div className="col-span-2 flex gap-x-2 items-center">
           <p>{price} </p>
           <p>X</p>
           <QtyBtn
@@ -34,8 +39,14 @@ const CartItemCard = ({ cartItem }: Props) => {
             onIncrease={() => dispatch(increment(cartItem.product))}
             qty={cartItem.qty}
           />
-          {/* <p>= {totalPrice} </p> */}
         </div>
+        <Button
+          className="col-span-1 w-2/3"
+          variant="destructive"
+          onClick={(e) => handleClickRemove(e)}
+        >
+          <Trash2 size={20} />
+        </Button>
       </div>
       <div className="bg-black/10 h-1 w-full mb-1" />
     </div>

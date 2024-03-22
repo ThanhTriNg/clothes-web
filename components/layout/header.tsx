@@ -47,8 +47,6 @@ const Header = () => {
     setActiveCart((cur) => !cur);
   };
 
-  console.log(totalItems);
-
   return (
     <header className="h-20 mb-4 sticky top-0 z-20 bg-white/90">
       <div className="flex justify-between items-center h-full lg:max-w-[1300px] mx-auto">

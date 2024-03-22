@@ -19,15 +19,19 @@ import { z } from "zod";
 import { AppDispatch } from "@/redux/store/Store";
 import { useRouter } from "next/router";
 import { useDispatch, useSelector } from "react-redux";
+import { signUpThunk } from "@/redux/reducer/User";
 
 const signUpFormSchema = z
   .object({
-    email: z.string({ required_error: "" }).min(1, " "),
-    password: z.string({ required_error: "" }).min(1, " "),
-    confirmPassword: z.string({ required_error: " " }).min(1, " "),
+    email: z
+      .string({ required_error: "Bắt buộc" })
+      .min(1, " ")
+      .email("Vui vòng nhập đúng email"),
+    password: z.string({ required_error: "Bắt buộc" }).min(8, "Tối thiểu 8 kí tự"),
+    confirmPassword: z.string({ required_error: "" }).min(8, " "),
   })
   .refine((data) => data.password === data.confirmPassword, {
-    message: " ",
+    message: "Mật khẩu không trùng khớp",
     path: ["confirmPassword"],
   });
 
@@ -38,24 +42,29 @@ export default function SignUpForm() {
 
   const form = useForm<SignUpFormValues>({
     resolver: zodResolver(signUpFormSchema),
-    mode: "onChange",
+    mode: "onSubmit",
   });
   const dispatch = useDispatch<AppDispatch>();
 
   const [passwordShown, setPasswordShown] = useState(false);
-  const SelectedIconPassword = passwordShown ? EyeIcon : EyeOffIcon;
+  const [rePasswordShown, setRePasswordShown] = useState(false);
+  const IconPassword = passwordShown ? EyeIcon : EyeOffIcon;
+  const IconRePassword = rePasswordShown ? EyeIcon : EyeOffIcon;
 
   async function onSubmit(data: SignUpFormValues) {
-    // console.log(data);
+    console.log(data);
     try {
-      const username = data.email;
+      const email = data.email;
       const password = data.password;
+      dispatch(signUpThunk({ email, password }));
     } catch (error) {}
   }
   const togglePassword = () => {
     setPasswordShown(!passwordShown);
   };
-
+  const toggleRePassword = () => {
+    setRePasswordShown(!rePasswordShown);
+  };
   return (
     <>
       <Card id="card" className="grid gap-6 bg-transparent border-none ">
@@ -107,7 +116,7 @@ export default function SignUpForm() {
                           {...field}
                         />
                       </FormControl>
-                      <SelectedIconPassword
+                      <IconPassword
                         className="absolute top-[50%] right-2.5 -translate-y-1/2  cursor-pointer"
                         width={20}
                         height={20}
@@ -130,17 +139,17 @@ export default function SignUpForm() {
                       <FormControl>
                         <Input
                           // variant="default"
-                          type={passwordShown ? "text" : "password"}
+                          type={rePasswordShown ? "text" : "password"}
                           autoComplete="on"
                           placeholder="Nhập lại mật khẩu"
                           {...field}
                         />
                       </FormControl>
-                      <SelectedIconPassword
-                        className="absolute top-[50%] right-2.5 -translate-y-1/2  cursor-pointer"
+                      <IconRePassword
+                        className="absolute top-[50%] right-2.5 -translate-y-1/2 cursor-pointer"
                         width={20}
                         height={20}
-                        onClick={togglePassword}
+                        onClick={toggleRePassword}
                       />
                     </div>
                     <FormMessage />

@@ -6,6 +6,7 @@ import CategoriesReducer from "../reducer/Categories";
 import GenderReducer from "../reducer/Gender";
 import WomenReducer from "../reducer/Women";
 import CartReducer from "../reducer/Cart";
+import UsersReducer from "../reducer/User";
 import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
 
 import { persistStore, persistReducer } from "redux-persist";
@@ -43,6 +44,7 @@ export const store = configureStore({
     gender: GenderReducer,
     women: WomenReducer,
     // cart: CartReducer,
+    users: UsersReducer,
     cartPersistedReducer,
   },
   middleware: (getDefaultMiddleware) =>

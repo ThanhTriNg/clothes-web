@@ -16,9 +16,10 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-import { AppDispatch } from "@/redux/store/Store";
+import { AppDispatch, RootState } from "@/redux/store/Store";
 import { useRouter } from "next/router";
 import { useDispatch, useSelector } from "react-redux";
+import { loginThunk } from "@/redux/reducer/User";
 
 const loginFormSchema = z.object({
   email: z.string({ required_error: "" }).min(1, " "),
@@ -36,20 +37,30 @@ export default function LoginForm() {
   });
   const dispatch = useDispatch<AppDispatch>();
 
+  useEffect(() => {}, [dispatch]);
   const [passwordShown, setPasswordShown] = useState(false);
   const SelectedIconPassword = passwordShown ? EyeIcon : EyeOffIcon;
+
+  const { errorLogin } = useSelector((state: RootState) => state.users);
 
   async function onSubmit(data: LoginFormValues) {
     // console.log(data);
     try {
-      const username = data.email;
+      const email = data.email;
       const password = data.password;
+      dispatch(loginThunk({ email, password }));
+      localStorage.setItem("email", email);
+      localStorage.setItem("password", password);
     } catch (error) {}
   }
   const togglePassword = () => {
     setPasswordShown(!passwordShown);
   };
 
+  console.log(errorLogin);
+  useEffect(() => {
+    if (errorLogin) alert("Lỗi");
+  }, [errorLogin]);
   return (
     <>
       <Card id="card" className="grid gap-6 bg-transparent border-none ">

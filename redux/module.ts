@@ -48,3 +48,8 @@ export interface CartItem {
   product: ClothesProps;
   qty: number;
 }
+
+export interface UserProps {
+  email: string;
+  password: string;
+}
