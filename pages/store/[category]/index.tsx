@@ -19,7 +19,7 @@ const Category = () => {
   const { categoriesInfo } = useSelector(
     (state: RootState) => state.categories
   );
-    useEffect(() => {
+  useEffect(() => {
     dispatch(getCategoriesThunk());
   }, [dispatch]);
 
@@ -30,13 +30,27 @@ const Category = () => {
         if (item.name === products) {
           dispatch(getClothesByCategoryThunk(item.id));
         }
+        console.log(products, category);
       });
     }
   }, [categoriesInfo, category, dispatch]);
+
+  const cateVi = (category: string) => {
+    if (category === "bottoms") {
+      return "Quần";
+    } else if (category === "tops") {
+      return "Áo";
+    }
+  };
+  // const getdefaultValue = () => {
+  //   console.log(clothesByCategoryId.id);
+  // };
   return (
     <div className="min-h-screen">
       <div className=" bg-white p-6 space-y-10">
-        <h1 className="uppercase font-bold text-3xl p-10">Tất cả</h1>
+        <h1 className="uppercase font-bold text-3xl p-10">
+          {getCategoryData(category as string)}
+        </h1>
 
         <div className="flex justify-between">
           <div className="space-y-3">
@@ -50,7 +64,7 @@ const Category = () => {
         </div>
         <div className="grid grid-cols-12 gap-x-8">
           {categoriesInfo && (
-            <ProductNav className="col-span-4" category={categoriesInfo} />
+            <ProductNav className="col-span-4" categoryArr={categoriesInfo} />
           )}
           {clothesByCategoryId && (
             <ProductList
@@ -81,7 +95,7 @@ const textFilters = [
   },
 ];
 
-const getCategoryData = (category: string | string[]): string => {
+export const getCategoryData = (category: string | string[]): string => {
   // Implement logic to fetch or return data based on the category
   switch (category) {
     case "tops":

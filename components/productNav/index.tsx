@@ -18,8 +18,15 @@ import {
 } from "@/redux/reducer/Categories";
 import { filterData } from "../layout/nav";
 import { CategoriesProps, SubCateProps } from "@/redux/module";
+import { useRouter } from "next/router";
+import { getCategoryData } from "@/pages/store/[category]";
 
-const ProductNav = ({ className, category }: ProductNavProps) => {
+const ProductNav = ({ className, categoryArr }: ProductNavProps) => {
+  const router = useRouter();
+  const { category } = router.query;
+
+  const [cateVi, setCateVi] = useState<string>();
+
   const dispatch = useDispatch<AppDispatch>();
   const { menSubCateInfo, womenSubCateInfo } = useSelector(
     (state: RootState) => state.categories
@@ -33,9 +40,9 @@ const ProductNav = ({ className, category }: ProductNavProps) => {
   }, [dispatch]);
 
   useEffect(() => {
-    if (category) {
+    if (categoryArr) {
       //women handle
-      const womenCate = category.filter(
+      const womenCate = categoryArr.filter(
         (item) => item.group === 1 || item.group === 3
       );
       const filterDataWomen = filterData(womenCate, womenSubCateInfo);
@@ -46,7 +53,7 @@ const ProductNav = ({ className, category }: ProductNavProps) => {
       setWomenCate(addDataWomen);
 
       //men handle
-      const menCate = category.filter(
+      const menCate = categoryArr.filter(
         (item) => item.group === 2 || item.group === 3
       );
       const filterDataMen = filterData(menCate, menSubCateInfo);
@@ -56,48 +63,67 @@ const ProductNav = ({ className, category }: ProductNavProps) => {
       }));
       setMenCate(addDataMen);
     }
+  }, [categoryArr]);
+
+  useEffect(() => {
+    setCateVi(getCategoryData(category as string));
   }, [category]);
+  const [getIndex, setGetIndex] = useState<number | undefined>();
+
+  useEffect(() => {
+    const index = womenCate?.findIndex((item) => item.name === cateVi);
+    console.log(index);
+    setGetIndex(index);
+  }, [category, womenCate, cateVi]);
+
+  // const test = ()=>{
+  //   console.log()
+  // }
 
   return (
     <div className={className}>
       <div>
         <div>
-          <Accordion type="single" collapsible>
-            {womenCate?.map((item, idx: number) => {
-              const data = item.data;
-              let href = "";
-              if (item.name === "Áo") {
-                href = "tops";
-              } else if (item.name === "Quần") {
-                href = "bottoms";
-              } else if (item.name === "Đồ mặc ngoài") {
-                href = "outwears";
-              } else if (item.name === "Đầm") {
-                href = "dresses";
-              }
-
-              return (
-                <AccordionItem key={`category-${idx}`} value={`item-${idx}`}>
-                  <AccordionTrigger className="font-semibold text-base uppercase">
-                    {item.name}
-                  </AccordionTrigger>
-                  <AccordionContent>
-                    <div className="flex flex-col gap-y-4 ml-6">
-                      {data?.map((item: SubCateProps, idx: number) => {
-                        return (
-                          <Link href={href} key={`item-product-${idx}`}>
-                            <p className="text-sm font-normal hover:font-medium">
-                              {item.name}
-                            </p>
-                          </Link>
-                        );
-                      })}
-                    </div>
-                  </AccordionContent>
-                </AccordionItem>
-              );
-            })}
-          </Accordion>
+          {getIndex && (
+            <Accordion type="multiple" defaultValue={[`item-${getIndex}`]}>
+              {womenCate?.map((item, idx: number) => {
+                const data = item.data;
+                let href = "";
+                if (item.name === "Áo") {
+                  href = "tops";
+                } else if (item.name === "Quần") {
+                  href = "bottoms";
+                } else if (item.name === "Đồ mặc ngoài") {
+                  href = "outwears";
+                } else if (item.name === "Đầm") {
+                  href = "dresses";
+                }
+                return (
+                  <AccordionItem
+                    key={`categoryArr-${idx}`}
+                    value={`item-${idx}`}
+                  >
+                    <AccordionTrigger className="font-semibold text-base uppercase">
+                      {item.name}
+                    </AccordionTrigger>
+                    <AccordionContent>
+                      <div className="flex flex-col gap-y-4 ml-6">
+                        {data?.map((item: SubCateProps, idx: number) => {
+                          return (
+                            <Link href={href} key={`item-product-${idx}`}>
+                              <p className="text-sm font-normal hover:font-medium">
+                                {item.name}
+                              </p>
+                            </Link>
+                          );
+                        })}
+                      </div>
+                    </AccordionContent>
+                  </AccordionItem>
+                );
+              })}
+            </Accordion>
+          )}
         </div>
       </div>
     </div>
