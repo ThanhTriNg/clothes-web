@@ -20,8 +20,11 @@ const Card = ({ id, img, name, price, color, link }: CardProps) => {
   };
   const router = useRouter();
   const { category } = router.query;
-
-  const href = link ? `${link}/detail/${id}` : `${category}/detail/${id}`;
+  console.log(category);
+  const href = link
+    ? `/${link}/detail/${id}`
+    : `${category}/detail/${id}`;
+  console.log(href);
   return (
     <div className="relative col-span-1  transition-all hover:scale-105 cursor-pointer select-none">
       {isLike ? (

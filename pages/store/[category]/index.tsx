@@ -62,17 +62,15 @@ const Category = () => {
             <Combobox textFilters={textFilters} />
           </div>
         </div>
-        <div className="grid grid-cols-12 gap-x-8">
-          {categoriesInfo && (
+        {categoriesInfo && clothesByCategoryId && (
+          <div className="grid grid-cols-12 gap-x-8">
             <ProductNav className="col-span-4" categoryArr={categoriesInfo} />
-          )}
-          {clothesByCategoryId && (
             <ProductList
               className="col-span-8"
               products={clothesByCategoryId}
             />
-          )}
-        </div>
+          </div>
+        )}
       </div>
     </div>
   );

@@ -31,7 +31,7 @@ export interface PickSizeProps {
 }
 export interface ProductNavProps {
   className?: string;
-  categoryArr: CategoriesProps[];
+  categoryArr?: CategoriesProps[];
 }
 export interface listItemProps {
   href: string;
