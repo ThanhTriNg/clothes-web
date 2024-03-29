@@ -19,7 +19,7 @@ const LimitedPromotion = () => {
     (state: RootState) => state.categories
   );
   useEffect(() => {
-    dispatch(getClothesThunk());
+    dispatch(getClothesThunk("0"));
     dispatch(getMenSubCateThunk());
     dispatch(getCategoriesThunk());
   }, [dispatch]);

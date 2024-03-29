@@ -33,7 +33,7 @@ const DetailPage = () => {
   );
 
   useEffect(() => {
-    dispatch(getClothesThunk());
+    dispatch(getClothesThunk('0'));
     if (typeof productId === "string") {
       dispatch(getClothesByIdThunk(productId));
     }

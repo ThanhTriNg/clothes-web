@@ -1,15 +1,17 @@
-import React, { useEffect } from "react";
-import Card from "../card";
-import productCardProps from "../card";
 import { ClothesProps } from "@/redux/module";
-import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, RootState } from "@/redux/store/Store";
-import { getClothesThunk } from "@/redux/reducer/Clothes";
+import Card from "../card";
+import { useRouter } from "next/router";
 interface ProductListProps {
   className?: string;
   products: ClothesProps[];
+  categoriesInfo?: any;
 }
-const ProductList = ({ className, products }: ProductListProps) => {
+const ProductList = ({
+  className,
+  products,
+  categoriesInfo,
+}: ProductListProps) => {
+  // console.log(categoriesInfo);
   return (
     <div className={className}>
       <div className="grid grid-cols-4 gap-x-4 gap-y-8">
@@ -22,6 +24,8 @@ const ProductList = ({ className, products }: ProductListProps) => {
               name={item.name}
               price={item.price}
               color={item.color}
+              categoryId={item.categoryId}
+              categoriesInfo={categoriesInfo}
             />
           );
         })}

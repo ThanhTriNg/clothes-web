@@ -2,9 +2,7 @@ import ProductList from "@/components/productList";
 import ProductNav from "@/components/productNav";
 import { Combobox } from "@/components/selectBox";
 import { getCategoriesThunk } from "@/redux/reducer/Categories";
-import {
-  getClothesThunk
-} from "@/redux/reducer/Clothes";
+import { getClothesThunk } from "@/redux/reducer/Clothes";
 import { AppDispatch, RootState } from "@/redux/store/Store";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -26,7 +24,7 @@ const Store = () => {
   useEffect(() => {
     dispatch(getClothesThunk(sortValue));
   }, [sortValue, dispatch]);
-
+  // console.log(categoriesInfo);
   return (
     <div className="min-h-screen">
       {clothesInfo && categoriesInfo && (
@@ -45,7 +43,11 @@ const Store = () => {
           </div>
           <div className="grid grid-cols-12 gap-x-8">
             <ProductNav className="col-span-4" categoryArr={categoriesInfo} />
-            <ProductList className="col-span-8" products={clothesInfo} />
+            <ProductList
+              className="col-span-8"
+              products={clothesInfo}
+              categoriesInfo={categoriesInfo}
+            />
           </div>
         </div>
       )}

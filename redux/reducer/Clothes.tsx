@@ -10,7 +10,6 @@ interface myState {
   clothesById: ClothesProps | null;
   clothesByName: ClothesProps[] | null;
   loadingClothesByName: boolean;
-  // clothesByCategoryId: ClothesProps[] | null;
   successLogout: boolean;
   errorLogout: string | null;
   colorAPI: colorAPI | null;
@@ -25,7 +24,6 @@ const initialState: myState = {
   clothesById: null,
   clothesByName: null,
   loadingClothesByName: false,
-  // clothesByCategoryId: null,
   successLogout: false,
   errorLogout: null,
   colorAPI: null,
