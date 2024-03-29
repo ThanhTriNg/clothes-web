@@ -2,7 +2,12 @@ import ProductList from "@/components/productList";
 import ProductNav from "@/components/productNav";
 import { Combobox } from "@/components/selectBox";
 import { getCategoriesThunk } from "@/redux/reducer/Categories";
-import { getClothesByCategoryThunk } from "@/redux/reducer/Clothes";
+import {
+  getClothesByCategoryThunk,
+  getClothesPriceAscendingByCategoryThunk,
+  getClothesPriceDescendingByCategoryThunk,
+  getLatestClothesByCategoryThunk,
+} from "@/redux/reducer/Clothes";
 import { AppDispatch, RootState } from "@/redux/store/Store";
 import { GetStaticPaths, GetStaticProps } from "next";
 import { useRouter } from "next/router";
@@ -13,7 +18,7 @@ const Category = () => {
   const router = useRouter();
   const { category } = router.query;
 
-  const { clothesByCategoryId } = useSelector(
+  const { clothesInfo, sortValue } = useSelector(
     (state: RootState) => state.clothes
   );
   const { categoriesInfo } = useSelector(
@@ -28,23 +33,28 @@ const Category = () => {
       categoriesInfo?.forEach((item) => {
         const products = getCategoryData(category);
         if (item.name === products) {
-          dispatch(getClothesByCategoryThunk(item.id));
+          switch (sortValue) {
+            case "0":
+              dispatch(getClothesByCategoryThunk(item.id));
+              break;
+            case "1":
+              dispatch(getLatestClothesByCategoryThunk(item.id));
+              break;
+            case "2":
+              dispatch(getClothesPriceAscendingByCategoryThunk(item.id));
+              break;
+            case "3":
+              dispatch(getClothesPriceDescendingByCategoryThunk(item.id));
+              break;
+            default:
+              break;
+          }
         }
-        console.log(products, category);
+        // console.log(products, category);
       });
     }
-  }, [categoriesInfo, category, dispatch]);
+  }, [categoriesInfo, category, dispatch, sortValue]);
 
-  const cateVi = (category: string) => {
-    if (category === "bottoms") {
-      return "Quần";
-    } else if (category === "tops") {
-      return "Áo";
-    }
-  };
-  // const getdefaultValue = () => {
-  //   console.log(clothesByCategoryId.id);
-  // };
   return (
     <div className="min-h-screen">
       <div className=" bg-white p-6 space-y-10">
@@ -55,20 +65,17 @@ const Category = () => {
         <div className="flex justify-between">
           <div className="space-y-3">
             <h1>Kết quả</h1>
-            <p>{clothesByCategoryId?.length} mặt hàng</p>
+            <p>{clothesInfo?.length} mặt hàng</p>
           </div>
           <div className="space-y-3">
             <h1>Sắp xếp theo</h1>
             <Combobox textFilters={textFilters} />
           </div>
         </div>
-        {categoriesInfo && clothesByCategoryId && (
+        {categoriesInfo && clothesInfo && (
           <div className="grid grid-cols-12 gap-x-8">
             <ProductNav className="col-span-4" categoryArr={categoriesInfo} />
-            <ProductList
-              className="col-span-8"
-              products={clothesByCategoryId}
-            />
+            <ProductList className="col-span-8" products={clothesInfo} />
           </div>
         )}
       </div>

@@ -21,6 +21,8 @@ import { CategoriesProps, SubCateProps } from "@/redux/module";
 import { useRouter } from "next/router";
 import { getCategoryData } from "@/pages/store/[category]";
 
+const defaultHref = "/store";
+
 const ProductNav = ({ className, categoryArr }: ProductNavProps) => {
   const router = useRouter();
   const { category } = router.query;
@@ -72,58 +74,47 @@ const ProductNav = ({ className, categoryArr }: ProductNavProps) => {
 
   useEffect(() => {
     const index = womenCate?.findIndex((item) => item.name === cateVi);
-    console.log(index);
     setGetIndex(index);
   }, [category, womenCate, cateVi]);
-
-  // const test = ()=>{
-  //   console.log()
-  // }
-
   return (
     <div className={className}>
       <div>
         <div>
-          {getIndex && (
-            <Accordion type="multiple" defaultValue={[`item-${getIndex}`]}>
-              {womenCate?.map((item, idx: number) => {
-                const data = item.data;
-                let href = "";
-                if (item.name === "Áo") {
-                  href = "tops";
-                } else if (item.name === "Quần") {
-                  href = "bottoms";
-                } else if (item.name === "Đồ mặc ngoài") {
-                  href = "outwears";
-                } else if (item.name === "Đầm") {
-                  href = "dresses";
-                }
-                return (
-                  <AccordionItem
-                    key={`categoryArr-${idx}`}
-                    value={`item-${idx}`}
-                  >
-                    <AccordionTrigger className="font-semibold text-base uppercase">
-                      {item.name}
-                    </AccordionTrigger>
-                    <AccordionContent>
-                      <div className="flex flex-col gap-y-4 ml-6">
-                        {data?.map((item: SubCateProps, idx: number) => {
-                          return (
-                            <Link href={href} key={`item-product-${idx}`}>
-                              <p className="text-sm font-normal hover:font-medium">
-                                {item.name}
-                              </p>
-                            </Link>
-                          );
-                        })}
-                      </div>
-                    </AccordionContent>
-                  </AccordionItem>
-                );
-              })}
-            </Accordion>
-          )}
+          <Accordion type="multiple" defaultValue={[`item-${getIndex}`]}>
+            {womenCate?.map((item, idx: number) => {
+              const data = item.data;
+              let href = "";
+              if (item.name === "Áo") {
+                href = `${defaultHref}/tops`;
+              } else if (item.name === "Quần") {
+                href = `${defaultHref}/bottoms`;
+              } else if (item.name === "Đồ mặc ngoài") {
+                href = `${defaultHref}/outwears`;
+              } else if (item.name === "Đầm") {
+                href = `${defaultHref}/dresses`;
+              }
+              return (
+                <AccordionItem key={`categoryArr-${idx}`} value={`item-${idx}`}>
+                  <AccordionTrigger className="font-semibold text-base uppercase">
+                    {item.name}
+                  </AccordionTrigger>
+                  <AccordionContent>
+                    <div className="flex flex-col gap-y-4 ml-6">
+                      {data?.map((item: SubCateProps, idx: number) => {
+                        return (
+                          <Link href={href} key={`item-product-${idx}`}>
+                            <p className="text-sm font-normal hover:font-medium">
+                              {item.name}
+                            </p>
+                          </Link>
+                        );
+                      })}
+                    </div>
+                  </AccordionContent>
+                </AccordionItem>
+              );
+            })}
+          </Accordion>
         </div>
       </div>
     </div>
@@ -131,60 +122,3 @@ const ProductNav = ({ className, categoryArr }: ProductNavProps) => {
 };
 
 export default ProductNav;
-
-const listOutwears = [
-  {
-    href: "/",
-    name: "Tất cả đồ mặc ngoài",
-  },
-  {
-    href: "/",
-    name: "Áo khoác siêu nhẹ",
-  },
-  {
-    href: "/",
-    name: "Áo blouson",
-  },
-  {
-    href: "/",
-    name: "Áo choàng",
-  },
-];
-
-const listTops = [
-  {
-    href: "/",
-    name: "Tất cả các quần",
-  },
-  {
-    href: "/",
-    name: "Quần Jeans",
-  },
-  {
-    href: "/",
-    name: "Quần Casual",
-  },
-  {
-    href: "/",
-    name: "Quần Tây",
-  },
-];
-
-const listBottoms = [
-  {
-    href: "/",
-    name: "Tất cả các quần",
-  },
-  {
-    href: "/",
-    name: "Quần Jeans",
-  },
-  {
-    href: "/",
-    name: "Quần Casual",
-  },
-  {
-    href: "/",
-    name: "Quần Tây",
-  },
-];

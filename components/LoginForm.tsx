@@ -87,11 +87,7 @@ export default function LoginForm() {
       toast.success("Đăng nhập thành công");
     }
   }, [successLogin, dispatch]);
-  console.log(process.env.ENV_KEY_CryptoJS);
-  useEffect(() => {
-    if (process.env.NUMBER_TEST)
-      console.log(parseInt(process.env.NUMBER_TEST) + 10);
-  }, []);
+
   const handleRememberMeChange = (
     email: string,
     password: string,

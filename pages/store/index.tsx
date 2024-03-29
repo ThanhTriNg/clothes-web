@@ -4,7 +4,12 @@ import { Combobox } from "@/components/selectBox";
 import { getCategoriesThunk } from "@/redux/reducer/Categories";
 import {
   getClothesByCategoryThunk,
+  getClothesByNameThunk,
+  getClothesByPriceAscendingThunk,
+  getClothesByPriceDescendingThunk,
   getClothesThunk,
+  getLatestClothesThunk,
+  getSort,
 } from "@/redux/reducer/Clothes";
 import { AppDispatch, RootState } from "@/redux/store/Store";
 import { GetStaticPaths, GetStaticProps } from "next";
@@ -15,42 +20,35 @@ import { useDispatch, useSelector } from "react-redux";
 const Store = () => {
   const dispatch = useDispatch<AppDispatch>();
 
-  const { clothesInfo } = useSelector((state: RootState) => state.clothes);
+  const { clothesInfo, sortValue } = useSelector(
+    (state: RootState) => state.clothes
+  );
   const { categoriesInfo } = useSelector(
     (state: RootState) => state.categories
   );
 
   useEffect(() => {
-    dispatch(getClothesThunk());
     dispatch(getCategoriesThunk());
   }, [dispatch]);
 
   useEffect(() => {
-    console.log(clothesInfo);
-  }, [clothesInfo]);
-
-  //   useEffect(() => {
-  //     dispatch(getCategoriesThunk());
-  //   }, [dispatch]);
-
-  //   useEffect(() => {
-  //     categoriesInfo?.forEach((item) => {
-  //       const products = getCategoryData(category);
-  //       console.log(products);
-  //       if (item.name === products) {
-  //         dispatch(getClothesByCategoryThunk(item.id));
-  //       }
-  //       console.log(products, category);
-  //     });
-  //   }, [categoriesInfo, dispatch]);
-
-  //   const cateVi = (category: string) => {
-  //     if (category === "bottoms") {
-  //       return "Quần";
-  //     } else if (category === "tops") {
-  //       return "Áo";
-  //     }
-  //   };
+    switch (sortValue) {
+      case "0":
+        dispatch(getClothesThunk());
+        break;
+      case "1":
+        dispatch(getLatestClothesThunk());
+        break;
+      case "2":
+        dispatch(getClothesByPriceAscendingThunk());
+        break;
+      case "3":
+        dispatch(getClothesByPriceDescendingThunk());
+        break;
+      default:
+        break;
+    }
+  }, [sortValue, dispatch]);
 
   return (
     <div className="min-h-screen">

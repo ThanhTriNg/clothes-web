@@ -4,11 +4,7 @@ import { Check, ChevronsUpDown } from "lucide-react";
 import * as React from "react";
 
 import { Button } from "@/components/ui/button";
-import {
-  Command,
-  CommandGroup,
-  CommandItem
-} from "@/components/ui/command";
+import { Command, CommandGroup, CommandItem } from "@/components/ui/command";
 import {
   Popover,
   PopoverContent,
@@ -17,18 +13,20 @@ import {
 import { cn } from "@/lib/utils";
 
 import { ComboBoxProps } from "@/common/type";
+import { getSort } from "@/redux/reducer/Clothes";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "@/redux/store/Store";
 
 export function Combobox({ textFilters }: ComboBoxProps) {
-
+  const dispatch = useDispatch<AppDispatch>();
+  const [open, setOpen] = React.useState(false);
+  const [value, setValue] = React.useState("0");
+  const [label, setLabel] = React.useState<string>("0 ");
   React.useEffect(() => {
     addValue();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  const [open, setOpen] = React.useState(false);
-  const [value, setValue] = React.useState("0");
-  const [label, setLabel] = React.useState<string>("0 ");
-
+  
   React.useEffect(() => {
     textFilters.forEach((item) => {
       if (value === item.value) {
@@ -38,9 +36,9 @@ export function Combobox({ textFilters }: ComboBoxProps) {
   }, [value, label, textFilters]);
 
   React.useEffect(() => {
-    // console.log(label);
-  }, [label]);
-  
+    dispatch(getSort(value));
+  }, [value, dispatch]);
+
   const addValue = () => {
     if (textFilters) {
       textFilters.forEach((item, idx) => {
@@ -48,6 +46,8 @@ export function Combobox({ textFilters }: ComboBoxProps) {
       });
     }
   };
+
+
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>

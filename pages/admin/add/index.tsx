@@ -68,7 +68,6 @@ const Add = () => {
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target;
-    console.log(name);
     setFormData((prevData) => ({
       ...prevData,
       [name]: name === "price" ? Number(value) : value,
