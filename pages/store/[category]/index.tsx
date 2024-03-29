@@ -3,10 +3,7 @@ import ProductNav from "@/components/productNav";
 import { Combobox } from "@/components/selectBox";
 import { getCategoriesThunk } from "@/redux/reducer/Categories";
 import {
-  getClothesByCategoryThunk,
-  getClothesPriceAscendingByCategoryThunk,
-  getClothesPriceDescendingByCategoryThunk,
-  getLatestClothesByCategoryThunk,
+  getClothesByCategoryThunk
 } from "@/redux/reducer/Clothes";
 import { AppDispatch, RootState } from "@/redux/store/Store";
 import { GetStaticPaths, GetStaticProps } from "next";
@@ -32,23 +29,11 @@ const Category = () => {
     if (category) {
       categoriesInfo?.forEach((item) => {
         const products = getCategoryData(category);
+
         if (item.name === products) {
-          switch (sortValue) {
-            case "0":
-              dispatch(getClothesByCategoryThunk(item.id));
-              break;
-            case "1":
-              dispatch(getLatestClothesByCategoryThunk(item.id));
-              break;
-            case "2":
-              dispatch(getClothesPriceAscendingByCategoryThunk(item.id));
-              break;
-            case "3":
-              dispatch(getClothesPriceDescendingByCategoryThunk(item.id));
-              break;
-            default:
-              break;
-          }
+          dispatch(
+            getClothesByCategoryThunk({ categoryId: item.id, sortValue })
+          );
         }
         // console.log(products, category);
       });

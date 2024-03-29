@@ -41,26 +41,21 @@ interface colors {
 }
 export const getClothesThunk = createAsyncThunk(
   "getClothes",
-  async (arg, { rejectWithValue }) => {
+  async (sortValue: string, { rejectWithValue }) => {
     try {
-      const response = await ClothesApi.getClothes();
-      return response;
-    } catch (error: any) {
-      if (error.response && error.response.data.message) {
-        return rejectWithValue(error.response.data.message);
-      } else {
-        return rejectWithValue(error.message);
+      if (sortValue === "0") {
+        const response = await ClothesApi.getClothes();
+        return response;
+      } else if (sortValue === "1") {
+        const response = await ClothesApi.getLatestClothes();
+        return response;
+      } else if (sortValue === "2") {
+        const response = await ClothesApi.getClothesByPriceAscending();
+        return response;
+      } else if (sortValue === "3") {
+        const response = await ClothesApi.getClothesByPriceDescending();
+        return response;
       }
-    }
-  }
-);
-
-export const getLatestClothesThunk = createAsyncThunk(
-  "getLatestClothes",
-  async (arg, { rejectWithValue }) => {
-    try {
-      const response = await ClothesApi.getLatestClothes();
-      return response;
     } catch (error: any) {
       if (error.response && error.response.data.message) {
         return rejectWithValue(error.response.data.message);
@@ -73,61 +68,30 @@ export const getLatestClothesThunk = createAsyncThunk(
 
 export const getClothesByCategoryThunk = createAsyncThunk(
   "getClothesByCategory",
-  async (categoryId: string, { rejectWithValue }) => {
+  async (
+    { categoryId, sortValue }: { categoryId: string; sortValue: string },
+    { rejectWithValue }
+  ) => {
     try {
-      const response = await ClothesApi.getClothesByCategory(categoryId);
-      return response;
-    } catch (error: any) {
-      if (error.response && error.response.data.message) {
-        return rejectWithValue(error.response.data.message);
-      } else {
-        return rejectWithValue(error.message);
+      if (sortValue === "0") {
+        const response = await ClothesApi.getClothesByCategory(categoryId);
+        return response;
+      } else if (sortValue === "1") {
+        const response = await ClothesApi.getLatestClothesByCategory(
+          categoryId
+        );
+        return response;
+      } else if (sortValue === "2") {
+        const response = await ClothesApi.getClothesPriceAscendingByCategory(
+          categoryId
+        );
+        return response;
+      } else if (sortValue === "3") {
+        const response = await ClothesApi.getClothesPriceDescendingByCategory(
+          categoryId
+        );
+        return response;
       }
-    }
-  }
-);
-
-export const getLatestClothesByCategoryThunk = createAsyncThunk(
-  "getLatestClothesByCategory",
-  async (categoryId: string, { rejectWithValue }) => {
-    try {
-      const response = await ClothesApi.getLatestClothesByCategory(categoryId);
-      return response;
-    } catch (error: any) {
-      if (error.response && error.response.data.message) {
-        return rejectWithValue(error.response.data.message);
-      } else {
-        return rejectWithValue(error.message);
-      }
-    }
-  }
-);
-
-export const getClothesPriceAscendingByCategoryThunk = createAsyncThunk(
-  "getClothesPriceAscendingByCategory",
-  async (categoryId: string, { rejectWithValue }) => {
-    try {
-      const response = await ClothesApi.getClothesPriceAscendingByCategory(
-        categoryId
-      );
-      return response;
-    } catch (error: any) {
-      if (error.response && error.response.data.message) {
-        return rejectWithValue(error.response.data.message);
-      } else {
-        return rejectWithValue(error.message);
-      }
-    }
-  }
-);
-export const getClothesPriceDescendingByCategoryThunk = createAsyncThunk(
-  "getClothesPriceDescendingByCategory",
-  async (categoryId: string, { rejectWithValue }) => {
-    try {
-      const response = await ClothesApi.getClothesPriceDescendingByCategory(
-        categoryId
-      );
-      return response;
     } catch (error: any) {
       if (error.response && error.response.data.message) {
         return rejectWithValue(error.response.data.message);
@@ -158,37 +122,6 @@ export const getClothesByNameThunk = createAsyncThunk(
   async (name: string, { rejectWithValue }) => {
     try {
       const response = await ClothesApi.getClothesByName(name);
-      return response;
-    } catch (error: any) {
-      if (error.response && error.response.data.message) {
-        return rejectWithValue(error.response.data.message);
-      } else {
-        return rejectWithValue(error.message);
-      }
-    }
-  }
-);
-
-export const getClothesByPriceAscendingThunk = createAsyncThunk(
-  "getClothesByPriceAscending",
-  async (arg, { rejectWithValue }) => {
-    try {
-      const response = await ClothesApi.getClothesByPriceAscending();
-      return response;
-    } catch (error: any) {
-      if (error.response && error.response.data.message) {
-        return rejectWithValue(error.response.data.message);
-      } else {
-        return rejectWithValue(error.message);
-      }
-    }
-  }
-);
-export const getClothesByPriceDescendingThunk = createAsyncThunk(
-  "getClothesByPriceDescending",
-  async (arg, { rejectWithValue }) => {
-    try {
-      const response = await ClothesApi.getClothesByPriceDescending();
       return response;
     } catch (error: any) {
       if (error.response && error.response.data.message) {
@@ -247,16 +180,9 @@ export const clothesSlice = createSlice({
     //get all clothes
     builder.addCase(getClothesThunk.pending, (state) => {});
     builder.addCase(getClothesThunk.fulfilled, (state, action) => {
-      state.clothesInfo = action.payload.data;
+      if (action.payload) state.clothesInfo = action.payload.data;
     });
     builder.addCase(getClothesThunk.rejected, (state, action) => {});
-
-    //get all latest clothes
-    builder.addCase(getLatestClothesThunk.pending, (state) => {});
-    builder.addCase(getLatestClothesThunk.fulfilled, (state, action) => {
-      state.clothesInfo = action.payload.data;
-    });
-    builder.addCase(getLatestClothesThunk.rejected, (state, action) => {});
 
     //get clothes by clothes id
     builder.addCase(getClothesByIdThunk.pending, (state) => {});
@@ -276,74 +202,13 @@ export const clothesSlice = createSlice({
       state.loadingClothesByName = false;
     });
 
-    //get clothes by price asce
-    builder.addCase(getClothesByPriceAscendingThunk.pending, (state) => {});
-    builder.addCase(
-      getClothesByPriceAscendingThunk.fulfilled,
-      (state, action) => {
-        state.clothesInfo = action.payload.data;
-      }
-    );
-    builder.addCase(
-      getClothesByPriceAscendingThunk.rejected,
-      (state, action) => {}
-    );
-    //get clothes by price desc
-    builder.addCase(getClothesByPriceDescendingThunk.pending, (state) => {});
-    builder.addCase(
-      getClothesByPriceDescendingThunk.fulfilled,
-      (state, action) => {
-        state.clothesInfo = action.payload.data;
-      }
-    );
-    builder.addCase(
-      getClothesByPriceDescendingThunk.rejected,
-      (state, action) => {}
-    );
     //get clothes by category id
     builder.addCase(getClothesByCategoryThunk.pending, (state) => {});
     builder.addCase(getClothesByCategoryThunk.fulfilled, (state, action) => {
-      state.clothesInfo = action.payload.data;
+      if (action.payload) state.clothesInfo = action.payload.data;
     });
     builder.addCase(getClothesByCategoryThunk.rejected, (state, action) => {});
 
-    //get clothes by category id
-    builder.addCase(getLatestClothesByCategoryThunk.pending, (state) => {});
-    builder.addCase(getLatestClothesByCategoryThunk.fulfilled, (state, action) => {
-      state.clothesInfo = action.payload.data;
-    });
-    builder.addCase(getLatestClothesByCategoryThunk.rejected, (state, action) => {});
-
-    //get clothes  by category id vs price asce
-    builder.addCase(
-      getClothesPriceAscendingByCategoryThunk.pending,
-      (state) => {}
-    );
-    builder.addCase(
-      getClothesPriceAscendingByCategoryThunk.fulfilled,
-      (state, action) => {
-        state.clothesInfo = action.payload.data;
-      }
-    );
-    builder.addCase(
-      getClothesPriceAscendingByCategoryThunk.rejected,
-      (state, action) => {}
-    );
-    //get clothes by category id vs price desc
-    builder.addCase(
-      getClothesPriceDescendingByCategoryThunk.pending,
-      (state) => {}
-    );
-    builder.addCase(
-      getClothesPriceDescendingByCategoryThunk.fulfilled,
-      (state, action) => {
-        state.clothesInfo = action.payload.data;
-      }
-    );
-    builder.addCase(
-      getClothesPriceDescendingByCategoryThunk.rejected,
-      (state, action) => {}
-    );
     //get color name
     builder.addCase(getColorNameThunk.pending, (state) => {});
     builder.addCase(getColorNameThunk.fulfilled, (state, action) => {

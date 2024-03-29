@@ -3,17 +3,9 @@ import ProductNav from "@/components/productNav";
 import { Combobox } from "@/components/selectBox";
 import { getCategoriesThunk } from "@/redux/reducer/Categories";
 import {
-  getClothesByCategoryThunk,
-  getClothesByNameThunk,
-  getClothesByPriceAscendingThunk,
-  getClothesByPriceDescendingThunk,
-  getClothesThunk,
-  getLatestClothesThunk,
-  getSort,
+  getClothesThunk
 } from "@/redux/reducer/Clothes";
 import { AppDispatch, RootState } from "@/redux/store/Store";
-import { GetStaticPaths, GetStaticProps } from "next";
-import { useRouter } from "next/router";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -32,22 +24,7 @@ const Store = () => {
   }, [dispatch]);
 
   useEffect(() => {
-    switch (sortValue) {
-      case "0":
-        dispatch(getClothesThunk());
-        break;
-      case "1":
-        dispatch(getLatestClothesThunk());
-        break;
-      case "2":
-        dispatch(getClothesByPriceAscendingThunk());
-        break;
-      case "3":
-        dispatch(getClothesByPriceDescendingThunk());
-        break;
-      default:
-        break;
-    }
+    dispatch(getClothesThunk(sortValue));
   }, [sortValue, dispatch]);
 
   return (
