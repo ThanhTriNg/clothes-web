@@ -2,9 +2,7 @@ import ProductList from "@/components/productList";
 import ProductNav from "@/components/productNav";
 import { Combobox } from "@/components/selectBox";
 import { getCategoriesThunk } from "@/redux/reducer/Categories";
-import {
-  getClothesByCategoryThunk
-} from "@/redux/reducer/Clothes";
+import { getClothesByCategoryThunk } from "@/redux/reducer/Clothes";
 import { AppDispatch, RootState } from "@/redux/store/Store";
 import { GetStaticPaths, GetStaticProps } from "next";
 import { useRouter } from "next/router";
@@ -43,7 +41,7 @@ const Category = () => {
   return (
     <div className="min-h-screen">
       <div className=" bg-white p-6 space-y-10">
-        <h1 className="uppercase font-bold text-3xl p-10">
+        <h1 className="uppercase font-bold text-xl md:text-3xl p-10">
           {getCategoryData(category as string)}
         </h1>
 
@@ -59,8 +57,14 @@ const Category = () => {
         </div>
         {categoriesInfo && clothesInfo && (
           <div className="grid grid-cols-12 gap-x-8">
-            <ProductNav className="col-span-4" categoryArr={categoriesInfo} />
-            <ProductList className="col-span-8" products={clothesInfo} />
+            <ProductNav
+              className="md:col-span-4 col-span-full mb-4 md:mb-0"
+              categoryArr={categoriesInfo}
+            />
+            <ProductList
+              className="md:col-span-8 col-span-full"
+              products={clothesInfo}
+            />
           </div>
         )}
       </div>

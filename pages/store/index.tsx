@@ -41,10 +41,13 @@ const Store = () => {
               <Combobox textFilters={textFilters} />
             </div>
           </div>
-          <div className="grid grid-cols-12 gap-x-8">
-            <ProductNav className="col-span-4" categoryArr={categoriesInfo} />
+          <div className="grid grid-cols-12 gap-x-8 ">
+            <ProductNav
+              className="md:col-span-4 col-span-full mb-4 md:mb-0"
+              categoryArr={categoriesInfo}
+            />
             <ProductList
-              className="col-span-8"
+              className="md:col-span-8 col-span-full"
               products={clothesInfo}
               categoriesInfo={categoriesInfo}
             />

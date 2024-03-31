@@ -27,19 +27,18 @@ const LimitedPromotion = () => {
   return (
     <div className="bg-white p-3 rounded">
       <div className="space-y-10">
-        <h1 className=" text-center text-4xl font-bold uppercase text-primary">
+        <h1 className=" text-center xl:text-4xl text-2xl font-bold uppercase text-primary">
           KHUYẾN MÃI CÓ HẠN
         </h1>
-        <div className="grid grid-cols-12 gap-x-8">
-          <div className="col-span-4 space-y-4">
+        <div className="sm:grid sm:grid-cols-12 sm:gap-x-8">
+          <div className="sm:col-span-4 text-center space-y-4 sm:mb-0 mb-8 sm:mx-0">
             <Image
               src={`${imgMenVar}/bottom/E463458-000/vngoods_06_463458.jpg`}
-              width="0"
-              height="0"
-              sizes="100vw"
-              alt=""
-              // className="w-[260px] h-auto mx-auto "
-              className="w-full h-auto mx-auto"
+              width="300"
+              height="300"
+              sizes="(max-width: 640px) 100vw, 33vw"
+              alt="Image" 
+              className="mx-auto"
             />
             <div className="space-y-2">
               <h1 className="text-lg font-bold">
@@ -52,7 +51,7 @@ const LimitedPromotion = () => {
               </p>
             </div>
           </div>
-          <div className="col-span-8 grid grid-cols-3 gap-x-4 gap-y-8">
+          <div className="sm:col-span-8 col-span-12 grid sm:grid-cols-3 grid-cols-2 gap-x-4 gap-y-8 ">
             {clothesInfo &&
               clothesInfo.map((item, idx: number) => {
                 let cate: string | undefined;

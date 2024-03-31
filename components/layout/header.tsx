@@ -50,8 +50,8 @@ const Header = () => {
   };
 
   return (
-    <header className="h-20 mb-4 sticky top-0 z-20 bg-white/90">
-      <div className="flex justify-between items-center h-full lg:max-w-[1300px] mx-auto">
+    <header className="h-20 mb-4 sticky top-0 z-20 bg-white/90 xl:px-8 md:px-6 px-4">
+      <div className="flex justify-between items-center h-full xl:max-w-[1300px] mx-auto">
         <div className="flex gap-x-10">
           <Link href="/">
             <Image src="/svg/logo.svg" alt="logo" width={50} height={50} />

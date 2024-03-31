@@ -122,7 +122,7 @@ export default function LoginForm() {
 
   return (
     <>
-      <Card id="card" className="grid gap-6 bg-transparent border-none ">
+      <Card id="card" className="grid gap-6 bg-transparent border-none">
         <CardHeader className="text-center grid gap-2 p-0">
           <CardTitle className="text-2xl font-bold text-tertiary-foreground ">
             Đăng nhập
@@ -132,7 +132,7 @@ export default function LoginForm() {
           <Form {...form}>
             <form
               onSubmit={form.handleSubmit(onSubmit)}
-              className=" w-full space-y-4"
+              className="w-full space-y-4"
             >
               <FormField
                 control={form.control}

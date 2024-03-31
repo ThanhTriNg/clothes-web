@@ -28,8 +28,8 @@ function LandingPage({ Component, pageProps }: AppProps) {
             />
           </Head>
           <Header />
-          <main>
-            <div className=" mx-auto lg:max-w-[1300px]">
+          <main className="xl:px-8 md:px-6 px-4">
+            <div className=" mx-auto xl:max-w-[1300px]">
               <Component {...pageProps} />
             </div>
           </main>

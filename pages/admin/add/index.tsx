@@ -112,7 +112,7 @@ const Add = () => {
   }, [dispatch, formData.categoryId, formData.genderId]);
   return (
     <div>
-      <h1 className="uppercase font-bold text-2xl">Add clothes</h1>
+      <h1 className="uppercase font-bold md:text-2xl text-base">Add clothes</h1>
 
       <form
         className="max-w-md mx-auto mt-8 p-8 bg-gray-100 rounded-lg shadow-lg"

@@ -80,41 +80,50 @@ const ProductNav = ({ className, categoryArr }: ProductNavProps) => {
     <div className={className}>
       <div>
         <div>
-          <Accordion type="multiple" defaultValue={[`item-${getIndex}`]}>
-            {womenCate?.map((item, idx: number) => {
-              const data = item.data;
-              let href = "";
-              if (item.name === "Áo") {
-                href = `${defaultHref}/tops`;
-              } else if (item.name === "Quần") {
-                href = `${defaultHref}/bottoms`;
-              } else if (item.name === "Đồ mặc ngoài") {
-                href = `${defaultHref}/outwears`;
-              } else if (item.name === "Đầm") {
-                href = `${defaultHref}/dresses`;
-              }
-              return (
-                <AccordionItem key={`categoryArr-${idx}`} value={`item-${idx}`}>
-                  <AccordionTrigger className="font-semibold text-base uppercase">
-                    {item.name}
-                  </AccordionTrigger>
-                  <AccordionContent>
-                    <div className="flex flex-col gap-y-4 ml-6">
-                      {data?.map((item: SubCateProps, idx: number) => {
-                        return (
-                          <Link href={href} key={`item-product-${idx}`}>
-                            <p className="text-sm font-normal hover:font-medium">
-                              {item.name}
-                            </p>
-                          </Link>
-                        );
-                      })}
-                    </div>
-                  </AccordionContent>
-                </AccordionItem>
-              );
-            })}
-          </Accordion>
+          {typeof getIndex !== "undefined" && (
+            <Accordion
+              type="multiple"
+              defaultValue={[`item-${getIndex}`]}
+              // defaultValue={[`item-1`]}
+            >
+              {womenCate?.map((item, idx: number) => {
+                const data = item.data;
+                let href = "";
+                if (item.name === "Áo") {
+                  href = `${defaultHref}/tops`;
+                } else if (item.name === "Quần") {
+                  href = `${defaultHref}/bottoms`;
+                } else if (item.name === "Đồ mặc ngoài") {
+                  href = `${defaultHref}/outwears`;
+                } else if (item.name === "Đầm") {
+                  href = `${defaultHref}/dresses`;
+                }
+                return (
+                  <AccordionItem
+                    key={`categoryArr-${idx}`}
+                    value={`item-${idx}`}
+                  >
+                    <AccordionTrigger className="font-semibold text-base uppercase">
+                      {item.name}
+                    </AccordionTrigger>
+                    <AccordionContent>
+                      <div className="flex flex-col gap-y-4 ml-6">
+                        {data?.map((item: SubCateProps, idx: number) => {
+                          return (
+                            <Link href={href} key={`item-product-${idx}`}>
+                              <p className="text-sm font-normal hover:font-medium">
+                                {item.name}
+                              </p>
+                            </Link>
+                          );
+                        })}
+                      </div>
+                    </AccordionContent>
+                  </AccordionItem>
+                );
+              })}
+            </Accordion>
+          )}
         </div>
       </div>
     </div>

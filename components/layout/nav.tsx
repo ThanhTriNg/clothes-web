@@ -81,18 +81,18 @@ const Nav = () => {
             }
             return (
               <NavigationMenuItem key={`s-${idx}`}>
-                <NavigationMenuTrigger className="uppercase text-base font-bold bg-bg-slate-200  ">
+                <NavigationMenuTrigger className="uppercase xl:text-base text-sm font-bold bg-bg-slate-200 ">
                   {item.name}
                 </NavigationMenuTrigger>
                 <NavigationMenuContent>
-                  <ul className="grid gap-3 p-6 md:w-[200px] lg:w-[800px] lg:grid-cols-4">
+                  <ul className="grid gap-3 p-6 md:w-[200px] xl:w-[800px] xl:grid-cols-4 xl:text-base text-sm">
                     {cate &&
                       cate.map((item, idx) => {
                         const data = item.data;
                         const cateName = convertNameCate(item.name);
                         return (
                           <div key={`clothes-${idx}`} className="space-y-3">
-                            <p className="font-semibold uppercase text-base">
+                            <p className="font-semibold uppercase xl:text-base text-sm">
                               {item.name}
                             </p>
                             <div>

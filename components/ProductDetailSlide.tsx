@@ -73,7 +73,7 @@ const ProductDetailSlide = ({ thumbnail }: ProductDetailSlide) => {
   };
   return (
     convertThumbnail && (
-      <div className="col-span-7 grid grid-cols-7 h-fit">
+      <div className="col-span-full md:col-span-7 grid grid-cols-7 h-fit">
         {/* thumbnail */}
         <div className="col-span-2 grid grid-cols-2 gap-0 mr-2 h-fit">
           {convertThumbnail.map((item, idx: number) => {
@@ -89,11 +89,9 @@ const ProductDetailSlide = ({ thumbnail }: ProductDetailSlide) => {
               >
                 <Image
                   src={item}
-                  width="0"
-                  height="0"
-                  sizes="100vw"
-                  alt=""
-                  className="w-full h-full mx-auto "
+                  width="80"
+                  height="80"
+                  alt="Banner"
                 />
               </div>
             );
@@ -113,20 +111,20 @@ const ProductDetailSlide = ({ thumbnail }: ProductDetailSlide) => {
                 <SwiperSlide key={`slide-${idx}`} className="h-full">
                   <Image
                     src={item}
-                    width="0"
-                    height="0"
+                    width="500"
+                    height="500"
                     sizes="100vw"
                     alt="Banner"
-                    className="w-full h-full rounded"
+                    // className="w-full h-full rounded"
                   />
                 </SwiperSlide>
               );
             })}
           </Swiper>
         </div>
-        <div className="mt-20 space-y-10 col-span-full">
+        <div className="my-4 md:my-12 space-y-4 md:space-y-8 col-span-full">
           <div className="">
-            <h1 className="uppercase font-bold text-2xl">Mô tả</h1>
+            <h1 className="uppercase font-bold md:text-2xl text-base">Mô tả</h1>
             <Accordion type="multiple" className="ml-4">
               {desc.map((item, idx: number) => {
                 return (
@@ -149,8 +147,10 @@ const ProductDetailSlide = ({ thumbnail }: ProductDetailSlide) => {
             </Accordion>
           </div>
           <div>
-            <div className="flex gap-x-4 items-center">
-              <h1 className="uppercase font-bold text-2xl">Đánh giá</h1>
+            <div className="flex gap-x-4">
+              <h1 className="uppercase font-bold md:text-2xl text-base">
+                Đánh giá
+              </h1>
               <Rating
                 size={20}
                 emptyStyle={{ display: "flex" }}

@@ -16,23 +16,19 @@ const ProductDetailDesc = ({ clothes }: ProductDetailProps) => {
   const { convertPrice } = formatPrice(clothes.price);
 
   return (
-    <div className="col-span-5 px-4">
+    <div className="col-span-full md:col-span-5 px-4">
       <div className="space-y-4">
         <div>
-          <h1 className="text-4xl font-bold">{clothes.name} </h1>
+          <h1 className="xl:text-4xl md:text-2xl text-lg font-bold uppercase ">{clothes.name} </h1>
         </div>
 
-        <div className="grid items-center grid-cols-4">
-          <div className="col-span-2 space-y-2">
+        <div className="grid grid-cols-3">
+          <div className="col-span-2">
             <h1 className="text-lg font-bold">{convertPrice} </h1>
-            {/* <h1 className="text-primary text-3xl font-bold">391.000VND</h1> */}
-            {/* <h1 className="text-primary text-base font-medium">
-              Limited Offer Từ 17 Nov 2023 - 23 Nov 2023
-            </h1> */}
           </div>
-          <div className="col-start-4">
+          <div className="col-span-1">
             <Rating
-              size={20}
+              size={18}
               emptyStyle={{ display: "flex" }}
               fillStyle={{ display: "-webkit-inline-box" }}
               onClick={handleRating}
@@ -40,7 +36,7 @@ const ProductDetailDesc = ({ clothes }: ProductDetailProps) => {
           </div>
         </div>
         <div>
-          <h1 className="text-base">{clothes.desc_sort}</h1>
+          <h1 className="text-sm md:text-base">{clothes.desc_sort}</h1>
         </div>
         <div className="border border-solid border-black/10" />
         <div>

@@ -47,10 +47,6 @@ const Card = ({
     }
   }, [categoryId]);
 
-  useEffect(() => {
-    console.log(categoryTest);
-  }, [categoryTest]);
-
   let href = "";
   if (link) {
     href = `/${link}/detail/${id}`;
@@ -61,7 +57,7 @@ const Card = ({
   }
 
   return (
-    <div className="relative col-span-1  transition-all hover:scale-105 cursor-pointer select-none">
+    <div className="relative col-span-1 transition-all hover:scale-105 cursor-pointer select-none">
       {isLike ? (
         <Heart
           className="absolute top-[5%] right-[5%]"
@@ -81,11 +77,15 @@ const Card = ({
       <Link href={href} className="space-y-4">
         <Image
           src={img.main}
-          width="0"
-          height="0"
-          sizes="100vw"
-          alt=""
-          className="w-full h-auto !mt-0"
+          // width="0"
+          // height="0"
+          // sizes="100vw"
+          // alt=""
+          // className="w-full h-auto !mt-0"
+          width="300"
+          height="300"
+          sizes="(max-width: 640px) 50vw, 25vw"
+          alt="Image"
         />
 
         <PickColor colors={color} />

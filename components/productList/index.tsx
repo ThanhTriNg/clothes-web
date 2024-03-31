@@ -14,7 +14,7 @@ const ProductList = ({
   // console.log(categoriesInfo);
   return (
     <div className={className}>
-      <div className="grid grid-cols-4 gap-x-4 gap-y-8">
+      <div className="grid lg:grid-cols-4 grid-cols-2 gap-x-4 gap-y-8">
         {products.map((item, idx: number) => {
           return (
             <Card

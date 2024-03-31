@@ -33,7 +33,7 @@ const DetailPage = () => {
   );
 
   useEffect(() => {
-    dispatch(getClothesThunk('0'));
+    dispatch(getClothesThunk("0"));
     if (typeof productId === "string") {
       dispatch(getClothesByIdThunk(productId));
     }
@@ -105,11 +105,15 @@ const DetailPage = () => {
                     <Link href={href}>
                       <Image
                         src={img}
-                        width="0"
-                        height="0"
-                        sizes="100vw"
+                        // width="0"
+                        // height="0"
+                        // sizes="100vw"
+                        // alt="Banner"
+                        // className="w-full h-full rounded"
+                        width="450"
+                        height="450"
+                        sizes="33vw"
                         alt="Banner"
-                        className="w-full h-full rounded"
                       />
                     </Link>
                   </SwiperSlide>
@@ -120,22 +124,26 @@ const DetailPage = () => {
             {currentSlide === 0 ? (
               ""
             ) : (
+              //Arrow Left
               <Button
-                className="absolute z-50 top-1/2"
+                size="sm"
+                className="absolute z-50 top-1/2 -translate-y-1/2 left-0"
                 onClick={() => slidePrev()}
               >
-                <ArrowLeft size={20} />
+                <ArrowLeft className="text-base md:text-xl" />
               </Button>
             )}
 
             {maxSlidePage && currentSlide === maxSlidePage ? (
               ""
             ) : (
+              //Arrow Right
               <Button
-                className="absolute z-50 top-1/2 right-0"
+                size="sm"
+                className="absolute z-50 top-1/2 -translate-y-1/2 right-0"
                 onClick={() => slideNext()}
               >
-                <ArrowRight size={20} />
+                <ArrowRight className="text-base md:text-xl" />
               </Button>
             )}
 
