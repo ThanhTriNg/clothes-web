@@ -65,7 +65,7 @@ const Search = () => {
               className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 z-10 "
             />
           )}
-          <Input type="text" onChange={handleInputChange} value={inputValue} />
+          <Input type="text" onChange={handleInputChange} value={inputValue} className="" />
           {loadingClothesByName && (
             <div className="absolute right-3 top-1/2 transform -translate-y-1/2 z-10">
               <ReactLoading

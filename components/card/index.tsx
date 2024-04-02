@@ -1,11 +1,10 @@
-import React, { useEffect, useState } from "react";
-import Image from "next/image";
-import { Heart } from "@phosphor-icons/react";
-import PickColor from "../pickColor";
 import { formatPrice } from "@/pages";
+import { Heart } from "@phosphor-icons/react";
+import Image from "next/image";
 import Link from "next/link";
+import { useEffect, useState } from "react";
+import PickColor from "../pickColor";
 
-import { ProductCardProps } from "@/common/type";
 import { CategoriesProps, ClothesProps } from "@/redux/module";
 import { useRouter } from "next/router";
 import { convertNameCate } from "../LimitedPromotion";

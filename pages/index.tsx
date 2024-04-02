@@ -111,7 +111,7 @@ export default function HomePage() {
           })}
         </div>
 
-        <div className="xl:w-1/2 w-2/3 mx-auto bg-primary xl:py-10 sm:py-6 py-4 rounded text-white">
+        <div className="md:w-1/2 w-full mx-auto bg-primary xl:py-10 sm:py-6 py-4 rounded text-white">
           <div className="text-center space-y-3 ">
             <h1 className="xl:text-4xl text-2xl font-bold uppercase">Giá mới hấp dẫn</h1>
             <h1 className="xl:text-xl text-base font-semibold">Số lượng có hạn</h1>

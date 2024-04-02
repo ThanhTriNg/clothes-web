@@ -1,37 +1,30 @@
+import { useMediaQuery } from "@/hook/use-media-query";
+import { totalCartItemSelector } from "@/redux/reducer/Cart";
+import { useAppSelector } from "@/redux/store/Store";
 import { User } from "@phosphor-icons/react";
+import { ShoppingCart } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import CartBtn from "../CartBtn";
+import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
+import Cart from "./cart";
+import DrawerMenu from "./drawerMennu";
 import Nav from "./nav";
 import Search from "./searchBtn";
-import { ShoppingCart, Trash2 } from "lucide-react";
-import { CartItem } from "@/redux/module";
-import { AppDispatch, RootState, useAppSelector } from "@/redux/store/Store";
-import { formatPrice } from "@/pages";
-import { useEffect, useState } from "react";
-import { totalCartItemSelector } from "@/redux/reducer/Cart";
-import { getCategoriesThunk } from "@/redux/reducer/Categories";
-import { useDispatch, useSelector } from "react-redux";
-import { findCategory } from "./searchBtn";
-import { convertNameCate } from "../LimitedPromotion";
-import { useRouter } from "next/router";
-import { remove } from "@/redux/reducer/Cart";
-import { Button } from "../ui/button";
 
-interface Props {
-  cartItem: CartItem;
-}
+import { CategoriesProps } from "@/redux/module";
+import {
+  getCategoriesThunk,
+  getMenSubCateThunk,
+  getWomenSubCateThunk,
+  saveCateMen,
+  saveCateWomen,
+} from "@/redux/reducer/Categories";
+import { getGenderThunk } from "@/redux/reducer/Gender";
+import { AppDispatch, RootState } from "@/redux/store/Store";
+import { useDispatch, useSelector } from "react-redux";
 
 const Header = () => {
-  // const [isScrollDown, setIsScrollDown] = useState<boolean>();
-
-  // const scrollDirection: string | undefined = useScrollDirection();
-  // useEffect(() => {
-  //   if (scrollDirection === "up") setIsScrollDown(true);
-  //   else setIsScrollDown(false);
-  // }, [scrollDirection]);
-  // console.log(isScrollDown);
-
   const router = useRouter();
 
   const [activeCart, setActiveCart] = useState<boolean>(false);
@@ -49,23 +42,87 @@ const Header = () => {
     setActiveCart((cur) => !cur);
   };
 
+  //test .nav
+  const dispatch = useDispatch<AppDispatch>();
+  const [womenCate, setWomenCate] = useState<CategoriesProps[]>();
+  const [menCate, setMenCate] = useState<CategoriesProps[]>();
+  const { categoriesInfo, menSubCateInfo, womenSubCateInfo } = useSelector(
+    (state: RootState) => state.categories
+  );
+  const { genderInfo } = useSelector((state: RootState) => state.gender);
+
+  useEffect(() => {
+    dispatch(getMenSubCateThunk());
+    dispatch(getWomenSubCateThunk());
+    dispatch(getCategoriesThunk());
+    dispatch(getGenderThunk());
+  }, [dispatch]);
+  useEffect(() => {
+    if (categoriesInfo) {
+      //women handle
+      const womenCate = categoriesInfo.filter(
+        (item) => item.group === 1 || item.group === 3
+      );
+      const filterDataWomen = filterData(womenCate, womenSubCateInfo);
+      const addDataWomen: any = womenCate.map((item, idx) => ({
+        ...item,
+        data: filterDataWomen[idx],
+      }));
+      setWomenCate(addDataWomen);
+
+      //men handle
+      const menCate = categoriesInfo.filter(
+        (item) => item.group === 2 || item.group === 3
+      );
+      const filterDataMen = filterData(menCate, menSubCateInfo);
+      const addDataMen: any = menCate.map((item, idx) => ({
+        ...item,
+        data: filterDataMen[idx],
+      }));
+      setMenCate(addDataMen);
+    }
+  }, [categoriesInfo]);
+
+  const isMobile = useMediaQuery("(max-width:767px)");
   return (
-    <header className="h-20 mb-4 sticky top-0 z-20 bg-white/90 xl:px-8 md:px-6 px-4">
-      <div className="flex justify-between items-center h-full xl:max-w-[1300px] mx-auto">
-        <div className="flex gap-x-10">
-          <Link href="/">
-            <Image src="/svg/logo.svg" alt="logo" width={50} height={50} />
+    <header className="h-auto md:h-20 mb-4 sticky top-0 z-20 bg-white/90 xl:px-8 md:px-6 p-4">
+      <div className="md:flex justify-between items-center h-full xl:max-w-[1300px] mx-auto">
+        <div className="md:flex md:gap-x-10 space-y-4">
+          <Link href="/" className="">
+            <Image
+              src="/svg/logo.svg"
+              className="mx-auto"
+              alt="logo"
+              width={50}
+              height={50}
+            />
           </Link>
-          <Nav />
+          {menCate &&
+            womenCate &&
+            (isMobile ? (
+              <DrawerMenu
+                className="text-center"
+                menCate={menCate}
+                womenCate={womenCate}
+                genderInfo ={genderInfo}
+              />
+            ) : (
+              <Nav
+                className="mx-auto"
+                menCate={menCate}
+                womenCate={womenCate}
+                genderInfo ={genderInfo}
+              />
+            ))}
         </div>
-        <div className="flex gap-x-10 items-center">
+        <div className="flex md:gap-x-10 gap-x-2 items-center md:justify-center justify-around">
           <Search />
           <Link href="/login">
-            <User size={30} className="cursor-pointer focus:" />
+            <User size={24} className="cursor-pointer " />
           </Link>
           {totalItems ? (
             <div onClick={handClickCart} className="relative ">
-              <ShoppingCart size={30} className="cursor-pointer" />
+              <ShoppingCart size={24} className="cursor-pointer" />
               {!!totalItems && (
                 <div
                   key={totalItems}
@@ -99,59 +156,11 @@ const Header = () => {
   );
 };
 
-const Cart = ({ cartItem }: Props) => {
-  const { convertPrice: price } = formatPrice(cartItem.product.price);
-  const [href, setHref] = useState<string>();
-  const dispatch = useDispatch<AppDispatch>();
-
-  useEffect(() => {
-    dispatch(getCategoriesThunk());
-  }, [dispatch]);
-  const { categoriesInfo } = useSelector(
-    (state: RootState) => state.categories
-  );
-
-  useEffect(() => {
-    setHref(findHref());
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  const findHref = () => {
-    const category = findCategory(cartItem.product.categoryId, categoriesInfo);
-    const cateName = convertNameCate(category?.name as any);
-    const href: string = `/store/${cateName}/detail/${cartItem.product.id}`;
-    return href;
-  };
-
-  const handleClickRemove = (event: any) => {
-    event.preventDefault();
-    dispatch(remove(cartItem.product));
-  };
-
-  return (
-    <Link href={href ? href : ""}>
-      <div className="grid grid-cols-6 bg-white items-center justify-center gap-x-4 m-1">
-        <Image
-          src={cartItem.product.img.main}
-          width="200"
-          height="150"
-          alt={cartItem.product.name}
-        />
-        <p className="col-span-2">{cartItem.product.name} </p>
-        <div className="flex gap-x-2 items-center">
-          <p>{price} </p>
-        </div>
-        <p className="text-center">{cartItem.qty} cái </p>
-        <Button
-          className="w-2/3"
-          variant="destructive"
-          onClick={(e) => handleClickRemove(e)}
-        >
-          <Trash2 size={20} />
-        </Button>
-      </div>
-    </Link>
-  );
-};
-
 export default Header;
+export const filterData = (cate: any, subCate: any) => {
+  const filter = cate.map((item1: any) => {
+    const data = subCate?.filter((item2: any) => item2.categoryId === item1.id);
+    return data;
+  });
+  return filter;
+};

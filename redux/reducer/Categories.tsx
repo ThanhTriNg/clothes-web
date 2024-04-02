@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import CategoriesApi from "../api/CategoriesApi";
 import { CategoriesProps, GetSubCateProps, SubCateProps } from "../module";
 
@@ -9,10 +9,12 @@ interface myState {
   categoriesInfo: CategoriesProps[] | null;
   menSubCateInfo: SubCateProps[] | null;
   womenSubCateInfo: SubCateProps[] | null;
-  
+
   subCateByIdInfo: SubCateProps[] | null;
   successLogout: boolean;
   errorLogout: string | null;
+  saveCateMen: CategoriesProps[] | null;
+  saveCateWomen: CategoriesProps[] | null;
 }
 
 const initialState: myState = {
@@ -26,6 +28,9 @@ const initialState: myState = {
 
   successLogout: false,
   errorLogout: null,
+
+  saveCateMen: null,
+  saveCateWomen: null,
 };
 
 export const getCategoriesThunk = createAsyncThunk(
@@ -115,7 +120,14 @@ export const getMenSubCateByCategoryIdThunk = createAsyncThunk(
 export const categoriesSlice = createSlice({
   name: "categories",
   initialState,
-  reducers: {},
+  reducers: {
+    saveCateMen: (state, action: PayloadAction<CategoriesProps[]>) => {
+      state.saveCateMen = action.payload;
+    },
+    saveCateWomen: (state, action: PayloadAction<CategoriesProps[]>) => {
+      state.saveCateWomen = action.payload;
+    },
+  },
 
   extraReducers: (builder) => {
     // categories
@@ -148,5 +160,6 @@ export const categoriesSlice = createSlice({
     );
   },
 });
+export const { saveCateMen, saveCateWomen } = categoriesSlice.actions;
 
 export default categoriesSlice.reducer;

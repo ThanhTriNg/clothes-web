@@ -14,6 +14,7 @@ import "swiper/css";
 import "swiper/css/pagination";
 import { Autoplay, Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
+
 const imgMenVar = "/img/men";
 const imgWomenVar = "/img/women";
 
@@ -80,7 +81,7 @@ const DetailPage = () => {
     clothesById &&
     clothesInfo && (
       <div className="min-h-screen bg-white p-2">
-        <div className="  grid grid-cols-12 gap-x-8">
+        <div className="grid grid-cols-12 md:gap-x-8 gap-x-2">
           <ProductDetailSlide thumbnail={clothesById?.img} />
           <ProductDetailDesc clothes={clothesById} />
         </div>
@@ -105,11 +106,6 @@ const DetailPage = () => {
                     <Link href={href}>
                       <Image
                         src={img}
-                        // width="0"
-                        // height="0"
-                        // sizes="100vw"
-                        // alt="Banner"
-                        // className="w-full h-full rounded"
                         width="450"
                         height="450"
                         sizes="33vw"
