@@ -28,7 +28,7 @@ const Store = () => {
   return (
     <div className="min-h-screen">
       {clothesInfo && categoriesInfo && (
-        <div className=" bg-white p-6 space-y-10">
+        <div className="bg-white md:p-6 md:space-y-10 p-2 space-y-2">
           <h1 className="uppercase font-bold text-3xl p-10">Tất cả</h1>
 
           <div className="flex justify-between">

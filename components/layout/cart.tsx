@@ -1,5 +1,8 @@
 import { formatPrice } from "@/pages";
-import { remove } from "@/redux/reducer/Cart";
+import { CartItem } from "@/redux/module";
+import {
+  remove
+} from "@/redux/reducer/Cart";
 import { getCategoriesThunk } from "@/redux/reducer/Categories";
 import { AppDispatch, RootState } from "@/redux/store/Store";
 import { Trash2 } from "lucide-react";
@@ -10,7 +13,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { convertNameCate } from "../LimitedPromotion";
 import { Button } from "../ui/button";
 import { findCategory } from "./searchBtn";
-import { CartItem } from "@/redux/module";
 
 interface CartProps {
   cartItem: CartItem;
@@ -19,7 +21,6 @@ const Cart = ({ cartItem }: CartProps) => {
   const { convertPrice: price } = formatPrice(cartItem.product.price);
   const [href, setHref] = useState<string>();
   const dispatch = useDispatch<AppDispatch>();
-
   useEffect(() => {
     dispatch(getCategoriesThunk());
   }, [dispatch]);
@@ -46,20 +47,22 @@ const Cart = ({ cartItem }: CartProps) => {
 
   return (
     <Link href={href ? href : ""}>
-      <div className="grid grid-cols-6 bg-white items-center justify-center gap-x-4 m-1">
+      <div className="grid md:grid-cols-6 grid-cols-3 bg-white items-center justify-center md:gap-x-4 gap-x-2 px-4 pb-4 pt-2">
         <Image
           src={cartItem.product.img.main}
           width="200"
           height="150"
           alt={cartItem.product.name}
         />
-        <p className="col-span-2">{cartItem.product.name} </p>
-        <div className="flex gap-x-2 items-center">
+        <p className="col-span-2 text-center line-clamp-2">
+          {cartItem.product.name}
+        </p>
+        <div className="text-center">
           <p>{price} </p>
         </div>
         <p className="text-center">{cartItem.qty} cái </p>
         <Button
-          className="w-2/3"
+          className="md:w-2/3"
           variant="destructive"
           onClick={(e) => handleClickRemove(e)}
         >
@@ -71,3 +74,5 @@ const Cart = ({ cartItem }: CartProps) => {
 };
 
 export default Cart;
+
+

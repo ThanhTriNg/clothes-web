@@ -27,10 +27,12 @@ const CartItemCard = ({ cartItem }: Props) => {
           width="200"
           height="150"
           alt={cartItem.product.name}
-          className="col-span-1"
+          className="md:col-span-1 col-span-3"
         />
-        <p className="col-span-3 text-center">{cartItem.product.name} </p>
-        <div className="col-span-2 flex gap-x-2 items-center">
+        <p className="md:col-span-3 col-span-4 text-center">
+          {cartItem.product.name}
+        </p>
+        <div className="md:col-span-2 col-end-7 col-start-1 flex justify-end gap-x-1 items-center">
           <p>{price} </p>
           <p>X</p>
           <QtyBtn
@@ -40,7 +42,7 @@ const CartItemCard = ({ cartItem }: Props) => {
           />
         </div>
         <Button
-          className="col-span-1 w-2/3"
+          className="md:col-span-1 col-end-8 md:w-2/3"
           variant="destructive"
           onClick={(e) => handleClickRemove(e)}
         >

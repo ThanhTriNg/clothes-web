@@ -40,8 +40,8 @@ const Category = () => {
 
   return (
     <div className="min-h-screen">
-      <div className=" bg-white p-6 space-y-10">
-        <h1 className="uppercase font-bold text-xl md:text-3xl p-10">
+      <div className="bg-white md:p-6 md:space-y-10 p-2 space-y-2">
+        <h1 className="uppercase font-bold text-xl md:text-3xl p-10 text-center md:text-left">
           {getCategoryData(category as string)}
         </h1>
 

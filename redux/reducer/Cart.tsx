@@ -1,20 +1,19 @@
-import {
-  PayloadAction,
-  createSelector,
-  createSlice
-} from "@reduxjs/toolkit";
+import { PayloadAction, createSelector, createSlice } from "@reduxjs/toolkit";
 // import CategoriesApi from "../api/CategoriesApi";
 import { CartItem, ClothesProps } from "../module";
 import { RootState } from "../store/Store";
+import { boolean } from "zod";
 
 interface myState {
   loading: boolean;
   cartItems: CartItem[];
+  isOpenDrawerCart: boolean;
 }
 
 const initialState: myState = {
   loading: false,
   cartItems: [],
+  isOpenDrawerCart: false,
 };
 
 export const cartSlice = createSlice({
@@ -54,8 +53,10 @@ export const cartSlice = createSlice({
         );
       }
     },
+    getIsOpenDrawerCart: (state, action: PayloadAction<boolean>) => {
+      state.isOpenDrawerCart = action.payload;
+    },
   },
-
   extraReducers: (builder) => {
     // //get sub categories by id
     // builder.addCase(getSubCateByCategoryIdThunk.pending, (state) => {});
@@ -88,5 +89,6 @@ export const productQtyInCartSelector = createSelector(
     cartItems.find((el) => el.product.id === productId)?.qty
 );
 
-export const { increment, decrement, remove } = cartSlice.actions;
+export const { increment, decrement, remove, getIsOpenDrawerCart } =
+  cartSlice.actions;
 export default cartSlice.reducer;

@@ -1,5 +1,8 @@
 import { useMediaQuery } from "@/hook/use-media-query";
-import { totalCartItemSelector } from "@/redux/reducer/Cart";
+import {
+  getIsOpenDrawerCart,
+  totalCartItemSelector,
+} from "@/redux/reducer/Cart";
 import { useAppSelector } from "@/redux/store/Store";
 import { User } from "@phosphor-icons/react";
 import { ShoppingCart } from "lucide-react";
@@ -8,7 +11,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import Cart from "./cart";
-import DrawerMenu from "./drawerMennu";
+import DrawerMenu from "../drawerMenu";
 import Nav from "./nav";
 import Search from "./searchBtn";
 
@@ -23,26 +26,37 @@ import {
 import { getGenderThunk } from "@/redux/reducer/Gender";
 import { AppDispatch, RootState } from "@/redux/store/Store";
 import { useDispatch, useSelector } from "react-redux";
+import { Drawer, DrawerContent, DrawerTrigger } from "../ui/drawer";
 
 const Header = () => {
   const router = useRouter();
-
-  const [activeCart, setActiveCart] = useState<boolean>(false);
-
-  useEffect(() => {
-    setActiveCart(false);
-  }, [router]);
-
   const totalItems = useAppSelector(totalCartItemSelector);
   const cartItems = useAppSelector(
     (state) => state.cartPersistedReducer.cartItems
   );
+  const isMobile = useMediaQuery("(max-width:767px)");
+  const [isOpen, setIsOpen] = useState(false);
+  const [cartActive, setCartActive] = useState(false);
+  useEffect(() => {
+    if (isOpen === true) {
+      setIsOpen(false);
+    }
+  }, [router]);
 
-  const handClickCart = () => {
-    setActiveCart((cur) => !cur);
-  };
+  useEffect(() => {
+    if (!!totalItems == false) {
+      if (isOpen === true) {
+        setIsOpen(false);
+      }
+      const timeoutId = setTimeout(() => {
+        setCartActive(false);
+      }, 510);
+      return () => clearTimeout(timeoutId);
+    } else {
+      setCartActive(true);
+    }
+  }, [isOpen, totalItems]);
 
-  //test .nav
   const dispatch = useDispatch<AppDispatch>();
   const [womenCate, setWomenCate] = useState<CategoriesProps[]>();
   const [menCate, setMenCate] = useState<CategoriesProps[]>();
@@ -57,6 +71,7 @@ const Header = () => {
     dispatch(getCategoriesThunk());
     dispatch(getGenderThunk());
   }, [dispatch]);
+
   useEffect(() => {
     if (categoriesInfo) {
       //women handle
@@ -68,6 +83,7 @@ const Header = () => {
         ...item,
         data: filterDataWomen[idx],
       }));
+      dispatch(saveCateWomen(addDataWomen));
       setWomenCate(addDataWomen);
 
       //men handle
@@ -79,11 +95,16 @@ const Header = () => {
         ...item,
         data: filterDataMen[idx],
       }));
+      dispatch(saveCateMen(addDataMen));
       setMenCate(addDataMen);
     }
-  }, [categoriesInfo]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [categoriesInfo, dispatch]);
 
-  const isMobile = useMediaQuery("(max-width:767px)");
+  useEffect(() => {
+    dispatch(getIsOpenDrawerCart(isOpen));
+  }, [isOpen, dispatch]);
+
   return (
     <header className="h-auto md:h-20 mb-4 sticky top-0 z-20 bg-white/90 xl:px-8 md:px-6 p-4">
       <div className="md:flex justify-between items-center h-full xl:max-w-[1300px] mx-auto">
@@ -104,14 +125,14 @@ const Header = () => {
                 className="text-center"
                 menCate={menCate}
                 womenCate={womenCate}
-                genderInfo ={genderInfo}
+                genderInfo={genderInfo}
               />
             ) : (
               <Nav
                 className="mx-auto"
                 menCate={menCate}
                 womenCate={womenCate}
-                genderInfo ={genderInfo}
+                genderInfo={genderInfo}
               />
             ))}
         </div>
@@ -120,32 +141,38 @@ const Header = () => {
           <Link href="/login">
             <User size={24} className="cursor-pointer " />
           </Link>
-          {totalItems ? (
-            <div onClick={handClickCart} className="relative ">
-              <ShoppingCart size={24} className="cursor-pointer" />
-              {!!totalItems && (
-                <div
-                  key={totalItems}
-                  className="select-none text-white bg-primary rounded-full w-6 text-center absolute -top-2 -right-3 animate-pingOnce "
-                >
-                  {totalItems}
-                </div>
-              )}
-              <div
-                onClick={(e) => e.stopPropagation()}
-                className={`${
-                  activeCart ? "block" : "hidden"
-                }   absolute shadow-md bg-orange-200 rounded-md w-[600px] mt-2 top-full right-0 z-10 `}
-              >
-                {cartItems.map((item, idx: number) => {
-                  return <Cart key={`cart-item-${idx}`} cartItem={item} />;
-                })}
-                <Link href="/cart" className="w-[200px] block mx-auto ">
-                  <p className="text-center bg-white mt-2 mb-1 p-2 rounded-md text-primary hover:bg-primary hover:text-white">
-                    Đến giỏ hàng
-                  </p>
-                </Link>
-              </div>
+          {cartActive ? (
+            <div className="relative ">
+              <Drawer open={isOpen} onOpenChange={setIsOpen}>
+                <DrawerTrigger>
+                  <ShoppingCart size={24} className="cursor-pointer" />
+                  {!!totalItems && (
+                    <div
+                      key={totalItems}
+                      className="select-none text-white bg-primary rounded-full w-6 text-center absolute -top-2 -right-3 animate-pingOnce "
+                    >
+                      {totalItems}
+                    </div>
+                  )}
+                  <DrawerContent className=" max-h-[80vh]">
+                    <div className="overflow-y-scroll overflow-x-hidden">
+                      {cartItems.map((item, idx: number) => {
+                        return (
+                          <Cart key={`cart-item-${idx}`} cartItem={item} />
+                        );
+                      })}
+                      <Link
+                        href="/cart"
+                        className="md:w-[40vw] w-[80vw] block mx-auto pb-3"
+                      >
+                        <p className="text-center bg-primary mt-2 mb-1 p-2 rounded-md text-white">
+                          Đến giỏ hàng
+                        </p>
+                      </Link>
+                    </div>
+                  </DrawerContent>
+                </DrawerTrigger>
+              </Drawer>
             </div>
           ) : (
             ""

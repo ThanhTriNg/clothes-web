@@ -1,4 +1,3 @@
-import React, { useState } from "react";
 import {
   Accordion,
   AccordionContent,
@@ -6,20 +5,17 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import Link from "next/link";
+import { useState } from "react";
 
-import { ProductNavProps, listItemProps } from "@/common/type";
+import { ProductNavProps } from "@/common/type";
 
-import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/redux/store/Store";
 import { useEffect } from "react";
-import {
-  getMenSubCateThunk,
-  getWomenSubCateThunk,
-} from "@/redux/reducer/Categories";
-import { filterData } from "../layout/nav";
-import { CategoriesProps, SubCateProps } from "@/redux/module";
-import { useRouter } from "next/router";
+import { useDispatch, useSelector } from "react-redux";
+
 import { getCategoryData } from "@/pages/store/[category]";
+import { SubCateProps } from "@/redux/module";
+import { useRouter } from "next/router";
 
 const defaultHref = "/store";
 
@@ -30,52 +26,54 @@ const ProductNav = ({ className, categoryArr }: ProductNavProps) => {
   const [cateVi, setCateVi] = useState<string>();
 
   const dispatch = useDispatch<AppDispatch>();
-  const { menSubCateInfo, womenSubCateInfo } = useSelector(
+  const { menSubCateInfo, womenSubCateInfo, saveCateWomen } = useSelector(
     (state: RootState) => state.categories
   );
-  const [womenCate, setWomenCate] = useState<CategoriesProps[]>();
-  const [menCate, setMenCate] = useState<CategoriesProps[]>();
+  // const [womenCate, setWomenCate] = useState<CategoriesProps[]>();
+  // const [menCate, setMenCate] = useState<CategoriesProps[]>();
 
-  useEffect(() => {
-    dispatch(getMenSubCateThunk());
-    dispatch(getWomenSubCateThunk());
-  }, [dispatch]);
+  // useEffect(() => {
+  //   dispatch(getMenSubCateThunk());
+  //   dispatch(getWomenSubCateThunk());
+  // }, [dispatch]);
 
-  useEffect(() => {
-    if (categoryArr) {
-      //women handle
-      const womenCate = categoryArr.filter(
-        (item) => item.group === 1 || item.group === 3
-      );
-      const filterDataWomen = filterData(womenCate, womenSubCateInfo);
-      const addDataWomen: any = womenCate.map((item, idx) => ({
-        ...item,
-        data: filterDataWomen[idx],
-      }));
-      setWomenCate(addDataWomen);
+  // useEffect(() => {
+  //   if (categoryArr) {
+  //     //women handle
+  //     const womenCate = categoryArr.filter(
+  //       (item) => item.group === 1 || item.group === 3
+  //     );
+  //     const filterDataWomen = filterData(womenCate, womenSubCateInfo);
+  //     const addDataWomen: any = womenCate.map((item, idx) => ({
+  //       ...item,
+  //       data: filterDataWomen[idx],
+  //     }));
+  //     setWomenCate(addDataWomen);
 
-      //men handle
-      const menCate = categoryArr.filter(
-        (item) => item.group === 2 || item.group === 3
-      );
-      const filterDataMen = filterData(menCate, menSubCateInfo);
-      const addDataMen: any = menCate.map((item, idx) => ({
-        ...item,
-        data: filterDataMen[idx],
-      }));
-      setMenCate(addDataMen);
-    }
-  }, [categoryArr]);
+  //     //men handle
+  //     const menCate = categoryArr.filter(
+  //       (item) => item.group === 2 || item.group === 3
+  //     );
+  //     const filterDataMen = filterData(menCate, menSubCateInfo);
+  //     const addDataMen: any = menCate.map((item, idx) => ({
+  //       ...item,
+  //       data: filterDataMen[idx],
+  //     }));
+  //     setMenCate(addDataMen);
+  //   }
+  // }, [categoryArr]);
 
+  // console.log(womenCate);
   useEffect(() => {
     setCateVi(getCategoryData(category as string));
   }, [category]);
   const [getIndex, setGetIndex] = useState<number | undefined>();
 
   useEffect(() => {
-    const index = womenCate?.findIndex((item) => item.name === cateVi);
+    const index = saveCateWomen?.findIndex((item) => item.name === cateVi);
     setGetIndex(index);
-  }, [category, womenCate, cateVi]);
+  }, [category, saveCateWomen, cateVi]);
+
   return (
     <div className={className}>
       <div>
@@ -86,7 +84,7 @@ const ProductNav = ({ className, categoryArr }: ProductNavProps) => {
               defaultValue={[`item-${getIndex}`]}
               // defaultValue={[`item-1`]}
             >
-              {womenCate?.map((item, idx: number) => {
+              {saveCateWomen?.map((item, idx: number) => {
                 const data = item.data;
                 let href = "";
                 if (item.name === "Áo") {

@@ -79,7 +79,7 @@ const Search = () => {
         </div>
 
         {categoriesInfo && clothesByName && clothesByName.length > 0 && (
-          <div className="mt-2 shadow-md absolute w-[200%] bg-gray-50 p-3 -right-1/2 rounded-sm hidden group-focus-within:block">
+          <div className="mt-2 shadow-md absolute md:w-[200%] w-[80vw] bg-gray-50 p-3 -right-1/2 rounded-sm hidden group-focus-within:block">
             {clothesByName.map((item, idx: number) => {
               const category = findCategory(item.categoryId, categoriesInfo);
               const cateName = convertNameCate(category?.name as any);
