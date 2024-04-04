@@ -18,10 +18,10 @@ import { Input } from "./ui/input";
 
 import { loginThunk, resetErrorLogin } from "@/redux/reducer/User";
 import { AppDispatch, RootState } from "@/redux/store/Store";
+import CryptoJS from "crypto-js";
+import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
-
-import CryptoJS from "crypto-js";
 const loginFormSchema = z.object({
   email: z
     .string({ required_error: "Bắt buộc" })
@@ -33,6 +33,7 @@ const loginFormSchema = z.object({
 type LoginFormValues = z.infer<typeof loginFormSchema>;
 
 export default function LoginForm() {
+  const router = useRouter();
   const [passwordShown, setPasswordShown] = useState(false);
   const [isChecked, setIsChecked] = useState<boolean>(false);
   const form = useForm<LoginFormValues>({
@@ -85,7 +86,10 @@ export default function LoginForm() {
   useEffect(() => {
     if (successLogin) {
       toast.success("Đăng nhập thành công");
+
+      router.push("/");
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [successLogin, dispatch]);
 
   const handleRememberMeChange = (

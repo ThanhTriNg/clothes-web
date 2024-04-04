@@ -1,6 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { EyeIcon, EyeOffIcon } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { Button } from "./ui/button";
@@ -15,9 +15,10 @@ import {
 } from "./ui/form";
 import { Input } from "./ui/input";
 
-import { signUpThunk } from "@/redux/reducer/User";
-import { AppDispatch } from "@/redux/store/Store";
-import { useDispatch } from "react-redux";
+import { resetErrorSignup, signUpThunk } from "@/redux/reducer/User";
+import { AppDispatch, RootState } from "@/redux/store/Store";
+import { useDispatch, useSelector } from "react-redux";
+import toast from "react-hot-toast";
 
 const signUpFormSchema = z
   .object({
@@ -40,7 +41,9 @@ type SignUpFormValues = z.infer<typeof signUpFormSchema>;
 export default function SignUpForm() {
   const [passwordShown, setPasswordShown] = useState(false);
   const [rePasswordShown, setRePasswordShown] = useState(false);
-
+  const { errorSignup, errorSignupText, successSignup } = useSelector(
+    (state: RootState) => state.users
+  );
   const form = useForm<SignUpFormValues>({
     resolver: zodResolver(signUpFormSchema),
     mode: "onSubmit",
@@ -54,6 +57,26 @@ export default function SignUpForm() {
     setRePasswordShown(!rePasswordShown);
   };
 
+  //if error sign up
+  useEffect(() => {
+    if (errorSignup) {
+      if (errorSignupText === "Email already exists") {
+        toast.error("Email này đã tồn tại");
+      } else toast.error(errorSignupText);
+      dispatch(resetErrorSignup());
+    }
+  }, [errorSignup, dispatch, errorSignupText]);
+
+  // if success sign up
+  useEffect(() => {
+    if (successSignup) {
+      toast.success("Đăng kí thành công");
+      form.setValue("email", "");
+      form.setValue("password", "");
+      form.setValue("confirmPassword", "");
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [successSignup]);
   const IconPassword = passwordShown ? EyeIcon : EyeOffIcon;
   const IconRePassword = rePasswordShown ? EyeIcon : EyeOffIcon;
 

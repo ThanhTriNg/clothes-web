@@ -1,5 +1,5 @@
 import Cookies from "js-cookie";
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { UserProps } from "../module";
 import UserApi from "../api/UserApi";
 
@@ -9,6 +9,11 @@ interface myState {
   errorLogin: any;
   successLogout: boolean;
   errorLogout: string | null;
+  errorSignupText: string | null;
+
+  successSignup: boolean;
+  errorSignup: any;
+
   userInfo: UserProps | null;
 }
 
@@ -18,6 +23,10 @@ const initialState: myState = {
   errorLogin: null,
   successLogout: false,
   errorLogout: null,
+  errorSignupText: null,
+
+  successSignup: false,
+  errorSignup: null,
   userInfo: null,
 };
 
@@ -28,7 +37,6 @@ export const loginThunk = createAsyncThunk(
       const response = await UserApi.logIn(UserProps);
       const token = response.data.accessToken;
       Cookies.set("token", token);
-      return response;
     } catch (error: any) {
       if (error.response && error.response.data.message) {
         return rejectWithValue(error.response.data.message);
@@ -44,13 +52,12 @@ export const signUpThunk = createAsyncThunk(
   async (UserProps: UserProps, { rejectWithValue }) => {
     try {
       const response = await UserApi.signUp(UserProps);
-      // console.log(response);
       return response;
     } catch (error: any) {
       if (error.response && error.response.data.message) {
         return rejectWithValue(error.response.data.message);
       } else {
-        return rejectWithValue(error.message);
+        return rejectWithValue(error.response.data);
       }
     }
   }
@@ -62,6 +69,12 @@ export const usersSlice = createSlice({
   reducers: {
     resetErrorLogin: (state) => {
       state.errorLogin = false;
+    },
+    resetErrorSignup: (state) => {
+      state.errorSignup = false;
+    },
+    signOut: () => {
+      Cookies.remove("token");
     },
   },
 
@@ -78,8 +91,23 @@ export const usersSlice = createSlice({
       state.loading = false;
       state.errorLogin = true;
     });
+    // signUp
+    builder.addCase(signUpThunk.pending, (state) => {
+      state.loading = true;
+      console.log("pending");
+    });
+    builder.addCase(signUpThunk.fulfilled, (state, action) => {
+      state.loading = false;
+      state.successSignup = true;
+      console.log("fulfilled");
+    });
+    builder.addCase(signUpThunk.rejected, (state, action) => {
+      state.loading = false;
+      state.errorSignup = true;
+      state.errorSignupText = action.payload as string;
+    });
   },
 });
-export const { resetErrorLogin } = usersSlice.actions;
+export const { resetErrorLogin, resetErrorSignup ,signOut} = usersSlice.actions;
 
 export default usersSlice.reducer;

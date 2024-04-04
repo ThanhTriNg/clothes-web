@@ -6,7 +6,7 @@ const UserApi = {
     return AxiosClient.post("/login", user);
   },
   signUp: (user: UserProps) => {
-    return AxiosClient.post("/signUp", user);
+    return AxiosClient.post("signup", user);
   },
 };
 

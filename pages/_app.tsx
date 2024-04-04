@@ -10,11 +10,13 @@ export const noto = Noto_Sans({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
 });
+import Cookies from "js-cookie";
 
 import Head from "next/head";
 import { PersistGate } from "redux-persist/integration/react";
 
 function LandingPage({ Component, pageProps }: AppProps) {
+  const token = Cookies.get("token");
   return (
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
@@ -27,14 +29,14 @@ function LandingPage({ Component, pageProps }: AppProps) {
               type="image/x-icon"
             />
           </Head>
-          <Header />
+          <Header token={token} />
           <main className="xl:px-8 md:px-6">
             <div className=" mx-auto xl:max-w-[1300px]">
               <Component {...pageProps} />
             </div>
           </main>
           <Footer />
-          <Toaster position="top-right"/>
+          <Toaster position="top-right" />
         </div>
       </PersistGate>
     </Provider>

@@ -4,7 +4,7 @@ import {
   totalCartItemSelector,
 } from "@/redux/reducer/Cart";
 import { useAppSelector } from "@/redux/store/Store";
-import { User } from "@phosphor-icons/react";
+import { User, SignOut } from "@phosphor-icons/react";
 import { ShoppingCart } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -27,8 +27,12 @@ import { getGenderThunk } from "@/redux/reducer/Gender";
 import { AppDispatch, RootState } from "@/redux/store/Store";
 import { useDispatch, useSelector } from "react-redux";
 import { Drawer, DrawerContent, DrawerTrigger } from "../ui/drawer";
-
-const Header = () => {
+import { signOut } from "@/redux/reducer/User";
+import { toast } from "react-hot-toast";
+interface HeaderProps {
+  token: string | undefined;
+}
+const Header = ({ token }: HeaderProps) => {
   const router = useRouter();
   const totalItems = useAppSelector(totalCartItemSelector);
   const cartItems = useAppSelector(
@@ -104,9 +108,16 @@ const Header = () => {
   useEffect(() => {
     dispatch(getIsOpenDrawerCart(isOpen));
   }, [isOpen, dispatch]);
-
+  const handleSignOut = () => {
+    dispatch(signOut());
+    toast.success("Đăng xuất thành công");
+    const timeoutId = setTimeout(() => {
+      window.location.reload();
+    }, 200);
+    return () => clearTimeout(timeoutId);
+  };
   return (
-    <header className="h-auto md:h-20 mb-4 sticky top-0 z-20 bg-white/90 xl:px-8 md:px-6 p-4">
+    <header className="h-auto md:h-20 mb-4 sticky top-0 z-20 bg-white shadow-md shadow-slate-300 xl:px-8 md:px-6 p-4">
       <div className="md:flex justify-between items-center h-full xl:max-w-[1300px] mx-auto">
         <div className="md:flex md:gap-x-10 space-y-4">
           <Link href="/" className="">
@@ -138,9 +149,15 @@ const Header = () => {
         </div>
         <div className="flex md:gap-x-10 gap-x-2 items-center md:justify-center justify-around">
           <Search />
-          <Link href="/login">
-            <User size={24} className="cursor-pointer " />
-          </Link>
+          {token ? (
+            <div onClick={handleSignOut}>
+              <SignOut size={24} className="cursor-pointer" />
+            </div>
+          ) : (
+            <Link href="/login">
+              <User size={24} className="cursor-pointer" />
+            </Link>
+          )}
           {cartActive ? (
             <div className="relative ">
               <Drawer open={isOpen} onOpenChange={setIsOpen}>
