@@ -16,23 +16,27 @@ const initialState: myState = {
   isOpenDrawerCart: false,
 };
 
+const isExist = (cartItems: CartItem[], id: string) => {
+  return cartItems.find((el) => el.product.id === id);
+};
+
 export const cartSlice = createSlice({
   name: "cart",
   initialState,
   reducers: {
     increment: (state, action: PayloadAction<ClothesProps>) => {
-      const item = state.cartItems.find(
-        (el) => el.product.id === action.payload.id
-      );
+      // const item = state.cartItems.find(
+      //   (el) => el.product.id === action.payload.id
+      // );
+      const item = isExist(state.cartItems, action.payload.id);
       if (item) item.qty++;
       else {
         state.cartItems.push({ product: action.payload, qty: 1 });
       }
     },
     decrement: (state, action: PayloadAction<ClothesProps>) => {
-      const item = state.cartItems.find(
-        (el) => el.product.id === action.payload.id
-      );
+      const item = isExist(state.cartItems, action.payload.id);
+
       if (item) {
         item.qty--;
         if (item.qty === 0) {
@@ -43,9 +47,7 @@ export const cartSlice = createSlice({
       }
     },
     remove: (state, action: PayloadAction<ClothesProps>) => {
-      const item = state.cartItems.find(
-        (el) => el.product.id === action.payload.id
-      );
+      const item = isExist(state.cartItems, action.payload.id);
       if (item) {
         item.qty = 0;
         state.cartItems = state.cartItems.filter(
@@ -57,17 +59,7 @@ export const cartSlice = createSlice({
       state.isOpenDrawerCart = action.payload;
     },
   },
-  extraReducers: (builder) => {
-    // //get sub categories by id
-    // builder.addCase(getSubCateByCategoryIdThunk.pending, (state) => {});
-    // builder.addCase(getSubCateByCategoryIdThunk.fulfilled, (state, action) => {
-    //   state.subCateByIdInfo = action.payload.data;
-    // });
-    // builder.addCase(
-    //   getSubCateByCategoryIdThunk.rejected,
-    //   (state, action) => {}
-    // );
-  },
+  extraReducers: (builder) => {},
 });
 
 const cartItems = (state: RootState) => state.cartPersistedReducer.cartItems;

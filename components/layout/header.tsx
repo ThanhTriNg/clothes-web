@@ -182,7 +182,7 @@ const Header = ({ token }: HeaderProps) => {
                         href="/cart"
                         className="md:w-[40vw] w-[80vw] block mx-auto pb-3"
                       >
-                        <p className="text-center bg-primary mt-2 mb-1 p-2 rounded-md text-white">
+                        <p className="text-center bg-primary mt-2 mb-1 p-2 rounded-md text-white hover:scale-105">
                           Đến giỏ hàng
                         </p>
                       </Link>
