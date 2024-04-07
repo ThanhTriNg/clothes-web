@@ -4,14 +4,14 @@ import {
   totalCartItemSelector,
 } from "@/redux/reducer/Cart";
 import { useAppSelector } from "@/redux/store/Store";
-import { User, SignOut } from "@phosphor-icons/react";
+import { SignOut, User } from "@phosphor-icons/react";
 import { ShoppingCart } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import Cart from "./cart";
 import DrawerMenu from "../drawerMenu";
+import Cart from "./cart";
 import Nav from "./nav";
 import Search from "./searchBtn";
 
@@ -24,11 +24,11 @@ import {
   saveCateWomen,
 } from "@/redux/reducer/Categories";
 import { getGenderThunk } from "@/redux/reducer/Gender";
+import { signOut } from "@/redux/reducer/User";
 import { AppDispatch, RootState } from "@/redux/store/Store";
+import { toast } from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 import { Drawer, DrawerContent, DrawerTrigger } from "../ui/drawer";
-import { signOut } from "@/redux/reducer/User";
-import { toast } from "react-hot-toast";
 interface HeaderProps {
   token: string | undefined;
 }
