@@ -16,12 +16,13 @@ import {
 } from "./ui/form";
 import { Input } from "./ui/input";
 
-import { loginThunk, resetErrorLogin } from "@/redux/reducer/User";
+import { loginThunk } from "@/redux/reducer/User";
 import { AppDispatch, RootState } from "@/redux/store/Store";
 import CryptoJS from "crypto-js";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
+import Loading from "@/components/loading";
 const loginFormSchema = z.object({
   email: z
     .string({ required_error: "Bắt buộc" })
@@ -44,14 +45,15 @@ export default function LoginForm() {
     },
     mode: "onSubmit",
   });
-  const { errorLogin, successLogin } = useSelector(
+  const { errorLogin, successLogin, loading, message } = useSelector(
     (state: RootState) => state.users
   );
   const key = "jlasdfuy6mnqweo@#$_)d41414141sf123456";
   const dispatch = useDispatch<AppDispatch>();
+
+  //check remember me flag
   useEffect(() => {
     const rememberMeFlag = localStorage.getItem("rememberMe");
-
     if (rememberMeFlag === "true") {
       const savedEmail = localStorage.getItem("email");
       const encryptedPassword = localStorage.getItem("password");
@@ -69,6 +71,7 @@ export default function LoginForm() {
       }
     }
   }, []);
+
   useEffect(() => {
     if (successLogin) {
       const email = form.getValues().email;
@@ -77,20 +80,20 @@ export default function LoginForm() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [form, successLogin]);
+
+  //errorLogin
   useEffect(() => {
     if (errorLogin) {
-      toast.error("Sai tài khoản hoặc mật khẩu");
-      dispatch(resetErrorLogin());
-    }
-  }, [errorLogin, dispatch]);
-  useEffect(() => {
-    if (successLogin) {
-      toast.success("Đăng nhập thành công");
-
+      toast.error(`${message}. Please try again`);
+    } else if (successLogin) {
+      if (localStorage.getItem("isFirstLogin") !== "true") {
+        localStorage.setItem("isFirstLogin", "true");
+        toast.success(message);
+      }
       router.push("/");
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [successLogin, dispatch]);
+  }, [errorLogin, successLogin, dispatch]);
 
   const handleRememberMeChange = (
     email: string,
@@ -111,6 +114,8 @@ export default function LoginForm() {
   const handleCheckboxChange = (event: ChangeEvent<HTMLInputElement>) => {
     setIsChecked(event.target.checked);
   };
+
+  // handle submit form => call api login
   async function onSubmit(data: LoginFormValues) {
     // console.log(data);
     try {
@@ -124,7 +129,11 @@ export default function LoginForm() {
   };
   const SelectedIconPassword = passwordShown ? EyeIcon : EyeOffIcon;
 
-  return (
+  return loading ? (
+    <div className="flex justify-center items-center h-full">
+      <Loading />
+    </div>
+  ) : (
     <>
       <Card id="card" className="grid gap-6 bg-transparent border-none">
         <CardHeader className="text-center grid gap-2 p-0">

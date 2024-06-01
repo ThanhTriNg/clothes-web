@@ -1,45 +1,34 @@
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { List, X } from "@phosphor-icons/react";
 import { useEffect, useState } from "react";
 
+import { menuProps } from "@/components/layout/module";
 import {
   Drawer,
   DrawerClose,
   DrawerContent,
   DrawerTrigger,
 } from "@/components/ui/drawer";
-import { CategoriesProps } from "@/redux/module";
-import { Gender } from "@/redux/reducer/Gender";
 import { useRouter } from "next/router";
-import { Button } from "../ui/button";
 import TabCustom from "./TabCustom";
-interface DrawerMenuProps {
-  className?: string;
-  womenCate: CategoriesProps[];
-  menCate: CategoriesProps[];
-  genderInfo: Gender[] | null;
-}
+
 const DrawerMenu = ({
   className,
   womenCate,
   menCate,
   genderInfo,
-}: DrawerMenuProps) => {
-  // const { saveCateMen, saveCateWomen } = useSelector(
-  //   (state: RootState) => state.categories
-  // );
+}: menuProps) => {
   const [isOpen, setIsOpen] = useState(false);
   useEffect(() => {
-    console.log(isOpen);
   }, [isOpen]);
   const router = useRouter();
 
-    useEffect(() => {
-      if (isOpen === true) {
-        setIsOpen(false);
-      }
+  useEffect(() => {
+    if (isOpen === true) {
+      setIsOpen(false);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [router]);
+  }, [router]);
 
   return (
     <div className={`${className}`}>
@@ -48,10 +37,8 @@ const DrawerMenu = ({
           <List size={24} />
         </DrawerTrigger>
         <DrawerContent className="overflow-y-scroll overflow-x-hidden max-h-[100vh]">
-          <Tabs defaultValue="genderInfo-0" >
+          <Tabs defaultValue="genderInfo-0">
             <TabsList className="w-full bg-white ">
-              {/* <TabsTrigger value="account">Account</TabsTrigger>
-              <TabsTrigger value="password">Password</TabsTrigger> */}
               {genderInfo?.map((genderInfoItem, idx) => {
                 return (
                   <TabsTrigger
@@ -65,14 +52,8 @@ const DrawerMenu = ({
               })}
             </TabsList>
 
-            <TabCustom
-              value="genderInfo-0"
-              data={womenCate}
-            />
-            <TabCustom
-              value="genderInfo-1"
-              data={menCate}
-            />
+            <TabCustom value="genderInfo-0" data={womenCate} />
+            <TabCustom value="genderInfo-1" data={menCate} />
           </Tabs>
           <DrawerClose className="flex justify-center py-6">
             <X size={28} />
@@ -84,36 +65,3 @@ const DrawerMenu = ({
 };
 
 export default DrawerMenu;
-
-// {genderInfo?.map((genderItem, idx: number) => {
-//   let cate;
-//   if (genderItem.name === "Nữ") {
-//     cate = womenCate;
-//   } else {
-//     cate = menCate;
-//   }
-//   return (
-//     <div key={`menu-${idx}`}>
-//       {/* {cate?.map((cateItem, idx) => {
-//         const data = cateItem.data;
-//         const cateName = convertNameCate(cateItem.name);
-//         return (
-//           <div key={`item-${genderItem.name}-${idx}`}>
-//             <DrawerHeader key={`menu-${idx}`}>
-//               <DrawerTitle> {cateItem.name} </DrawerTitle>
-//               {data?.map((dataItem, idx: number) => {
-//                 return (
-//                   <div key={`dataItem-${dataItem.id}`}>
-//                     <DrawerDescription>
-//                       {dataItem.name}
-//                     </DrawerDescription>
-//                   </div>
-//                 );
-//               })}
-//             </DrawerHeader>
-//           </div>
-//         );
-//       })} */}
-//     </div>
-//   );
-// })}

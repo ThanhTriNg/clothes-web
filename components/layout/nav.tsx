@@ -10,77 +10,17 @@ import {
 } from "@/components/ui/navigation-menu";
 import { cn } from "@/lib/utils";
 import { CategoriesProps } from "@/redux/module";
-import {
-  getCategoriesThunk,
-  getMenSubCateThunk,
-  getWomenSubCateThunk,
-  saveCateMen,
-  saveCateWomen,
-} from "@/redux/reducer/Categories";
-import { Gender, getGenderThunk } from "@/redux/reducer/Gender";
-import { AppDispatch, RootState } from "@/redux/store/Store";
 import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
 import { convertNameCate } from "../LimitedPromotion";
+import { menuProps } from "@/components/layout/module";
 
-import { getClothesByNameThunk } from "@/redux/reducer/Clothes";
-
-interface NavProps {
-  className?: string;
-  womenCate: CategoriesProps[];
-  menCate: CategoriesProps[];
-  genderInfo: Gender[] | null;
-}
-
-const Nav = ({ className, womenCate, menCate, genderInfo }: NavProps) => {
-  // const dispatch = useDispatch<AppDispatch>();
-  // const [womenCate, setWomenCate] = useState<CategoriesProps[]>();
-  // const [menCate, setMenCate] = useState<CategoriesProps[]>();
-  // const { categoriesInfo, menSubCateInfo, womenSubCateInfo } = useSelector(
-  //   (state: RootState) => state.categories
-  // );
-
-  // useEffect(() => {
-  //   dispatch(getMenSubCateThunk());
-  //   dispatch(getWomenSubCateThunk());
-  //   dispatch(getCategoriesThunk());
-  //   dispatch(getGenderThunk());
-  // }, [dispatch]);
-
-  // useEffect(() => {
-  //   if (categoriesInfo) {
-  //     //women handle
-  //     const womenCate = categoriesInfo.filter(
-  //       (item) => item.group === 1 || item.group === 3
-  //     );
-  //     const filterDataWomen = filterData(womenCate, womenSubCateInfo);
-  //     const addDataWomen: any = womenCate.map((item, idx) => ({
-  //       ...item,
-  //       data: filterDataWomen[idx],
-  //     }));
-  //     setWomenCate(addDataWomen);
-  //     dispatch(saveCateWomen(addDataWomen));
-
-  //     //men handle
-  //     const menCate = categoriesInfo.filter(
-  //       (item) => item.group === 2 || item.group === 3
-  //     );
-  //     const filterDataMen = filterData(menCate, menSubCateInfo);
-  //     const addDataMen: any = menCate.map((item, idx) => ({
-  //       ...item,
-  //       data: filterDataMen[idx],
-  //     }));
-  //     setMenCate(addDataMen);
-  //     dispatch(saveCateMen(addDataMen));
-  //   }
-  // }, [categoriesInfo]);
-
+const Nav = ({ className, menCate, womenCate, genderInfo }: menuProps) => {
   return (
     <NavigationMenu className={className}>
       <NavigationMenuList>
         {genderInfo?.map((item, idx: number) => {
           let cate;
-          if (item.name === "Nữ") {
+          if (item.name === "Women") {
             cate = womenCate;
           } else {
             cate = menCate;
@@ -98,21 +38,20 @@ const Nav = ({ className, womenCate, menCate, genderInfo }: NavProps) => {
                   } md:text-base text-sm`}
                 >
                   {cate?.map((item, idx) => {
-                    const data = item.data;
-                    const cateName = convertNameCate(item.name);
+                    const cateName = item.name.toLowerCase();
                     return (
                       <div key={`clothes-${idx}`} className="space-y-3">
                         <p className="font-semibold uppercase xl:text-base text-sm">
                           {item.name}
                         </p>
                         <div>
-                          {data?.map((item, idx) => {
+                          {item.Sub_Categories.map((itemSub, idx) => {
                             return (
                               <ListItem
                                 href={`/store/${cateName}`}
                                 className="capitalize"
                                 key={`${item.name}-${idx}`}
-                                title={item.name}
+                                title={itemSub.name}
                               />
                             );
                           })}
@@ -157,11 +96,3 @@ const ListItem = React.forwardRef<
   );
 });
 ListItem.displayName = "ListItem";
-
-// export const filterData = (cate: any, subCate: any) => {
-//   const filter = cate.map((item1: any) => {
-//     const data = subCate?.filter((item2: any) => item2.categoryId === item1.id);
-//     return data;
-//   });
-//   return filter;
-// };

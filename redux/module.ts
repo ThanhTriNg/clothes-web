@@ -1,37 +1,65 @@
 export interface AddClothesProps {
-  categoryId: string;
-  subCategoryId: string;
-  genderId: string;
   name: string;
+  price: string;
+
+  imageUrl: any;
+  subImageUrls: any;
+
+  // gender: string;
+  // stock: string;
+  descriptionSort: string;
+  description: string;
+  subCategoryId: string;
+  // sizes: string;
+  // colors: string;
+}
+
+export interface ClothesPropsData {
+  id: number;
+  name: string;
+  gender?: string;
+  stock?: number;
   price: number;
-  desc_sort: string;
-  desc: string;
-  img: {
-    main: string;
-    sub: string[];
-  };
+  descriptionSort?: string;
+  description: string;
+  subCategoryId?: number;
+  Sub_Category: SubCateInClothesProps;
+  imageUrl: string;
+  subImageUrls?: any;
+  sizes?: string;
+  colors?: string;
+}
+export interface SubCateInClothesProps {
+  id: number;
+  name: string;
+  categoryId: number;
+  Categories: {
+    id: number;
+    name: string;
+  }[];
 }
 export interface ClothesProps {
-  id: string;
-  name: string;
-  price: number;
-  desc_sort?: string;
-  desc?: string;
-  genderId?: string;
-  subCategoryId?: string;
-  categoryId?: string;
-  img: {
-    main: string;
-    sub?: string[];
-  };
-  size?: string[];
-  color: string[];
+  data: ClothesPropsData[];
+  currentPage: number;
+  pageSize: number;
+  totalCount: number;
+  totalPages: number;
 }
+
 export interface CategoriesProps {
-  id: string;
+  id: number;
   name: string;
-  group: number;
-  data?: SubCateProps[];
+  Sub_Categories: {
+    id: number;
+    name: string;
+  }[];
+  gender: string;
+}
+
+export interface apiResponse {
+  err: number;
+  message: string;
+  data: CategoriesProps[];
 }
 export interface GetSubCateProps {
   subName: string;
@@ -39,17 +67,23 @@ export interface GetSubCateProps {
 }
 
 export interface SubCateProps {
-  id: string;
-  categoryId: string;
+  id: number;
   name: string;
+  categoryId: number;
 }
 
 export interface CartItem {
-  product: ClothesProps;
+  product: ClothesPropsData;
   qty: number;
+  // size: string;
+  // color:string;
 }
 
 export interface UserProps {
   email: string;
   password: string;
+}
+export interface CateApiProps {
+  name: string;
+  gender: string;
 }

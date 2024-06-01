@@ -1,7 +1,5 @@
-import LoginForm from "@/components/LoginForm";
-import { Button } from "@/components/ui/button";
 import CommonFormLoginSignin from "@/components/CommonFormLoginSignin";
-import Link from "next/link";
+import LoginForm from "@/components/LoginForm";
 const data = {
   buttonText: "Tạo tài khoản",
   description:

@@ -2,6 +2,7 @@ import LimitedPromotion from "@/components/LimitedPromotion";
 import OutStanding from "@/components/OutStanding";
 import SlideShow from "@/components/swiper";
 import { Button } from "@/components/ui/button";
+import { formatPrice } from "@/helpers";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -61,7 +62,7 @@ export default function HomePage() {
                 <div className="flex justify-between items-center px-10">
                   <p className="uppercase font-medium text-base">{title}</p>
                   <Button variant="link" className="text-xs">
-                    Xem thêm
+                    Read more
                   </Button>
                 </div>
                 <div className="grid xl:grid-cols-4 sm:grid-cols-2 grid-cols-1 gap-4">
@@ -86,11 +87,9 @@ export default function HomePage() {
                               width="300"
                               height="300"
                               sizes="(max-width: 640px) 40vw, 20vw"
-
                               alt={`${idx}`}
                               // className="w-[160px] h-[160px]"
                               // className="xl:w-4/5 xl:h-auto md:w-auto md:h-[200px] w-full h-full  mx-auto"
-
                             />
                           </div>
                           <div className="md:mt-2 xl:mt-0 my-auto mx-2 rounded-sm">
@@ -113,10 +112,14 @@ export default function HomePage() {
 
         <div className="md:w-1/2 w-full mx-auto bg-primary xl:py-10 sm:py-6 py-4 rounded text-white">
           <div className="text-center space-y-3 ">
-            <h1 className="xl:text-4xl text-2xl font-bold uppercase">Giá mới hấp dẫn</h1>
-            <h1 className="xl:text-xl text-base font-semibold">Số lượng có hạn</h1>
+            <h1 className="xl:text-4xl text-2xl font-bold uppercase">
+              Attractive price
+            </h1>
+            <h1 className="xl:text-xl text-base font-semibold">
+              Limited quantity
+            </h1>
             <p className="text-base font-medium">
-              Mua sắm online tiện lợi và nhận hàng tại cửa hàng gần bạn
+              Shop online conveniently and pick up at a store near you
             </p>
           </div>
         </div>
@@ -134,46 +137,46 @@ const listImgIcon = [
   {
     href: "/",
     img: "/img/flash.png",
-    title: "Khung giờ săn sale",
+    title: "Sale",
   },
   {
     href: "/",
     img: "/img/free-ship.png",
-    title: "Miễn phí ship",
+    title: "Free shipping",
   },
   {
     href: "/",
     img: "/img/voucher-xtra.png",
-    title: "Voucher giảm dên 500.000Đ",
+    title: "Voucher",
   },
   {
     href: "/",
     img: "/img/cheap.png",
-    title: "Gì cũng rẻ",
+    title: "Cheap",
   },
   {
     href: "/",
     img: "/img/coupon.png",
-    title: "Mã giảm giá",
+    title: "Coupon",
   },
   {
     href: "/",
     img: "/img/outlet.png",
-    title: "Hàng hiệu outlet",
+    title: "Outlet",
   },
   {
     href: "/",
     img: "/img/world.png",
-    title: "Quốc tế - Deal đồng giá",
+    title: "World",
   },
   {
     href: "/",
     img: "/img/percent.png",
-    title: "Bắt trend giá sốc",
+    title: "Trend",
   },
 ];
 
-const listTab = ["Deal cho bạn", "Hàng hiệu giá tốt"];
+const listTab = ["Deal for you", "Good prices"];
 
 const listDeal = [
   {
@@ -193,26 +196,11 @@ const listDeal = [
     img: `${imgMenVar}/bottom/E463458-000/vngoods_06_463458.jpg`,
     price: 400000,
     discount: 1,
-  },  {
+  },
+  {
     href: "/",
     img: `${imgMenVar}/bottom/E463458-000/vngoods_06_463458.jpg`,
     price: 1150000,
     discount: 90,
   },
 ];
-
-export const formatPrice = (price: number, discount: number = 0) => {
-  const discountP: number = discount / 100;
-  const priceDiscount: number = price * (1 - discountP);
-
-  const convertPrice: string = price.toLocaleString("it-IT", {
-    style: "currency",
-    currency: "VND",
-  });
-
-  const convertPriceDiscount: string = priceDiscount.toLocaleString("it-IT", {
-    style: "currency",
-    currency: "VND",
-  });
-  return { convertPrice, convertPriceDiscount };
-};

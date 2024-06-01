@@ -6,7 +6,7 @@ const OutStanding = () => {
   return (
     <div className="bg-white p-3 rounded">
       <div className="text-center space-y-10">
-        <h1 className="xl:text-4xl text-2xl font-bold uppercase">Danh mục nổi bật</h1>
+        <h1 className="xl:text-4xl text-2xl font-bold uppercase">Featured categories</h1>
         <div className="grid grid-cols-12  xl:gap-4 gap-2 ">
           {ListOutstanding.map((item, idx) => (
             <Link
@@ -39,36 +39,36 @@ export default OutStanding;
 
 const ListOutstanding = [
   {
-    name: "Đồ mặc ngoài",
+    name: "Outwears",
     img: `${imgMenVar}/bottom/E463458-000/vngoods_06_463458.jpg`,
   },
   {
-    name: "Đồ nỉ",
+    name: "Sweatshirts",
     img: `${imgMenVar}/bottom/E463458-000/vngoods_06_463458.jpg`,
   },
   {
-    name: "Áo len",
+    name: "Sweaters",
     img: `${imgMenVar}/bottom/E463458-000/vngoods_06_463458.jpg`,
   },
   {
-    name: "Áo giả lông cừu",
+    name: "Fleece Turtleneck",
     img: `${imgMenVar}/bottom/E463458-000/vngoods_06_463458.jpg`,
   },
 
   {
-    name: "Áo sơ mi",
+    name: "Shirts ",
     img: `${imgMenVar}/bottom/E463458-000/vngoods_06_463458.jpg`,
   },
   {
-    name: "Áo thun",
+    name: "T-shirts",
     img: `${imgMenVar}/bottom/E463458-000/vngoods_06_463458.jpg`,
   },
   {
-    name: "Quần dài",
+    name: "Pants",
     img: `${imgMenVar}/bottom/E463458-000/vngoods_06_463458.jpg`,
   },
   {
-    name: "Đầm",
+    name: "Dresses",
     img: `${imgMenVar}/bottom/E463458-000/vngoods_06_463458.jpg`,
   },
 ];

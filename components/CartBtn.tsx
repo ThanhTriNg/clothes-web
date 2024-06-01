@@ -1,6 +1,6 @@
 "use client";
 
-import { formatPrice } from "@/pages";
+import { formatPrice } from "@/helpers"; 
 import {
   totalCartItemSelector,
   totalPriceSelector,

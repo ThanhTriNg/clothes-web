@@ -6,14 +6,12 @@ export interface ProductProps {
   img: string;
   price: number;
 }
-export interface ProductDetailSlide {
-  // thumbnail: {
-  //   img: string;
-  // }[];
+export interface ProductDetailSlideProps {
   thumbnail: {
-    main: string;
-    sub?: string[];
+    imageUrl: string;
+    subImageUrls?: string[];
   };
+  description: string;
 }
 //ko xai
 export interface ProductCardProps {

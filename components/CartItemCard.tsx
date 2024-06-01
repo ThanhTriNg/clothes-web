@@ -1,4 +1,4 @@
-import { formatPrice } from "@/pages";
+import { formatPrice } from "@/helpers";
 import { CartItem } from "@/redux/module";
 import { decrement, increment, remove } from "@/redux/reducer/Cart";
 import { useAppDispatch } from "@/redux/store/Store";
@@ -23,7 +23,7 @@ const CartItemCard = ({ cartItem }: Props) => {
     <div>
       <div className="grid grid-cols-7 items-center py-2 gap-x-2">
         <Image
-          src={cartItem.product.img.main}
+          src={cartItem.product.imageUrl}
           width="200"
           height="150"
           alt={cartItem.product.name}

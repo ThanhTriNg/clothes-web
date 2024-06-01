@@ -2,7 +2,8 @@ import ProductDetailDesc from "@/components/ProductDetailDesc";
 import ProductDetailSlide from "@/components/ProductDetailSlide";
 import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
-
+import Error from "next/error";
+import Loading from "@/components/loading";
 import { Button } from "@/components/ui/button";
 import { getClothesByIdThunk, getClothesThunk } from "@/redux/reducer/Clothes";
 import { AppDispatch, RootState } from "@/redux/store/Store";
@@ -23,15 +24,20 @@ const slidesPerView = 3;
 const DetailPage = () => {
   const router = useRouter();
   const dispatch = useDispatch<AppDispatch>();
-  const { productId } = router.query;
-
+  const { category: slugCateName, productId } = router.query;
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isLike, setIsLike] = useState<boolean>(false);
   const [maxSlidePage, setMaxSlidePage] = useState<number>();
-
-  const { clothesInfo, clothesById } = useSelector(
+  const [isRightSlug, setIsRightSlug] = useState<boolean>(true);
+  const { clothesInfoData, clothesById, clothesByIdLoading } = useSelector(
     (state: RootState) => state.clothes
   );
+  useEffect(() => {
+    if (slugCateName && typeof slugCateName === "string" && clothesById) {
+      setIsRightSlug(fnIsRightSlug(slugCateName));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [clothesById, slugCateName]);
 
   useEffect(() => {
     dispatch(getClothesThunk("0"));
@@ -40,21 +46,22 @@ const DetailPage = () => {
     }
   }, [dispatch, productId]);
   useEffect(() => {
-    if (clothesInfo) {
-      setMaxSlidePage(clothesInfo.length - 1 - slidesPerView);
+    if (clothesInfoData) {
+      setMaxSlidePage(clothesInfoData.length - 1 - slidesPerView);
     }
-  }, [clothesInfo]);
+  }, [clothesInfoData]);
   const sliderRef = useRef<any>(null);
   const updateIndex = () => {
     setCurrentSlide(sliderRef.current.swiper.realIndex);
   };
   useEffect(() => {
     setCurrentSlide(0);
-    if (clothesById && clothesInfo) sliderRef.current.swiper.slideTo(0);
+    if (clothesById && clothesInfoData) sliderRef.current.swiper.slideTo(0);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [productId]);
 
   useEffect(() => {
-    if (clothesById && clothesInfo) {
+    if (clothesById && clothesInfoData) {
       const swiperInstance = sliderRef.current.swiper;
 
       if (swiperInstance) {
@@ -67,7 +74,7 @@ const DetailPage = () => {
         }
       };
     }
-  }, [clothesById, clothesInfo]);
+  }, [clothesById, clothesInfoData]);
   const slidePrev = () => {
     sliderRef.current.swiper.slidePrev();
   };
@@ -77,12 +84,29 @@ const DetailPage = () => {
   const handleClickLike = () => {
     setIsLike((prev) => !prev);
   };
-  return (
+
+  const fnIsRightSlug = (slugCateName: string) => {
+    return (
+      clothesById?.Sub_Category.Categories[0].name.toLowerCase() ===
+      slugCateName.toLowerCase()
+    );
+  };
+  return clothesByIdLoading ? (
+    <div className="flex justify-center items-center min-h-[85vh] ">
+      <Loading />
+    </div>
+  ) : isRightSlug ? (
     clothesById &&
-    clothesInfo && (
+    clothesInfoData && (
       <div className="min-h-screen bg-white p-2">
         <div className="grid grid-cols-12 md:gap-x-8 gap-x-2">
-          <ProductDetailSlide thumbnail={clothesById?.img} />
+          <ProductDetailSlide
+            description={clothesById.description}
+            thumbnail={{
+              imageUrl: clothesById.imageUrl,
+              subImageUrls: JSON.parse(clothesById.subImageUrls),
+            }}
+          />
           <ProductDetailDesc clothes={clothesById} />
         </div>
         <div className="font-semibold text-lg mt-20 space-y-5">
@@ -95,9 +119,10 @@ const DetailPage = () => {
             pagination={{ clickable: true }}
             className="h-full w-full !flex"
           >
-            {clothesInfo.map((item, idx: number) => {
-              const img = item.img.main;
-              const href = `/store/tops/detail/${item.id}`;
+            {clothesInfoData.map((item, idx: number) => {
+              const img = item.imageUrl;
+              const cateName = item.Sub_Category.Categories[0].name.toLowerCase();
+              const href = `/store/${cateName}/detail/${item.id}`;
               const currentProduct = item.id.toString() === productId;
               // console.log(item.id, productId);
               return (
@@ -148,28 +173,30 @@ const DetailPage = () => {
         </div>
       </div>
     )
+  ) : (
+    <Error statusCode={404} />
   );
 };
 
 export default DetailPage;
 
-const listImg = [
-  {
-    img: `${imgMenVar}/bottom/E463458-000/vngoods_06_463458.jpg`,
-  },
-  {
-    img: `${imgWomenVar}/bottom/E458340-000/vngoods_31_458340.png`,
-  },
-  {
-    img: `${imgMenVar}/bottom/E463458-000/vngoods_06_463458.jpg`,
-  },
-  {
-    img: `${imgWomenVar}/bottom/E458340-000/vngoods_31_458340.png`,
-  },
-  {
-    img: `${imgMenVar}/bottom/E463458-000/vngoods_06_463458.jpg`,
-  },
-  {
-    img: `${imgWomenVar}/bottom/E458340-000/vngoods_31_458340.png`,
-  },
-];
+// const listImg = [
+//   {
+//     img: `${imgMenVar}/bottom/E463458-000/vngoods_06_463458.jpg`,
+//   },
+//   {
+//     img: `${imgWomenVar}/bottom/E458340-000/vngoods_31_458340.png`,
+//   },
+//   {
+//     img: `${imgMenVar}/bottom/E463458-000/vngoods_06_463458.jpg`,
+//   },
+//   {
+//     img: `${imgWomenVar}/bottom/E458340-000/vngoods_31_458340.png`,
+//   },
+//   {
+//     img: `${imgMenVar}/bottom/E463458-000/vngoods_06_463458.jpg`,
+//   },
+//   {
+//     img: `${imgWomenVar}/bottom/E458340-000/vngoods_31_458340.png`,
+//   },
+// ];

@@ -1,19 +1,23 @@
-import { GetSubCateProps } from "../module";
+import { CateApiProps, GetSubCateProps } from "../module";
 import AxiosClient from "./AxiosClient";
+
 const CategoriesApi = {
   getCategories: () => {
     return AxiosClient.get("/categories");
   },
-  getMenSubCate: () => {
-    return AxiosClient.get(`/men`);
-  },
-  getWomenSubCate: () => {
-    return AxiosClient.get(`/women`);
+
+  getSubCateByCateId: (categoryId: number) => {
+    return AxiosClient.get(`/subCategories?categoryId=${categoryId}`);
   },
 
-  getSubCateByCategoryId: (getSubCate: GetSubCateProps) => {
-    const { subName, categoryId } = getSubCate;
-    return AxiosClient.get(`/${subName}/?categoryId=${categoryId}`);
+  //create cate
+  createCate: (category: CateApiProps) => {
+    return AxiosClient.post("/categories", category);
+  },
+
+  // sub cate
+  getAllSubCate: () => {
+    return AxiosClient.get("/subCategories");
   },
 };
 

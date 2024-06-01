@@ -1,6 +1,6 @@
 "use client";
 
-import { ClothesProps } from "@/redux/module";
+import { ClothesPropsData } from "@/redux/module";
 import {
   decrement,
   increment,
@@ -11,7 +11,7 @@ import QtyBtn from "./QtyBtn";
 import { Button } from "./ui/button";
 
 interface Props {
-  product: ClothesProps;
+  product: ClothesPropsData;
 }
 
 const AddToCartBtn = (props: Props) => {

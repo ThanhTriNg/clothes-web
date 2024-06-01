@@ -3,10 +3,10 @@ import AxiosClient from "./AxiosClient";
 
 const UserApi = {
   logIn: (user: UserProps) => {
-    return AxiosClient.post("/login", user);
+    return AxiosClient.post("/auth/login", user);
   },
   signUp: (user: UserProps) => {
-    return AxiosClient.post("signup", user);
+    return AxiosClient.post("/auth/register", user);
   },
 };
 

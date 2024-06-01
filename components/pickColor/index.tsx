@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import { AppDispatch, RootState } from "@/redux/store/Store";
 import { useDispatch, useSelector } from "react-redux";
 import { getColorNameThunk } from "@/redux/reducer/Clothes";
+import { useRouter } from "next/router";
 interface PickColorProps {
   colors: string[];
   size?: number;
@@ -16,18 +17,23 @@ const PickColor = ({
   spaceBetween = 4,
   showName = false,
 }: PickColorProps) => {
+  // const colorsObj = JSONparse(colors);
   const dispatch = useDispatch<AppDispatch>();
+  const router = useRouter();
+  const { productId } = router.query;
 
   const [colorHex, setColorHex] = useState<string>(
     removeHashFromColorCode(colors[0])
   );
+
   const [colorName, setColorName] = useState<string>();
 
   const { colorAPI } = useSelector((state: RootState) => state.clothes);
 
   useEffect(() => {
     setColorHex(removeHashFromColorCode(colors[0]));
-  }, [colors]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [colors[0]]);
 
   useEffect(() => {
     if (colorHex) {
@@ -45,14 +51,13 @@ const PickColor = ({
     const removeHash = removeHashFromColorCode(color);
     setColorHex(removeHash);
   };
-  
+
   const sizeText = `${size}px`;
   const spaceBetweenText = `${spaceBetween}px`;
-
   return (
     <div className="space-y-2">
       {showName ? (
-        <h1 className="uppercase font-semibold">Màu sắc: {colorName} </h1>
+        <h1 className="uppercase font-semibold">Color: {colorName} </h1>
       ) : (
         ""
       )}
@@ -64,6 +69,7 @@ const PickColor = ({
       >
         {colors.map((color: string, idx: number) => {
           const activeColor = `#${colorHex}`;
+
           return (
             <div
               onClick={() => handleClick(color)}
@@ -98,3 +104,9 @@ const removeHashFromColorCode = (colorCode: string): string => {
   // If the color code doesn't start with '#', return it as is
   return colorCode;
 };
+
+// const isValidColorHex = (colorHex: string) => {
+//   // Regular expression to match valid color hex codes
+//   const hexRegex = /^#?([0-9A-F]{3}){1,2}$/i;
+//   return hexRegex.test(colorHex);
+// };

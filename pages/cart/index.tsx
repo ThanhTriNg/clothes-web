@@ -1,17 +1,21 @@
 import CartItemCard from "@/components/CartItemCard";
 import { totalPriceSelector } from "@/redux/reducer/Cart";
 import { RootState, useAppSelector } from "@/redux/store/Store";
-import { formatPrice } from "..";
+import { formatPrice } from "@/helpers";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 const Cart = () => {
-  const cartItems = useAppSelector((state:RootState) => state.cartPersistedReducer.cartItems);
+  const cartItems = useAppSelector(
+    (state: RootState) => state.cartPersistedReducer.cartItems
+  );
   const totalPrice = useAppSelector(totalPriceSelector);
   const { convertPrice } = formatPrice(totalPrice);
+
+  console.log(cartItems)
   return totalPrice === 0 ? (
     <div className=" min-h-[calc(100vh-96px-96px)] flex items-center justify-center">
-      <h1 className="text-2xl text-primary text-center ">
-        Giỏ hàng đang trống!
-      </h1>
+      <h1 className="text-2xl text-primary text-center ">Empty!</h1>
     </div>
   ) : (
     <div className="p-2  ">
@@ -20,9 +24,16 @@ const Cart = () => {
       })}
       <div className="pt-4">
         <p className="text-center text-lg">
-          Tổng giá tiền:{" "}
-          <strong className=" text-primary">{convertPrice}</strong>
+          Total price: <strong className=" text-primary">{convertPrice}</strong>
         </p>
+      </div>
+      <div className="pt-4 text-center">
+        <Button className="">
+          <Link href="/" className="px-4">
+            Order now
+          </Link>
+        </Button>
+
       </div>
     </div>
   );

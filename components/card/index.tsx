@@ -1,31 +1,31 @@
-import { formatPrice } from "@/pages";
+import { JSONparse, formatPrice } from "@/helpers";
 import { Heart } from "@phosphor-icons/react";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import PickColor from "../pickColor";
 
-import { CategoriesProps, ClothesProps } from "@/redux/module";
+import { CategoriesProps, ClothesPropsData } from "@/redux/module";
 import { useRouter } from "next/router";
 import { convertNameCate } from "../LimitedPromotion";
-interface CardProps extends ClothesProps {
+interface CardProps extends ClothesPropsData {
   link?: string | undefined;
   categoriesInfo?: CategoriesProps[];
 }
 
 const Card = ({
   id,
-  img,
+  imageUrl,
   name,
   price,
-  color,
+  colors,
+  Sub_Category,
   link,
-  categoryId,
   categoriesInfo,
 }: CardProps) => {
   const { convertPrice } = formatPrice(price);
   const [isLike, setIsLike] = useState<boolean>(false);
-  const [categoryTest, setCategoryTest] = useState<any>();
+  const [subCateName, setSubCateName] = useState<string>();
 
   const handleClickLike = () => {
     setIsLike((prev) => !prev);
@@ -33,18 +33,24 @@ const Card = ({
   const router = useRouter();
   const { category } = router.query;
 
-  const getCategoryNameById = (categoryId: string) => {
-    const cate = categoriesInfo?.find((item) => item.id === categoryId);
+  const getCategoryNameById = (subCategoryId: number) => {
+    const cate = categoriesInfo?.find((item) => item.id === subCategoryId);
     return cate?.name;
   };
+
+  //get name of categories
   useEffect(() => {
-    if (categoryId) {
-      const cateName = getCategoryNameById(categoryId);
-      if (cateName) {
-        setCategoryTest(convertNameCate(cateName));
-      }
-    }
-  }, [categoryId]);
+    setSubCateName(Sub_Category?.Categories[0].name.toLowerCase());
+  }, [Sub_Category?.Categories]);
+
+  // useEffect(() => {
+  //   if (subCategoryId) {
+  //     const cateName = getCategoryNameById(subCategoryId);
+  //     if (cateName) {
+  //       setSubCateName(convertNameCate(cateName));
+  //     }
+  //   }
+  // }, [subCategoryId]);
 
   let href = "";
   if (link) {
@@ -52,9 +58,8 @@ const Card = ({
   } else if (category) {
     href = `/store/${category}/detail/${id}`;
   } else {
-    href = `/store/${categoryTest}/detail/${id}`;
+    href = `/store/${subCateName}/detail/${id}`;
   }
-
   return (
     <div className="relative col-span-1 transition-all hover:scale-105 cursor-pointer select-none">
       {isLike ? (
@@ -75,7 +80,8 @@ const Card = ({
       )}
       <Link href={href} className="space-y-4">
         <Image
-          src={img.main}
+          // src={img.main}
+          src={imageUrl}
           // width="0"
           // height="0"
           // sizes="100vw"
@@ -87,7 +93,9 @@ const Card = ({
           alt="Image"
         />
 
-        <PickColor colors={color} />
+   
+        {colors && <PickColor colors={JSONparse(colors)} />}
+
         <p className={`truncate-2  font-semibold text-base h-[3rem]`}>{name}</p>
         <p className={`truncate-2  font-bold text-primary`}>{convertPrice}</p>
       </Link>

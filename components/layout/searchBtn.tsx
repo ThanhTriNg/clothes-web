@@ -6,18 +6,18 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { ChangeEvent, useEffect, useState } from "react";
-import ReactLoading from "react-loading";
 import { useDispatch, useSelector } from "react-redux";
 import { convertNameCate } from "../LimitedPromotion";
 import { Input } from "../ui/input";
 import { CategoriesProps } from "@/redux/module";
+import Loading from "@/components/loading";
 
 const Search = () => {
   const router = useRouter();
   const [inputValue, setInputValue] = useState<string>("");
   const [debouncedInputValue, setDebouncedInputValue] =
     useState<string>("null");
-    
+
   const { clothesByName, loadingClothesByName } = useSelector(
     (state: RootState) => state.clothes
   );
@@ -65,15 +65,15 @@ const Search = () => {
               className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 z-10 "
             />
           )}
-          <Input type="text" onChange={handleInputChange} value={inputValue} className="" />
+          <Input
+            type="text"
+            onChange={handleInputChange}
+            value={inputValue}
+            className=""
+          />
           {loadingClothesByName && (
             <div className="absolute right-3 top-1/2 transform -translate-y-1/2 z-10">
-              <ReactLoading
-                type={"spin"}
-                color="#0000ff80"
-                height="18px"
-                width="18px"
-              />
+              <Loading />
             </div>
           )}
         </div>
@@ -81,14 +81,16 @@ const Search = () => {
         {categoriesInfo && clothesByName && clothesByName.length > 0 && (
           <div className="mt-2 shadow-md absolute md:w-[200%] w-[80vw] bg-gray-50 p-3 -right-1/2 rounded-sm hidden group-focus-within:block">
             {clothesByName.map((item, idx: number) => {
-              const category = findCategory(item.categoryId, categoriesInfo);
-              const cateName = convertNameCate(category?.name as any);
+              const cateName =
+                item.Sub_Category.Categories[0].name.toLowerCase();
+              // const category = findCategory(item.subCategoryId, categoriesInfo);
+              // const cateName = convertNameCate(category?.name as any);
               return (
                 <div key={`cart-item-${idx}`} className="">
                   <Link href={`/store/${cateName}/detail/${item.id}`}>
                     <div className="grid grid-cols-4 p-2  items-center hover:bg-black/10 hover:cursor-pointer gap-x-3">
                       <Image
-                        src={item.img.main}
+                        src={item.imageUrl}
                         width="0"
                         height="0"
                         sizes="100vw"
@@ -96,9 +98,7 @@ const Search = () => {
                         className="col-span-1 w-full  !mt-0"
                       />
                       <h1 className="col-span-2"> {item.name} </h1>
-                      <h1 className="col-span-1  text-center">
-                        {item.price}đ{" "}
-                      </h1>
+                      <h1 className="col-span-1  text-center">{item.price}đ</h1>
                     </div>
                   </Link>
                 </div>
@@ -114,7 +114,7 @@ const Search = () => {
 export default Search;
 
 export const findCategory = (
-  categoryId: string | undefined,
+  categoryId: number | undefined,
   categoriesInfo: CategoriesProps[] | null
 ) => {
   if (categoriesInfo) {

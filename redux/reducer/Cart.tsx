@@ -1,6 +1,6 @@
 import { PayloadAction, createSelector, createSlice } from "@reduxjs/toolkit";
 // import CategoriesApi from "../api/CategoriesApi";
-import { CartItem, ClothesProps } from "../module";
+import { CartItem, ClothesPropsData } from "../module";
 import { RootState } from "../store/Store";
 import { boolean } from "zod";
 
@@ -16,7 +16,7 @@ const initialState: myState = {
   isOpenDrawerCart: false,
 };
 
-const isExist = (cartItems: CartItem[], id: string) => {
+const isExist = (cartItems: CartItem[], id: number) => {
   return cartItems.find((el) => el.product.id === id);
 };
 
@@ -24,17 +24,14 @@ export const cartSlice = createSlice({
   name: "cart",
   initialState,
   reducers: {
-    increment: (state, action: PayloadAction<ClothesProps>) => {
-      // const item = state.cartItems.find(
-      //   (el) => el.product.id === action.payload.id
-      // );
+    increment: (state, action: PayloadAction<ClothesPropsData>) => {
       const item = isExist(state.cartItems, action.payload.id);
       if (item) item.qty++;
       else {
         state.cartItems.push({ product: action.payload, qty: 1 });
       }
     },
-    decrement: (state, action: PayloadAction<ClothesProps>) => {
+    decrement: (state, action: PayloadAction<ClothesPropsData>) => {
       const item = isExist(state.cartItems, action.payload.id);
 
       if (item) {
@@ -46,7 +43,7 @@ export const cartSlice = createSlice({
         }
       }
     },
-    remove: (state, action: PayloadAction<ClothesProps>) => {
+    remove: (state, action: PayloadAction<ClothesPropsData>) => {
       const item = isExist(state.cartItems, action.payload.id);
       if (item) {
         item.qty = 0;
@@ -76,7 +73,7 @@ export const totalPriceSelector = createSelector([cartItems], (cartItems) =>
 );
 
 export const productQtyInCartSelector = createSelector(
-  [cartItems, (cartItems, productId: string) => productId],
+  [cartItems, (cartItems, productId: number) => productId],
   (cartItems, productId) =>
     cartItems.find((el) => el.product.id === productId)?.qty
 );

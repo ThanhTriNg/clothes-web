@@ -1,15 +1,15 @@
 import { useState } from "react";
 
-const PickSize = ({ size }: any) => {
-  const [isActive, setIsActive] = useState<number>();
+const PickSize = ({ sizes }: { sizes: string[] }) => {
+  const [isActive, setIsActive] = useState<number>(0);
   const handleClick = (idx: number) => {
     setIsActive(idx);
   };
   return (
     <div className="space-y-2">
-      <h1 className="uppercase font-semibold">Kích cỡ: Nam S</h1>
+      <h1 className="uppercase font-semibold">Size: {sizes[isActive]} </h1>
       <div className="flex gap-x-2">
-        {size.map((item: string, idx: number) => {
+        {sizes.map((item: string, idx: number) => {
           return (
             <div
               key={`size-${item}`}
@@ -28,18 +28,3 @@ const PickSize = ({ size }: any) => {
 };
 
 export default PickSize;
-
-const size = [
-  {
-    size: "XS",
-  },
-  {
-    size: "S",
-  },
-  {
-    size: "M",
-  },
-  {
-    size: "L",
-  },
-];

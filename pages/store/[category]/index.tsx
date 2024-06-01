@@ -1,109 +1,89 @@
-import ProductList from "@/components/productList";
-import ProductNav from "@/components/productNav";
-import { Combobox } from "@/components/selectBox";
-import { getCategoriesThunk } from "@/redux/reducer/Categories";
-import { getClothesByCategoryThunk } from "@/redux/reducer/Clothes";
+import StoreUI from "@/components/storeUI";
+import {
+  getCategoriesThunk,
+  getSubCateByCateIdThunk,
+} from "@/redux/reducer/Categories";
+import { getClothesBySubCategoryThunk } from "@/redux/reducer/Clothes";
 import { AppDispatch, RootState } from "@/redux/store/Store";
 import { GetStaticPaths, GetStaticProps } from "next";
 import { useRouter } from "next/router";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 const Category = () => {
   const dispatch = useDispatch<AppDispatch>();
   const router = useRouter();
   const { category } = router.query;
-
   const { clothesInfo, sortValue } = useSelector(
     (state: RootState) => state.clothes
   );
-  const { categoriesInfo } = useSelector(
+  const { categoriesInfo, subCateInfo } = useSelector(
     (state: RootState) => state.categories
   );
+  const [idCate, setIdCate] = useState<number>();
+
+  const [idSubCate, setIdSubCate] = useState<number[] | undefined>([]);
   useEffect(() => {
     dispatch(getCategoriesThunk());
   }, [dispatch]);
 
+  //call the api to get id cate
   useEffect(() => {
-    if (category) {
-      categoriesInfo?.forEach((item) => {
-        const products = getCategoryData(category);
+    categoriesInfo?.map((item, idx) => {
+      const cateNameLower = item.name.toLowerCase();
+      if (category === cateNameLower) {
+        setIdCate(item.id);
+        // dispatch(getSubCateByCateIdThunk(item.id));
+      }
+    });
+  }, [categoriesInfo, category]);
 
-        if (item.name === products) {
-          dispatch(
-            getClothesByCategoryThunk({ categoryId: item.id, sortValue })
-          );
-        }
-        // console.log(products, category);
-      });
+  // if have id cate => get SUB CATE by id cate
+  useEffect(() => {
+    if (idCate) {
+      dispatch(getSubCateByCateIdThunk(idCate));
     }
-  }, [categoriesInfo, category, dispatch, sortValue]);
+  }, [idCate, dispatch]);
+
+  //reset setIdSubCate when change params
+  useEffect(() => {
+    setIdSubCate([]);
+  }, [category]);
+
+  //get SUB CATE success => set all id of SUB CATE to setIdSubCate
+  useEffect(() => {
+    subCateInfo?.map((item) => {
+      setIdSubCate((prev: number[] | undefined) => {
+        if (prev !== undefined) return [...prev, item.id];
+      });
+    });
+  }, [subCateInfo]);
+
+  useEffect(() => {
+    if (idSubCate && idSubCate.length > 0) {
+      dispatch(
+        getClothesBySubCategoryThunk({
+          subCateId: idSubCate,
+          sortValue,
+        })
+      );
+    }
+  }, [idSubCate, dispatch, sortValue]);
+
+  useEffect(() => {}, [clothesInfo]);
 
   return (
-    <div className="min-h-screen">
-      <div className="bg-white md:p-6 md:space-y-10 p-2 space-y-2">
-        <h1 className="uppercase font-bold text-xl md:text-3xl p-10 text-center md:text-left">
-          {getCategoryData(category as string)}
-        </h1>
-
-        <div className="flex justify-between">
-          <div className="space-y-3">
-            <h1>Kết quả</h1>
-            <p>{clothesInfo?.length} mặt hàng</p>
-          </div>
-          <div className="space-y-3">
-            <h1>Sắp xếp theo</h1>
-            <Combobox textFilters={textFilters} />
-          </div>
-        </div>
-        {categoriesInfo && clothesInfo && (
-          <div className="grid grid-cols-12 gap-x-8">
-            <ProductNav
-              className="md:col-span-4 col-span-full mb-4 md:mb-0"
-              categoryArr={categoriesInfo}
-            />
-            <ProductList
-              className="md:col-span-8 col-span-full"
-              products={clothesInfo}
-            />
-          </div>
-        )}
-      </div>
-    </div>
+    categoriesInfo &&
+    clothesInfo?.data && (
+      <StoreUI
+        categoriesInfo={categoriesInfo}
+        clothesInfoData={clothesInfo.data}
+        title={category as string}
+      />
+    )
   );
 };
 
 export default Category;
-
-const textFilters = [
-  {
-    label: "Tiêu biểu",
-  },
-  {
-    label: "Hàng mới về",
-  },
-  {
-    label: "Từ thấp đến cao",
-  },
-  {
-    label: "Từ cao đến thấp",
-  },
-];
-
-export const getCategoryData = (category: string | string[]): string => {
-  // Implement logic to fetch or return data based on the category
-  switch (category) {
-    case "tops":
-      return "Áo";
-    case "bottoms":
-      return "Quần";
-    case "outwears":
-      return "Đồ mặc ngoài";
-    case "dresses":
-      return "Đầm";
-    default:
-      return "";
-  }
-};
 
 export const getStaticPaths: GetStaticPaths = async () => {
   // Define the allowed categories

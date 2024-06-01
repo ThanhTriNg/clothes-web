@@ -1,8 +1,6 @@
-import { formatPrice } from "@/pages";
+import { formatPrice } from "@/helpers";
 import { CartItem } from "@/redux/module";
-import {
-  remove
-} from "@/redux/reducer/Cart";
+import { remove } from "@/redux/reducer/Cart";
 import { getCategoriesThunk } from "@/redux/reducer/Categories";
 import { AppDispatch, RootState } from "@/redux/store/Store";
 import { Trash2 } from "lucide-react";
@@ -34,8 +32,10 @@ const Cart = ({ cartItem }: CartProps) => {
   }, []);
 
   const findHref = () => {
-    const category = findCategory(cartItem.product.categoryId, categoriesInfo);
-    const cateName = convertNameCate(category?.name as any);
+    // const category = findCategory(cartItem.product.categoryId, categoriesInfo);
+    // const cateName = convertNameCate(category?.name as any);
+    const cateName =
+      cartItem.product.Sub_Category.Categories[0].name.toLowerCase();
     const href: string = `/store/${cateName}/detail/${cartItem.product.id}`;
     return href;
   };
@@ -44,12 +44,12 @@ const Cart = ({ cartItem }: CartProps) => {
     event.preventDefault();
     dispatch(remove(cartItem.product));
   };
-
+  console.log(cartItem.product.imageUrl);
   return (
     <Link href={href ? href : ""}>
       <div className="grid md:grid-cols-6 grid-cols-3 bg-white items-center justify-center md:gap-x-4 gap-x-2 px-4 pb-4 pt-2">
         <Image
-          src={cartItem.product.img.main}
+          src={cartItem.product.imageUrl}
           width="200"
           height="150"
           alt={cartItem.product.name}
@@ -74,5 +74,3 @@ const Cart = ({ cartItem }: CartProps) => {
 };
 
 export default Cart;
-
-
