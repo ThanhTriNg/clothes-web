@@ -44,7 +44,6 @@ const Cart = ({ cartItem }: CartProps) => {
     event.preventDefault();
     dispatch(remove(cartItem.product));
   };
-  console.log(cartItem.product.imageUrl);
   return (
     <Link href={href ? href : ""}>
       <div className="grid md:grid-cols-6 grid-cols-3 bg-white items-center justify-center md:gap-x-4 gap-x-2 px-4 pb-4 pt-2">

@@ -91,6 +91,7 @@ const DetailPage = () => {
       slugCateName.toLowerCase()
     );
   };
+
   return clothesByIdLoading ? (
     <div className="flex justify-center items-center min-h-[85vh] ">
       <Loading />
@@ -120,8 +121,8 @@ const DetailPage = () => {
             className="h-full w-full !flex"
           >
             {clothesInfoData.map((item, idx: number) => {
-              const img = item.imageUrl;
-              const cateName = item.Sub_Category.Categories[0].name.toLowerCase();
+              const cateName =
+                item.Sub_Category.Categories[0].name.toLowerCase();
               const href = `/store/${cateName}/detail/${item.id}`;
               const currentProduct = item.id.toString() === productId;
               // console.log(item.id, productId);
@@ -130,7 +131,7 @@ const DetailPage = () => {
                   <SwiperSlide key={`slide-${idx}`} className="h-full">
                     <Link href={href}>
                       <Image
-                        src={img}
+                        src={item.imageUrl}
                         width="450"
                         height="450"
                         sizes="33vw"

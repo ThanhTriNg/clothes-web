@@ -6,6 +6,7 @@ import AddToCartBtn from "./AddToCartBtn";
 import PickColor from "./pickColor";
 import PickSize from "./pickSize";
 import { JSONparse } from "@/helpers";
+import { useRouter } from "next/router";
 interface ProductDetailProps {
   clothes: ClothesPropsData;
 }
@@ -14,6 +15,10 @@ const ProductDetailDesc = ({ clothes }: ProductDetailProps) => {
   const handleRating = (rate: number) => {
     setRating(rate);
   };
+
+  const router = useRouter();
+  const { sizeCode } = router.query;
+
   const { convertPrice } = formatPrice(clothes.price);
   return clothes ? (
     <div className="col-span-full md:col-span-5 px-4">
@@ -57,7 +62,9 @@ const ProductDetailDesc = ({ clothes }: ProductDetailProps) => {
 
         <div>
           {/* <Button className="uppercase w-full">Thêm vào giỏ hàng</Button> */}
-          <AddToCartBtn product={clothes} />
+          {typeof sizeCode === "string" && (
+            <AddToCartBtn product={clothes} size={sizeCode} />
+          )}
         </div>
       </div>
     </div>

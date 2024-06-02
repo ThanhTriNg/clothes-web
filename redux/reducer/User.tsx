@@ -39,7 +39,6 @@ export const loginThunk = createAsyncThunk(
       const response = await UserApi.logIn(UserProps);
       const token = response.data.access_token;
       Cookies.set("token", token);
-      console.log(response);
       return response;
     } catch (error: any) {
       if (error.response && error.response.data.message) {

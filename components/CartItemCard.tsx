@@ -4,14 +4,18 @@ import { decrement, increment, remove } from "@/redux/reducer/Cart";
 import { useAppDispatch } from "@/redux/store/Store";
 import { Trash2 } from "lucide-react";
 import Image from "next/image";
-import QtyBtn from "./QtyBtn";
-import { Button } from "./ui/button";
+import QtyBtn from "@/components/QtyBtn";
+import { Button } from "@/components/ui/button";
+import { useRouter } from "next/router";
 
 interface Props {
   cartItem: CartItem;
 }
 
 const CartItemCard = ({ cartItem }: Props) => {
+  const router = useRouter();
+  const { sizeCode } = router.query;
+
   const dispatch = useAppDispatch();
   const { convertPrice: price } = formatPrice(cartItem.product.price);
 
@@ -19,6 +23,7 @@ const CartItemCard = ({ cartItem }: Props) => {
     event.preventDefault();
     dispatch(remove(cartItem.product));
   };
+
   return (
     <div>
       <div className="grid grid-cols-7 items-center py-2 gap-x-2">
@@ -35,11 +40,17 @@ const CartItemCard = ({ cartItem }: Props) => {
         <div className="md:col-span-2 col-end-7 col-start-1 flex justify-end gap-x-1 items-center">
           <p>{price} </p>
           <p>X</p>
-          <QtyBtn
-            onDecrease={() => dispatch(decrement(cartItem.product))}
-            onIncrease={() => dispatch(increment(cartItem.product))}
-            qty={cartItem.qty}
-          />
+          {typeof sizeCode === "string" && (
+            <QtyBtn
+              onDecrease={() => dispatch(decrement(cartItem.product))}
+              onIncrease={() =>
+                dispatch(
+                  increment({ product: cartItem.product, size: sizeCode })
+                )
+              }
+              qty={cartItem.qty}
+            />
+          )}
         </div>
         <Button
           className="md:col-span-1 col-end-8 md:w-2/3"

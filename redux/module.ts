@@ -75,7 +75,7 @@ export interface SubCateProps {
 export interface CartItem {
   product: ClothesPropsData;
   qty: number;
-  // size: string;
+  size: string;
   // color:string;
 }
 

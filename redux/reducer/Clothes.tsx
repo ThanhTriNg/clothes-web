@@ -201,12 +201,10 @@ export const addClothesThunk = createAsyncThunk(
       formData.append("name", addClothes.name);
 
       formData.append("price", addClothes.price);
-      console.log(formData);
       const response = await ClothesApi.addClothes(formData);
 
       return response;
     } catch (error: any) {
-      console.log(error);
       if (error.response && error.response.data.message) {
         return rejectWithValue(error.response.data.message);
       } else {

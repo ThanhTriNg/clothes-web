@@ -7,36 +7,36 @@ import {
   productQtyInCartSelector,
 } from "@/redux/reducer/Cart";
 import { useAppDispatch, useAppSelector } from "@/redux/store/Store";
-import QtyBtn from "./QtyBtn";
-import { Button } from "./ui/button";
+import QtyBtn from "@/components/QtyBtn";
+import { Button } from "@/components/ui/button";
 
-interface Props {
+interface AddToBtnProps {
   product: ClothesPropsData;
+  size: string;
 }
 
-const AddToCartBtn = (props: Props) => {
+const AddToCartBtn = ({ product, size }: AddToBtnProps) => {
   const dispatch = useAppDispatch();
-
-  const qty = useAppSelector((state) =>
-    productQtyInCartSelector(state, props.product.id)
-  );
+  const qty = useAppSelector((state) => {
+    return productQtyInCartSelector(state, product.id, size);
+  });
   if (!qty)
     return (
       <div>
         {/* <button>Add to cart</button> */}
         <Button
           className="uppercase w-full"
-          onClick={() => dispatch(increment(props.product))}
+          onClick={() => dispatch(increment({ product, size }))}
         >
-          Thêm vào giỏ hàng
+          Add to cart
         </Button>
       </div>
     );
 
   return (
     <QtyBtn
-      onDecrease={() => dispatch(decrement(props.product))}
-      onIncrease={() => dispatch(increment(props.product))}
+      onIncrease={() => dispatch(increment({ product, size }))}
+      onDecrease={() => dispatch(decrement(product))}
       qty={qty}
     />
   );

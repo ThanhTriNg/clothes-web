@@ -20,7 +20,6 @@ const LimitedPromotion = () => {
     dispatch(getClothesThunk("0"));
   }, [dispatch]);
 
-  console.log(clothesInfoData);
   return (
     <div className="bg-white p-3 rounded">
       <div className="space-y-10">

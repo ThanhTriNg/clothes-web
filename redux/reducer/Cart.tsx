@@ -15,21 +15,36 @@ const initialState: myState = {
   cartItems: [],
   isOpenDrawerCart: false,
 };
-
 const isExist = (cartItems: CartItem[], id: number) => {
   return cartItems.find((el) => el.product.id === id);
+};
+
+const isExistTest = (cartItems: CartItem[], id: number, size: string) => {
+  const isId = cartItems.find((el) => el.product.id === id && el.size === size);
+  console.log(isId?.size);
+  return isId;
 };
 
 export const cartSlice = createSlice({
   name: "cart",
   initialState,
   reducers: {
-    increment: (state, action: PayloadAction<ClothesPropsData>) => {
-      const item = isExist(state.cartItems, action.payload.id);
-      if (item) item.qty++;
-      else {
-        state.cartItems.push({ product: action.payload, qty: 1 });
+    increment: (
+      state,
+      action: PayloadAction<{ product: ClothesPropsData; size: string }>
+    ) => {
+      const { product, size } = action.payload;
+      const item = isExistTest(state.cartItems, product.id, size);
+
+      const test = state.cartItems.find((el) => el.product.id === product.id);
+      if (item) {
+        item.qty++;
+      } else {
+        state.cartItems.push({ product, qty: 1, size });
       }
+      // You can also store the size in the cart item here if needed
+      // For example:
+      // item.size = size;
     },
     decrement: (state, action: PayloadAction<ClothesPropsData>) => {
       const item = isExist(state.cartItems, action.payload.id);
@@ -60,7 +75,7 @@ export const cartSlice = createSlice({
 });
 
 const cartItems = (state: RootState) => state.cartPersistedReducer.cartItems;
-
+console.log("cartItems>>", cartItems);
 export const totalCartItemSelector = createSelector([cartItems], (cartItems) =>
   cartItems.reduce((total: number, cur: CartItem) => (total += cur.qty), 0)
 );
@@ -73,9 +88,13 @@ export const totalPriceSelector = createSelector([cartItems], (cartItems) =>
 );
 
 export const productQtyInCartSelector = createSelector(
-  [cartItems, (cartItems, productId: number) => productId],
-  (cartItems, productId) =>
-    cartItems.find((el) => el.product.id === productId)?.qty
+  [
+    cartItems,
+    (state, productId: number) => productId,
+    (state, productId, size: string) => size,
+  ],
+  (cartItems, productId, size) =>
+    cartItems.find((el) => el.product.id === productId && el.size === size)?.qty
 );
 
 export const { increment, decrement, remove, getIsOpenDrawerCart } =

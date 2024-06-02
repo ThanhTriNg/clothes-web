@@ -1,9 +1,26 @@
-import { useState } from "react";
+import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
 
 const PickSize = ({ sizes }: { sizes: string[] }) => {
-  const [isActive, setIsActive] = useState<number>(0);
-  const handleClick = (idx: number) => {
+  const router = useRouter();
+  const [isActive, setIsActive] = useState<number>(-1);
+  const { sizeCode } = router.query;
+
+  useEffect(() => {
+    if (typeof sizeCode === "string") {
+      const index = sizes.indexOf(sizeCode);
+      setIsActive(index);
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  //handle choose size
+  const handleClick = (idx: number, size: string) => {
     setIsActive(idx);
+    router.push({
+      pathname: router.pathname,
+      query: { ...router.query, sizeCode: size },
+    });
   };
   return (
     <div className="space-y-2">
@@ -16,7 +33,7 @@ const PickSize = ({ sizes }: { sizes: string[] }) => {
               className={`cursor-pointer border-solid border border-black/10  w-11 h-11 grid justify-center items-center transition-all${
                 isActive === idx ? "scale-110 bg-primary " : ""
               }`}
-              onClick={() => handleClick(idx)}
+              onClick={() => handleClick(idx, sizes[idx])}
             >
               <h1 className="select-none">{item}</h1>
             </div>
