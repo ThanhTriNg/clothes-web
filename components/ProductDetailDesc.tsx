@@ -17,7 +17,7 @@ const ProductDetailDesc = ({ clothes }: ProductDetailProps) => {
   };
 
   const router = useRouter();
-  const { sizeCode } = router.query;
+  const { sizeCode, colorCode } = router.query;
 
   const { convertPrice } = formatPrice(clothes.price);
   return clothes ? (
@@ -62,8 +62,8 @@ const ProductDetailDesc = ({ clothes }: ProductDetailProps) => {
 
         <div>
           {/* <Button className="uppercase w-full">Thêm vào giỏ hàng</Button> */}
-          {typeof sizeCode === "string" && (
-            <AddToCartBtn product={clothes} size={sizeCode} />
+          {typeof sizeCode === "string" && typeof colorCode === "string" && (
+            <AddToCartBtn product={clothes} size={sizeCode} color={colorCode} />
           )}
         </div>
       </div>

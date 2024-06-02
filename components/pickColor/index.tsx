@@ -20,7 +20,6 @@ const PickColor = ({
   // const colorsObj = JSONparse(colors);
   const dispatch = useDispatch<AppDispatch>();
   const router = useRouter();
-  const { productId } = router.query;
 
   const [colorHex, setColorHex] = useState<string>(
     removeHashFromColorCode(colors[0])
@@ -47,9 +46,21 @@ const PickColor = ({
     }
   }, [colorAPI]);
 
+  useEffect(() => {
+    router.push({
+      pathname: router.pathname,
+      query: { ...router.query, colorCode: colorHex },
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const handleClick = (color: string) => {
     const removeHash = removeHashFromColorCode(color);
     setColorHex(removeHash);
+    router.push({
+      pathname: router.pathname,
+      query: { ...router.query, colorCode: removeHash },
+    });
   };
 
   const sizeText = `${size}px`;

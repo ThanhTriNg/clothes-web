@@ -135,7 +135,7 @@ export default function LoginForm() {
     </div>
   ) : (
     <>
-      <Card id="card" className="grid gap-6 bg-transparent border-none">
+      <Card id="card-login" className="grid gap-6 bg-transparent border-none">
         <CardHeader className="text-center grid gap-2 p-0">
           <CardTitle className="text-2xl font-bold text-tertiary-foreground ">
             Đăng nhập

@@ -11,12 +11,14 @@ import { useDispatch, useSelector } from "react-redux";
 import { convertNameCate } from "../LimitedPromotion";
 import { Button } from "../ui/button";
 import { findCategory } from "./searchBtn";
+import { useRouter } from "next/router";
 
 interface CartProps {
   cartItem: CartItem;
 }
 const Cart = ({ cartItem }: CartProps) => {
   const { convertPrice: price } = formatPrice(cartItem.product.price);
+  const router = useRouter();
   const [href, setHref] = useState<string>();
   const dispatch = useDispatch<AppDispatch>();
   useEffect(() => {
@@ -25,6 +27,7 @@ const Cart = ({ cartItem }: CartProps) => {
   const { categoriesInfo } = useSelector(
     (state: RootState) => state.categories
   );
+  const { sizeCode } = router.query;
 
   useEffect(() => {
     setHref(findHref());
@@ -42,11 +45,17 @@ const Cart = ({ cartItem }: CartProps) => {
 
   const handleClickRemove = (event: any) => {
     event.preventDefault();
-    dispatch(remove(cartItem.product));
+    dispatch(
+      remove({
+        product: cartItem.product,
+        size: cartItem.size,
+        color: cartItem.color,
+      })
+    );
   };
   return (
     <Link href={href ? href : ""}>
-      <div className="grid md:grid-cols-6 grid-cols-3 bg-white items-center justify-center md:gap-x-4 gap-x-2 px-4 pb-4 pt-2">
+      <div className="grid md:grid-cols-8 grid-cols-3 bg-white items-center justify-center md:gap-x-4 gap-2 px-4 pb-4 pt-2">
         <Image
           src={cartItem.product.imageUrl}
           width="200"
@@ -56,12 +65,21 @@ const Cart = ({ cartItem }: CartProps) => {
         <p className="col-span-2 text-center line-clamp-2">
           {cartItem.product.name}
         </p>
-        <div className="text-center">
+        <div className="text-center col-span-1">
           <p>{price} </p>
         </div>
-        <p className="text-center">{cartItem.qty} cái </p>
+        <div className="text-center col-span-1">
+          <p>{cartItem.size} </p>
+        </div>
+        <div
+          className="h-7 w-7 mx-auto"
+          style={{ backgroundColor: `#${cartItem.color}` }}
+        />
+        <p className="text-center col-end-3 md:col-end-8">
+          {cartItem.qty} cái
+        </p>
         <Button
-          className="md:w-2/3"
+          className="md:w-2/3 col-end-4 col-span-1  md:col-end-9"
           variant="destructive"
           onClick={(e) => handleClickRemove(e)}
         >

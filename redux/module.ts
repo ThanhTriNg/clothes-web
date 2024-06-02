@@ -76,7 +76,7 @@ export interface CartItem {
   product: ClothesPropsData;
   qty: number;
   size: string;
-  // color:string;
+  color:string;
 }
 
 export interface UserProps {

@@ -89,7 +89,7 @@ export default function SignUpForm() {
   }
   return (
     <>
-      <Card id="card" className="grid gap-6 bg-transparent border-none ">
+      <Card id="card-signup" className="grid gap-6 bg-transparent border-none ">
         <CardHeader className="text-center grid gap-2 p-0">
           <CardTitle className="text-2xl font-bold text-tertiary-foreground ">
             Đăng ký

@@ -15,10 +15,8 @@ import Cart from "./cart";
 import Nav from "./nav";
 import Search from "./searchBtn";
 
-import { CategoriesProps } from "@/redux/module";
-import {
-  getCategoriesThunk
-} from "@/redux/reducer/Categories";
+import { CartItem, CategoriesProps } from "@/redux/module";
+import { getCategoriesThunk } from "@/redux/reducer/Categories";
 import { signOut } from "@/redux/reducer/User";
 import { AppDispatch, RootState } from "@/redux/store/Store";
 import { toast } from "react-hot-toast";
@@ -39,6 +37,7 @@ const Header = ({ token }: HeaderProps) => {
   const [menCate, setMenCate] = useState<CategoriesProps[]>();
   const [isOpen, setIsOpen] = useState(false);
   const [cartActive, setCartActive] = useState(false);
+  const [sortCartItems, setSortCartItems] = useState<CartItem[]>();
 
   const { categoriesInfo } = useSelector(
     (state: RootState) => state.categories
@@ -96,6 +95,12 @@ const Header = ({ token }: HeaderProps) => {
     }
   }, [categoriesInfo]);
 
+  useEffect(() => {
+    if (cartItems) {
+      const sorted = [...cartItems].sort((a, b) => a.product.id - b.product.id);
+      setSortCartItems(sorted);
+    }
+  }, [cartItems]);
   return (
     <header className="h-auto md:h-20 mb-4 sticky top-0 z-20 bg-white shadow-md shadow-slate-300 xl:px-8 md:px-6 p-4">
       <div className="md:flex justify-between items-center h-full xl:max-w-[1300px] mx-auto">
@@ -153,7 +158,7 @@ const Header = ({ token }: HeaderProps) => {
                   )}
                   <DrawerContent className=" max-h-[80vh]">
                     <div className="overflow-y-scroll overflow-x-hidden">
-                      {cartItems.map((item, idx: number) => {
+                      {sortCartItems?.map((item, idx: number) => {
                         return (
                           <Cart key={`cart-item-${idx}`} cartItem={item} />
                         );

@@ -125,7 +125,6 @@ const DetailPage = () => {
                 item.Sub_Category.Categories[0].name.toLowerCase();
               const href = `/store/${cateName}/detail/${item.id}`;
               const currentProduct = item.id.toString() === productId;
-              // console.log(item.id, productId);
               return (
                 !currentProduct && (
                   <SwiperSlide key={`slide-${idx}`} className="h-full">

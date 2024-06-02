@@ -4,6 +4,8 @@ import { RootState, useAppSelector } from "@/redux/store/Store";
 import { formatPrice } from "@/helpers";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { CartItem } from "@/redux/module";
+import { useEffect, useState } from "react";
 
 const Cart = () => {
   const cartItems = useAppSelector(
@@ -11,15 +13,23 @@ const Cart = () => {
   );
   const totalPrice = useAppSelector(totalPriceSelector);
   const { convertPrice } = formatPrice(totalPrice);
+  const [sortCartItems, setSortCartItems] = useState<CartItem[]>();
 
-  console.log(cartItems)
+  // sort cartItem by id
+  useEffect(() => {
+    if (cartItems) {
+      const sorted = [...cartItems].sort((a, b) => a.product.id - b.product.id);
+      setSortCartItems(sorted);
+    }
+  }, [cartItems]);
+  
   return totalPrice === 0 ? (
     <div className=" min-h-[calc(100vh-96px-96px)] flex items-center justify-center">
       <h1 className="text-2xl text-primary text-center ">Empty!</h1>
     </div>
   ) : (
     <div className="p-2  ">
-      {cartItems.map((item, idx: number) => {
+      {sortCartItems?.map((item, idx: number) => {
         return <CartItemCard key={`cart-item-${idx}`} cartItem={item} />;
       })}
       <div className="pt-4">
@@ -29,11 +39,10 @@ const Cart = () => {
       </div>
       <div className="pt-4 text-center">
         <Button className="">
-          <Link href="/" className="px-4">
+          <Link href="/checkout" className="px-4">
             Order now
           </Link>
         </Button>
-
       </div>
     </div>
   );

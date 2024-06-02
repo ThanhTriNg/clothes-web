@@ -13,12 +13,13 @@ import { Button } from "@/components/ui/button";
 interface AddToBtnProps {
   product: ClothesPropsData;
   size: string;
+  color: string;
 }
 
-const AddToCartBtn = ({ product, size }: AddToBtnProps) => {
+const AddToCartBtn = ({ product, size, color }: AddToBtnProps) => {
   const dispatch = useAppDispatch();
   const qty = useAppSelector((state) => {
-    return productQtyInCartSelector(state, product.id, size);
+    return productQtyInCartSelector(state, product.id, size, color);
   });
   if (!qty)
     return (
@@ -26,7 +27,7 @@ const AddToCartBtn = ({ product, size }: AddToBtnProps) => {
         {/* <button>Add to cart</button> */}
         <Button
           className="uppercase w-full"
-          onClick={() => dispatch(increment({ product, size }))}
+          onClick={() => dispatch(increment({ product, size, color }))}
         >
           Add to cart
         </Button>
@@ -35,8 +36,8 @@ const AddToCartBtn = ({ product, size }: AddToBtnProps) => {
 
   return (
     <QtyBtn
-      onIncrease={() => dispatch(increment({ product, size }))}
-      onDecrease={() => dispatch(decrement(product))}
+      onIncrease={() => dispatch(increment({ product, size, color }))}
+      onDecrease={() => dispatch(decrement({ product, size, color }))}
       qty={qty}
     />
   );
