@@ -55,7 +55,7 @@ const Cart = ({ cartItem }: CartProps) => {
   };
   return (
     <Link href={href ? href : ""}>
-      <div className="grid md:grid-cols-8 grid-cols-3 bg-white items-center justify-center md:gap-x-4 gap-2 px-4 pb-4 pt-2">
+      <div className="grid md:grid-cols-8 grid-cols-3 bg-white items-center justify-center md:gap-x-4 gap-2 px-4 pb-4 pt-2 xl:max-w-[1300px] mx-auto">
         <Image
           src={cartItem.product.imageUrl}
           width="200"
@@ -69,15 +69,13 @@ const Cart = ({ cartItem }: CartProps) => {
           <p>{price} </p>
         </div>
         <div className="text-center col-span-1">
-          <p>{cartItem.size} </p>
+          <p>size: {cartItem.size} </p>
         </div>
         <div
           className="h-7 w-7 mx-auto"
           style={{ backgroundColor: `#${cartItem.color}` }}
         />
-        <p className="text-center col-end-3 md:col-end-8">
-          {cartItem.qty} cái
-        </p>
+        <p className="text-center col-end-3 md:col-end-8">{cartItem.qty} cái</p>
         <Button
           className="md:w-2/3 col-end-4 col-span-1  md:col-end-9"
           variant="destructive"

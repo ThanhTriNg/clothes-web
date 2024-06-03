@@ -76,12 +76,23 @@ export interface CartItem {
   product: ClothesPropsData;
   qty: number;
   size: string;
-  color:string;
+  color: string;
 }
 
-export interface UserProps {
+export interface UserAuthProps {
   email: string;
   password: string;
+}
+export interface UserProps {
+  id?: number;
+  lName?: string;
+  fName?: string;
+  email?: string;
+  password?: string;
+  avatar?: string;
+  roleCode?: string;
+  address?: string;
+  phone?: string;
 }
 export interface CateApiProps {
   name: string;

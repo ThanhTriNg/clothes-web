@@ -1,6 +1,6 @@
 import Cookies from "js-cookie";
 import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { UserProps } from "../module";
+import { UserAuthProps, UserProps } from "../module";
 import UserApi from "../api/UserApi";
 
 interface myState {
@@ -34,9 +34,9 @@ const initialState: myState = {
 
 export const loginThunk = createAsyncThunk(
   "logIn",
-  async (UserProps: UserProps, { rejectWithValue }) => {
+  async (UserAuthProps: UserAuthProps, { rejectWithValue }) => {
     try {
-      const response = await UserApi.logIn(UserProps);
+      const response = await UserApi.logIn(UserAuthProps);
       const token = response.data.access_token;
       Cookies.set("token", token);
       return response;
@@ -52,9 +52,40 @@ export const loginThunk = createAsyncThunk(
 
 export const signUpThunk = createAsyncThunk(
   "signUp",
-  async (UserProps: UserProps, { rejectWithValue }) => {
+  async (UserAuthProps: UserAuthProps, { rejectWithValue }) => {
     try {
-      const response = await UserApi.signUp(UserProps);
+      const response = await UserApi.signUp(UserAuthProps);
+      return response;
+    } catch (error: any) {
+      if (error.response && error.response.data.message) {
+        return rejectWithValue(error.response.data.message);
+      } else {
+        return rejectWithValue(error.response.data);
+      }
+    }
+  }
+);
+
+export const getUserThunk = createAsyncThunk(
+  "getUser",
+  async (arg, { rejectWithValue }) => {
+    try {
+      const response = await UserApi.getUser();
+      return response;
+    } catch (error: any) {
+      if (error.response && error.response.data.message) {
+        return rejectWithValue(error.response.data.message);
+      } else {
+        return rejectWithValue(error.response.data);
+      }
+    }
+  }
+);
+export const updateUserThunk = createAsyncThunk(
+  "updateUser",
+  async (updateUser: UserProps, { rejectWithValue }) => {
+    try {
+      const response = await UserApi.updateUser(updateUser);
       return response;
     } catch (error: any) {
       if (error.response && error.response.data.message) {
@@ -78,7 +109,7 @@ export const usersSlice = createSlice({
     // },
     signOut: () => {
       Cookies.remove("token");
-      localStorage.removeItem('isFirstLogin')
+      localStorage.removeItem("isFirstLogin");
     },
   },
 
@@ -114,6 +145,13 @@ export const usersSlice = createSlice({
       state.errorSignup = true;
       state.errorSignupText = action.payload as string;
     });
+
+    // getUser
+    builder.addCase(getUserThunk.pending, (state) => {});
+    builder.addCase(getUserThunk.fulfilled, (state, action) => {
+      state.userInfo = action.payload.data.data;
+    });
+    builder.addCase(getUserThunk.rejected, (state, action) => {});
   },
 });
 export const { signOut } = usersSlice.actions;

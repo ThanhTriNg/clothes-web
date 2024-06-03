@@ -135,9 +135,9 @@ const Header = ({ token }: HeaderProps) => {
         <div className="flex md:gap-x-10 gap-x-2 items-center md:justify-center justify-around">
           <Search />
           {token ? (
-            <div onClick={handleSignOut}>
-              <SignOut size={24} className="cursor-pointer" />
-            </div>
+            <Link href="/user">
+              <User size={24} className="cursor-pointer" />
+            </Link>
           ) : (
             <Link href="/login">
               <User size={24} className="cursor-pointer" />

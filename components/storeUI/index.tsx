@@ -12,7 +12,7 @@ interface StoreUIProps {
 
 const StoreUI = ({ clothesInfoData, categoriesInfo, title }: StoreUIProps) => {
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen ">
       {clothesInfoData && categoriesInfo && (
         <div className="bg-white md:p-6 md:space-y-10 p-2 space-y-2">
           <h1 className="uppercase font-bold text-3xl p-10">{title}</h1>

@@ -1,11 +1,12 @@
 import CheckoutForm from "@/pages/checkout/CheckoutForm";
 import OrderSummary from "@/pages/checkout/OrderSummary";
-import { CartItem } from "@/redux/module";
+import { ClothesPropsData } from "@/redux/module";
+import { totalPriceSelector } from "@/redux/reducer/Cart";
 import { RootState, useAppSelector } from "@/redux/store/Store";
 import { useEffect, useState } from "react";
 
-interface summaryCart {
-  product: CartItem[];
+export interface summaryCart {
+  product: ClothesPropsData;
   qty: string;
 }
 
@@ -13,10 +14,11 @@ const Checkout = () => {
   const cartItems = useAppSelector(
     (state: RootState) => state.cartPersistedReducer.cartItems
   );
+
   const [summaryCart, setSummaryCart] = useState<summaryCart[]>();
+
   useEffect(() => {
     const consolidatedCartItems = new Map();
-    console.log(consolidatedCartItems);
     cartItems.forEach((item) => {
       const productId = item.product.id;
       const existingItem = consolidatedCartItems.get(productId);
@@ -32,18 +34,19 @@ const Checkout = () => {
     const outputCartItems = Array.from(consolidatedCartItems.values());
     setSummaryCart(outputCartItems);
   }, [cartItems]);
-  console.log(summaryCart);
 
   return (
-    <div>
-      <p className="text-center text-2xl font-bold text-tertiary-foreground mb-6">
-        Checkout
-      </p>
-      <div className="grid grid-cols-4 gap-x-10">
-        <CheckoutForm className="col-span-3" />
-        <OrderSummary className="col-span-1" />
+    summaryCart && (
+      <div>
+        <p className="text-center text-2xl font-bold text-tertiary-foreground mb-6">
+          Checkout
+        </p>
+        <div className="grid grid-cols-5 gap-x-10">
+          <CheckoutForm className="col-span-3" />
+          <OrderSummary className="col-span-2" summaryCart={summaryCart} />
+        </div>
       </div>
-    </div>
+    )
   );
 };
 
