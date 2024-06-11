@@ -14,7 +14,6 @@ const Cart = () => {
     const totalPrice = useAppSelector(totalPriceSelector);
     const { convertPrice } = formatPrice(totalPrice);
     const [sortCartItems, setSortCartItems] = useState<CartItem[]>();
-    console.log(cartItems);
 
     // sort cartItem by id
     useEffect(() => {
@@ -23,17 +22,6 @@ const Cart = () => {
             setSortCartItems(sorted);
         }
     }, [cartItems]);
-    const dispatch = useAppDispatch();
-
-    // useEffect(() => {
-    //     const debounceTime = 300;
-    //     const timer = setTimeout(() => {
-    //         const update = updatedCartItems(cartItems);
-    //         dispatch(addCartItemThunk(update));
-    //     }, debounceTime);
-
-    //     return () => clearTimeout(timer);
-    // }, [cartItems, dispatch]);
 
     return totalPrice === 0 ? (
         <div className=" min-h-[calc(100vh-96px-96px)] flex items-center justify-center">
