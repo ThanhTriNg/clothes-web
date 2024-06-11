@@ -11,16 +11,18 @@ const PickSize = ({ sizes }: { sizes: string[] }) => {
       const index = sizes.indexOf(sizeCode);
       setIsActive(index);
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   //handle choose size
   const handleClick = (idx: number, size: string) => {
     setIsActive(idx);
-    router.push({
-      pathname: router.pathname,
-      query: { ...router.query, sizeCode: size },
-    });
+    if (router.asPath.startsWith("/store")) {
+      router.push({
+        pathname: router.pathname,
+        query: { ...router.query, sizeCode: size },
+      });
+    }
   };
   return (
     <div className="space-y-2">

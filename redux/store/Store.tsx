@@ -3,7 +3,6 @@
 import { configureStore } from "@reduxjs/toolkit";
 import ClothesReducer from "../reducer/Clothes";
 import CategoriesReducer from "../reducer/Categories";
-import WomenReducer from "../reducer/Women";
 import CartReducer from "../reducer/Cart";
 import UsersReducer from "../reducer/User";
 import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
@@ -40,10 +39,10 @@ export const store = configureStore({
   reducer: {
     clothes: ClothesReducer,
     categories: CategoriesReducer,
-    women: WomenReducer,
     // cart: CartReducer,
     users: UsersReducer,
     cartPersistedReducer,
+    carts: CartReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({ serializableCheck: false }),
