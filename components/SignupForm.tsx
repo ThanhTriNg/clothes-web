@@ -84,7 +84,7 @@ export default function SignUpForm() {
     try {
       const email = data.email;
       const password = data.password;
-      dispatch(signUpThunk({ email, password }));
+      await dispatch(signUpThunk({ email, password }));
     } catch (error) {}
   }
   return (

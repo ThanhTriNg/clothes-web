@@ -1,19 +1,19 @@
-import { UserAuthProps, UserProps } from '../module';
+import { OrderProps } from '@/redux/module';
 import AxiosClient from './AxiosClient';
 import Cookies from 'js-cookie';
 
-const CartApi = {
-    getCart: () => {
+const OrderApi = {
+    getOrder: () => {
         const token = Cookies.get('token');
-        return AxiosClient.get('/cart', {
+        return AxiosClient.get('/order', {
             headers: {
                 Authorization: `Bearer ${token}`,
             },
         });
     },
-    addCartItem: (cartItem: any) => {
+    createOrder: (orderItems: OrderProps[]) => {
         const token = Cookies.get('token');
-        return AxiosClient.post('/cart/addItem', cartItem, {
+        return AxiosClient.post('/order', orderItems, {
             headers: {
                 Authorization: `Bearer ${token}`,
             },
@@ -21,4 +21,4 @@ const CartApi = {
     },
 };
 
-export default CartApi;
+export default OrderApi;

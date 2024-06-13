@@ -52,7 +52,6 @@ export const addCartItemThunk = createAsyncThunk(
   async (cartItem: any, { rejectWithValue }) => {
     try {
       const response = await CartApi.addCartItem(cartItem);
-      console.log("response addCartItemThunk", response);
       return response;
     } catch (error: any) {
       if (error.response && error.response.data.message) {

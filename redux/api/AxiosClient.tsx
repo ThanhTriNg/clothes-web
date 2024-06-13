@@ -20,14 +20,6 @@ export const TheColorAPI = axios.create({
     },
 });
 
-// AxiosClient.interceptors.request.use(
-//   async (config) => {
-//     const token = Cookies.get("token");
-//     config.headers.Authorization = `Bearer ${token}`;
-//     return config;
-//   },
-//   (error) => {}
-// );
 AxiosClient.interceptors.request.use(
     async (response) => {
         return response;
@@ -43,12 +35,11 @@ AxiosClient.interceptors.response.use(
         return response;
     },
     async (error) => {
-
         const statusCode = error.response?.status;
         if (statusCode === 401) {
             //logic code refresh token
             Cookies.remove('token');
-            window.location.href='/login'
+            window.location.href = '/login';
         }
         throw error;
     },

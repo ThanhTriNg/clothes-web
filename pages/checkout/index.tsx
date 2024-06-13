@@ -46,7 +46,7 @@ const Checkout = () => {
             <div>
                 <p className="text-center text-2xl font-bold text-tertiary-foreground mb-6">Checkout</p>
                 <div className="grid grid-cols-5 gap-x-10">
-                    <CheckoutForm className="col-span-3" userInfo={userInfo} />
+                    <CheckoutForm className="col-span-3" userInfo={userInfo} cartItems={cartItems} />
                     <OrderSummary className="col-span-2" summaryCart={summaryCart} />
                 </div>
             </div>

@@ -66,7 +66,7 @@ export default function UserForm({ className, userInfo }: UserFormProps) {
     async function onSubmit(data: UserFormValues) {
         console.log(data);
         try {
-            dispatch(updateUserThunk(data));
+            await dispatch(updateUserThunk(data));
             window.location.reload();
         } catch (error) {}
     }

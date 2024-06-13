@@ -69,7 +69,7 @@ const Header = ({ token }: HeaderProps) => {
     //sign out
     const handleSignOut = () => {
         dispatch(signOut());
-        toast.success('Đăng xuất thành công');
+        toast.success('Signed out successfully');
         const timeoutId = setTimeout(() => {
             window.location.reload();
         }, 200);
@@ -99,14 +99,17 @@ const Header = ({ token }: HeaderProps) => {
     // }, [dispatch, token]);
 
     useEffect(() => {
-        const debounceTime = 300;
-        const timer = setTimeout(() => {
-            const update = updatedCartItems(cartItems);
-            dispatch(addCartItemThunk(update));
-        }, debounceTime);
+        if (token) {
+            const debounceTime = 300;
+            const timer = setTimeout(() => {
+                const update = updatedCartItems(cartItems);
+                dispatch(addCartItemThunk(update));
+            }, debounceTime);
 
-        return () => clearTimeout(timer);
-    }, [cartItems, dispatch]);
+            return () => clearTimeout(timer);
+        }
+    }, [cartItems, dispatch, token]);
+
     return (
         <header className="h-auto md:h-20 mb-4 sticky top-0 z-20 bg-white shadow-md shadow-slate-300 xl:px-8 md:px-6 p-4">
             <div className="md:flex justify-between items-center h-full xl:max-w-[1300px] mx-auto">

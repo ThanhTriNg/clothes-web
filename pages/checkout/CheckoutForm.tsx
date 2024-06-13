@@ -16,7 +16,8 @@ import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
 import { useDispatch, useSelector } from 'react-redux';
 import Loading from '@/components/loading';
-import { UserProps } from '@/redux/module';
+import { CartItem, OrderProps, UserProps } from '@/redux/module';
+import { createOrderThunk } from '@/redux/reducer/Order';
 const checkoutFormSchema = z.object({
     fName: z.string({ required_error: 'required' }).min(0),
     lName: z.string({ required_error: 'required' }).min(0),
@@ -28,8 +29,9 @@ type CheckoutFormValues = z.infer<typeof checkoutFormSchema>;
 interface CheckoutProps {
     className?: string;
     userInfo: UserProps;
+    cartItems: CartItem[];
 }
-export default function CheckoutForm({ className, userInfo }: CheckoutProps) {
+export default function CheckoutForm({ className, userInfo, cartItems }: CheckoutProps) {
     const router = useRouter();
     const [passwordShown, setPasswordShown] = useState(false);
     const [isChecked, setIsChecked] = useState<boolean>(false);
@@ -46,22 +48,46 @@ export default function CheckoutForm({ className, userInfo }: CheckoutProps) {
     //   const { errorLogin, successLogin, loading, message } = useSelector(
     //     (state: RootState) => state.users
     //   );
+    console.log(cartItems);
+
+    const [orderItems, setOrderItems] = useState<OrderProps[]>();
+
+    useEffect(() => {
+        const consolidatedCartItems = new Map();
+        cartItems.forEach((item) => {
+            const productId = item.product.id;
+            const existingItem = consolidatedCartItems.get(productId);
+            if (existingItem) {
+                existingItem.qty += item.qty;
+            } else {
+                consolidatedCartItems.set(productId, {
+                    product: {
+                        id: item.product.id,
+                        name: item.product.name,
+                        price: item.product.price,
+                        imageUrl: item.product.imageUrl,
+                    },
+                    quantity: item.qty,
+                    color: item.color,
+                    size: item.size,
+                });
+            }
+        });
+        const outputOrderItems = Array.from(consolidatedCartItems.values());
+        setOrderItems(outputOrderItems);
+    }, [cartItems]);
+
     const dispatch = useDispatch<AppDispatch>();
     async function onSubmit(data: CheckoutFormValues) {
         console.log(data);
         try {
-            dispatch(updateUserThunk(data));
+            await dispatch(updateUserThunk(data));
+            if (orderItems) {
+                await dispatch(createOrderThunk(orderItems));
+            }
         } catch (error) {}
     }
-    const [phone, setPhone] = useState('');
-    const handlePhoneChange = (event: any) => {
-        const inputValue = event.target.value;
-        const regex = /^[0-9]+$/;
 
-        if (regex.test(inputValue)) {
-            setPhone(inputValue);
-        }
-    };
     return (
         <div className={`${className}`}>
             <Form {...form}>

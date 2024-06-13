@@ -45,7 +45,7 @@ const CreateCategory = () => {
     try {
       const name = data.name;
       const gender = data.gender;
-      dispatch(createCateThunk({ name, gender }));
+      await  dispatch(createCateThunk({ name, gender }));
     } catch (error) {}
   }
 
