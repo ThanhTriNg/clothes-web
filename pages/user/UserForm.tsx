@@ -17,7 +17,7 @@ import toast from 'react-hot-toast';
 import { useDispatch, useSelector } from 'react-redux';
 import Loading from '@/components/loading';
 import { UserProps } from '@/redux/module';
-import { obscureEmail } from '@/helpers';
+import { obscureEmail } from '@/utils';
 const userFormSchema = z.object({
     fName: z.string({ required_error: 'required' }).min(0),
     lName: z.string({ required_error: 'required' }).min(0),

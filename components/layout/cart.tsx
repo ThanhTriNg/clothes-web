@@ -1,8 +1,8 @@
-import { formatPrice } from '@/helpers';
 import { CartItem } from '@/redux/module';
 import { remove } from '@/redux/reducer/Cart';
 import { getCategoriesThunk } from '@/redux/reducer/Categories';
 import { AppDispatch, RootState } from '@/redux/store/Store';
+import { formatPrice } from '@/utils';
 import { Trash2 } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -22,8 +22,6 @@ const Cart = ({ cartItem }: CartProps) => {
     useEffect(() => {
         dispatch(getCategoriesThunk());
     }, [dispatch]);
-    const { categoriesInfo } = useSelector((state: RootState) => state.categories);
-    const { sizeCode } = router.query;
 
     useEffect(() => {
         setHref(findHref());
@@ -31,8 +29,6 @@ const Cart = ({ cartItem }: CartProps) => {
     }, []);
 
     const findHref = () => {
-        // const category = findCategory(cartItem.product.categoryId, categoriesInfo);
-        // const cateName = convertNameCate(category?.name as any);
         const cateName = cartItem.product.Sub_Category.Categories[0].name.toLowerCase();
         const href: string = `/store/${cateName}/detail/${cartItem.product.id}`;
         return href;
@@ -48,8 +44,6 @@ const Cart = ({ cartItem }: CartProps) => {
             }),
         );
     };
-
-
 
     return (
         <Link href={href ? href : ''}>

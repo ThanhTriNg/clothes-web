@@ -1,4 +1,4 @@
-import { JSONparse, formatPrice } from "@/helpers";
+import { JSONparse, formatPrice } from "@/utils";
 import { Heart } from "@phosphor-icons/react";
 import Image from "next/image";
 import Link from "next/link";

@@ -1,9 +1,4 @@
-import { useSelector } from 'react-redux';
 import { Button } from './ui/button';
-import { RootState, useAppDispatch } from '@/redux/store/Store';
-import { useEffect, useRef } from 'react';
-import { CartItem } from '@/redux/module';
-import { addCartItemThunk } from '@/redux/reducer/Cart';
 
 interface QtyBtnProps {
     onIncrease: () => void;

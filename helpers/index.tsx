@@ -37,3 +37,14 @@ export const obscureEmail = (email: string | undefined) => {
         return 'aasd';
     }
 };
+
+export const getCartFromLocalStorage = () => {
+    const cart = localStorage.getItem('persist:cart');
+    if (cart) {
+        const cartParse = JSON.parse(cart);
+        const cartItems = JSON.parse(cartParse.cartItems);
+        return cartItems;
+    } else {
+        return [];
+    }
+};

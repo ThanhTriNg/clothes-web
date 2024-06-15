@@ -1,6 +1,6 @@
 import Footer from '@/components/layout/footer';
 import Header from '@/components/layout/header';
-import { RootState, persistor, store, useAppDispatch, useAppSelector } from '@/redux/store/Store';
+import { persistor, store } from '@/redux/store/Store';
 import Cookies from 'js-cookie';
 import type { AppProps } from 'next/app';
 import { Noto_Sans } from 'next/font/google';
@@ -14,9 +14,6 @@ export const noto = Noto_Sans({
 
 import Head from 'next/head';
 import { PersistGate } from 'redux-persist/integration/react';
-import { useEffect } from 'react';
-import { updatedCartItems } from '@/components/AddToCartBtn';
-import { addCartItemThunk } from '@/redux/reducer/Cart';
 
 function LandingPage({ Component, pageProps }: AppProps) {
     const token = Cookies.get('token');

@@ -1,11 +1,11 @@
-import { formatPrice } from "@/helpers";
+import { formatPrice } from "@/utils";
 import { ClothesProps, ClothesPropsData } from "@/redux/module";
 import { useState } from "react";
 import { Rating } from "react-simple-star-rating";
 import AddToCartBtn from "./AddToCartBtn";
 import PickColor from "./pickColor";
 import PickSize from "./pickSize";
-import { JSONparse } from "@/helpers";
+import { JSONparse } from "@/utils";
 import { useRouter } from "next/router";
 interface ProductDetailProps {
   clothes: ClothesPropsData;

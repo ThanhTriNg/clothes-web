@@ -2,7 +2,7 @@ import LimitedPromotion from "@/components/LimitedPromotion";
 import OutStanding from "@/components/OutStanding";
 import SlideShow from "@/components/swiper";
 import { Button } from "@/components/ui/button";
-import { formatPrice } from "@/helpers";
+import { formatPrice } from "@/utils";
 import Image from "next/image";
 import Link from "next/link";
 

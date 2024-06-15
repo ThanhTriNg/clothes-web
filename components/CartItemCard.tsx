@@ -1,4 +1,4 @@
-import { formatPrice } from "@/helpers";
+import { formatPrice } from "@/utils";
 import { CartItem } from "@/redux/module";
 import { decrement, increment, remove } from "@/redux/reducer/Cart";
 import { useAppDispatch } from "@/redux/store/Store";

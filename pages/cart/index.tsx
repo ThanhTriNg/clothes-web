@@ -1,17 +1,14 @@
-import { updatedCartItems } from '@/components/AddToCartBtn';
 import CartItemCard from '@/components/CartItemCard';
+import { useCartItems, useTotalPrices } from '@/components/hook';
 import { Button } from '@/components/ui/button';
-import { formatPrice } from '@/helpers';
+import { formatPrice } from '@/utils';
 import { CartItem } from '@/redux/module';
-import { addCartItemThunk, totalPriceSelector } from '@/redux/reducer/Cart';
-import { RootState, useAppDispatch, useAppSelector } from '@/redux/store/Store';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
-import { debounce } from 'lodash';
 
 const Cart = () => {
-    const cartItems = useAppSelector((state: RootState) => state.cartPersistedReducer.cartItems);
-    const totalPrice = useAppSelector(totalPriceSelector);
+    const totalPrice = useTotalPrices();
+    const cartItems = useCartItems();
     const { convertPrice } = formatPrice(totalPrice);
     const [sortCartItems, setSortCartItems] = useState<CartItem[]>();
 
