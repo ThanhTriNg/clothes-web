@@ -1,12 +1,12 @@
 import { PayloadAction, createAsyncThunk, createSelector, createSlice } from '@reduxjs/toolkit';
-import { CartItem, ClothesPropsData } from '../module';
+import { CartDbProps, CartItemDbProps, CartItemProps, ClothesPropsData } from '../module';
 import { RootState } from '../store/Store';
 import CartApi from '@/redux/api/CartApi';
 // import { mergeCarts } from '@/utils';
 interface myState {
     loading: boolean;
-    cartItems: CartItem[];
-    cartItemsDB: any;
+    cartItems: CartItemProps[];
+    cartDb: CartDbProps[];
     isOpenDrawerCart: boolean;
 }
 
@@ -14,10 +14,10 @@ const initialState: myState = {
     loading: false,
     cartItems: [],
     isOpenDrawerCart: false,
-    cartItemsDB: [],
+    cartDb: [],
 };
 
-const isExist = (cartItems: CartItem[], id: number, size: string, color: string) =>
+const isExist = (cartItems: CartItemProps[], id: number, size: string, color: string) =>
     cartItems.find((el) => el.product.id === id && el.size === size && el.color === color);
 export const getCartThunk = createAsyncThunk('getCart', async (arg, { rejectWithValue }) => {
     try {
@@ -125,7 +125,7 @@ export const cartSlice = createSlice({
         // get Cart
         builder.addCase(getCartThunk.pending, (state) => {});
         builder.addCase(getCartThunk.fulfilled, (state, action) => {
-            state.cartItemsDB = action.payload.data.data[0];
+            state.cartDb = action.payload.data.data;
         });
         builder.addCase(getCartThunk.rejected, (state, action) => {});
 
@@ -142,11 +142,11 @@ export const cartSlice = createSlice({
 const cartItems = (state: RootState) => state.cartPersistedReducer.cartItems;
 
 export const totalCartItemSelector = createSelector([cartItems], (cartItems) =>
-    cartItems.reduce((total: number, cur: CartItem) => (total += cur.qty), 0),
+    cartItems.reduce((total: number, cur: CartItemProps) => (total += cur.qty), 0),
 );
 
 export const totalPriceSelector = createSelector([cartItems], (cartItems) =>
-    cartItems.reduce((total: number, cur: CartItem) => (total += cur.qty * cur.product.price), 0),
+    cartItems.reduce((total: number, cur: CartItemProps) => (total += cur.qty * cur.product.price), 0),
 );
 
 export const productQtyInCartSelector = createSelector(
@@ -163,7 +163,7 @@ export const productQtyInCartSelector = createSelector(
 export const { increment, decrement, remove, getIsOpenDrawerCart } = cartSlice.actions;
 export default cartSlice.reducer;
 
-const fetchProductById = async (productId: string) => {
+const fetchProductById = async (productId: number | string) => {
     const response = await fetch(`http://localhost:5000/api/v1/clothes/${productId}`);
     if (!response.ok) {
         throw new Error('Failed to fetch product details');
@@ -171,13 +171,13 @@ const fetchProductById = async (productId: string) => {
     return response.json();
 };
 
-const convertDbCartToLocalCart = async (dbCart: any[]) => {
+const convertDbCartToLocalCart = async (dbCart: CartItemDbProps[]) => {
     const localCart = [];
     for (const dbItem of dbCart) {
         const product = await fetchProductById(dbItem.productId);
 
         const localItem = {
-            product:product.data,
+            product: product.data,
             qty: dbItem.quantity,
             size: dbItem.size,
             color: dbItem.color,
@@ -190,24 +190,25 @@ const convertDbCartToLocalCart = async (dbCart: any[]) => {
 };
 export const mergeCart = createAsyncThunk(
     'cart/mergeCart',
-    async ({ dbCart, localStorageCart }: { dbCart: any[]; localStorageCart: any[] }) => {
+    async ({ dbCart, localStorageCart }: { dbCart: CartItemDbProps[]; localStorageCart: CartItemProps[] }) => {
         const localDbCart = await convertDbCartToLocalCart(dbCart);
-        console.log('localDbCart>>', localDbCart);
+        // console.log('localDbCart>>', localDbCart);
         return mergeCarts(localDbCart, localStorageCart);
     },
 );
 
-const mergeCarts = (dbCart: any[], localStorageCart: any[]) => {
-    const mergedCart = [...dbCart];
-    console.log('dbCart', dbCart);
-    console.log('mergeCartCopy', mergeCart);
+const mergeCarts = (localDbCart: CartItemProps[], localStorageCart: CartItemProps[]) => {
+    const mergedCart = [...localDbCart];
+    // console.log('dbCart', dbCart);
+    // console.log('mergeCartCopy', mergeCart);
     localStorageCart.forEach((localItem: any) => {
-        const existingItemIndex = mergedCart.findIndex(
-            (dbItem) =>
+        const existingItemIndex = mergedCart.findIndex((dbItem) => {
+            return (
                 dbItem.product.id === localItem.product.id &&
                 dbItem.size === localItem.size &&
-                dbItem.color === localItem.color,
-        );
+                dbItem.color === localItem.color
+            );
+        });
 
         if (existingItemIndex !== -1) {
             mergedCart[existingItemIndex].qty += localItem.qty;
@@ -215,6 +216,6 @@ const mergeCarts = (dbCart: any[], localStorageCart: any[]) => {
             mergedCart.push(localItem);
         }
     });
-    console.log('mergedCart>>>', mergedCart);
+    // console.log('mergedCart>>>', mergedCart);
     return mergedCart;
 };

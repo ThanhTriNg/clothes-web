@@ -1,3 +1,5 @@
+import { CartItemDbProps } from '@/redux/module';
+
 export const JSONparse = (string: string) => {
     while (typeof string === 'string') {
         string = JSON.parse(string);
@@ -77,40 +79,40 @@ export const getCartFromLocalStorage = () => {
 //     return mergedCart;
 // };
 
-export const mergeCarts = (dbCart: any, localStorageCart: any) => {
-    console.log('dbCart>>', dbCart);
-    const mergedCart = dbCart.map((item: any) => ({ ...item }));
-    console.log('dbCart>>', dbCart);
-    console.log('localStorageCart>>', localStorageCart);
+// export const mergeCarts = (dbCart: CartItemDbProps[], localStorageCart: any) => {
+//     console.log('dbCart>>', dbCart);
+//     const mergedCart = dbCart.map((item: any) => ({ ...item }));
+//     console.log('dbCart>>', dbCart);
+//     console.log('localStorageCart>>', localStorageCart);
 
-    if (mergedCart) {
-        localStorageCart.forEach((localItem: any) => {
-            console.log('localItem>>', localItem.product.id);
+//     if (mergedCart) {
+//         localStorageCart.forEach((localItem: any) => {
+//             console.log('localItem>>', localItem.product.id);
 
-            const existingItemIndex = mergedCart.findIndex((dbItem: any) => {
-                console.log('chay vo day');
-                return (
-                    dbItem.productId === localItem.product.id &&
-                    dbItem.size === localItem.size &&
-                    dbItem.color === localItem.color
-                );
-            });
+//             const existingItemIndex = mergedCart.findIndex((dbItem: any) => {
+//                 console.log('chay vo day');
+//                 return (
+//                     dbItem.productId === localItem.product.id &&
+//                     dbItem.size === localItem.size &&
+//                     dbItem.color === localItem.color
+//                 );
+//             });
 
-            if (existingItemIndex !== -1) {
-                console.log('existingItem.quantity>>', mergedCart[existingItemIndex].quantity);
-                console.log('localItem.qty>>', localItem.qty);
+//             if (existingItemIndex !== -1) {
+//                 console.log('existingItem.quantity>>', mergedCart[existingItemIndex].quantity);
+//                 console.log('localItem.qty>>', localItem.qty);
 
-                // Creating a mutable copy of the existing item
-                mergedCart[existingItemIndex] = {
-                    ...mergedCart[existingItemIndex],
-                    quantity: mergedCart[existingItemIndex].quantity + localItem.qty,
-                };
-            } else {
-                mergedCart.push(localItem);
-            }
-        });
-        return mergedCart;
-    } else {
-        return localStorageCart;
-    }
-};
+//                 // Creating a mutable copy of the existing item
+//                 mergedCart[existingItemIndex] = {
+//                     ...mergedCart[existingItemIndex],
+//                     quantity: mergedCart[existingItemIndex].quantity + localItem.qty,
+//                 };
+//             } else {
+//                 mergedCart.push(localItem);
+//             }
+//         });
+//         return mergedCart;
+//     } else {
+//         return localStorageCart;
+//     }
+// };

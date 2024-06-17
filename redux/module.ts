@@ -73,7 +73,7 @@ export interface SubCateProps {
     categoryId: number;
 }
 
-export interface CartItem {
+export interface CartItemProps {
     product: ClothesPropsData;
     qty: number;
     size: string;
@@ -109,4 +109,23 @@ export interface OrderProps {
     quantity: string;
     size: string;
     color: string;
+}
+
+export interface CartItemDbProps {
+    id: number;
+    cartId: number;
+    size: string;
+    color: string;
+    productId: number;
+    quantity: number;
+    createdAt: string;
+    updatedAt: string;
+}
+
+export interface CartDbProps {
+    id: number;
+    userId: number;
+    createdAt: string;
+    updatedAt: string;
+    Cart_items: CartItemDbProps[];
 }

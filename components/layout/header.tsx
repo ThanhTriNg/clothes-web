@@ -13,15 +13,13 @@ import Search from './searchBtn';
 
 import { updatedCartItems } from '@/components/AddToCartBtn';
 import { useCartItems, useTotalItems } from '@/components/hook/';
-import { CartItem, CategoriesProps } from '@/redux/module';
+import { CartItemProps, CategoriesProps } from '@/redux/module';
 import { getCategoriesThunk } from '@/redux/reducer/Categories';
 import { signOut } from '@/redux/reducer/User';
 import { AppDispatch, RootState } from '@/redux/store/Store';
 import { toast } from 'react-hot-toast';
 import { useDispatch, useSelector } from 'react-redux';
 import { Drawer, DrawerContent, DrawerTrigger } from '../ui/drawer';
-import { getCartFromLocalStorage, mergeCarts } from '@/utils';
-import { getClothesByIdThunk, getClothesThunk } from '@/redux/reducer/Clothes';
 interface HeaderProps {
     token: string | undefined;
 }
@@ -35,7 +33,8 @@ const Header = ({ token }: HeaderProps) => {
     const [menCate, setMenCate] = useState<CategoriesProps[]>();
     const [isOpen, setIsOpen] = useState(false);
     const [cartActive, setCartActive] = useState(false);
-    const [sortCartItems, setSortCartItems] = useState<CartItem[]>();
+    const [sortCartItems, setSortCartItems] = useState<CartItemProps[]>();
+    const { cartDb } = useSelector((state: RootState) => state.cartPersistedReducer);
 
     const { categoriesInfo } = useSelector((state: RootState) => state.categories);
 
@@ -94,78 +93,21 @@ const Header = ({ token }: HeaderProps) => {
         }
     }, [cartItems]);
 
-    //test
-
-    // useEffect(() => {
-    //     dispatch(mergeCart({ dbCart: cartItemsDB.Cart_items, localStorageCart: cartItems }));
-    // }, [cartItems, cartItemsDB, dispatch]);
-    // console.log('cartItems>>', cartItems);
-    // console.log('cartItems>', cartItems);
-    // console.log('cartItemsLocal>>');
-    // console.log('cartItemsLocal == cartItems', cartItemsLocal == cartItems);
-    // console.log('cartItemsLocal === cartItems', cartItemsLocal === cartItems);
-    // console.log('typeof', typeof cartItemsLocal, typeof cartItems);
-
-    // console.log(clothesById);
-    // console.log(cartItemsDB.Cart_items[0]);
-
-    const { cartItemsDB } = useSelector((state: RootState) => state.cartPersistedReducer);
-
-    // const convertDbCartToLocalCart = async (dbCart: any[]) => {
-    //     const localCart = [];
-
-    //     for (const dbItem of dbCart) {
-    //         const product = await fetchProductById(dbItem.productId);
-    //         const localItem = {
-    //             product: product.data,
-    //             qty: dbItem.quantity,
-    //             size: dbItem.size,
-    //             color: dbItem.color,
-    //         };
-
-    //         localCart.push(localItem);
-    //     }
-
-    //     return localCart;
-    // };
-    // const convertCart = async () => {
-    //     const convertedCart = await convertDbCartToLocalCart(cartItemsDB.Cart_items);
-    //     console.log('convertedCart>>', convertedCart);
-    // };
-
     useEffect(() => {
         if (token) {
             dispatch(getCartThunk());
         }
     }, [dispatch, token]);
 
-    // const test = async (convert: any, cartItems: any) => {
-    //     const mergedCart = await mergeCarts(convert, cartItems);
-    //     console.log('mergedCart>>', mergedCart);
-    //     return mergeCart;
-    // };
-
-    // useEffect(() => {
-    //     test(convertCart(), cartItems);
-    // }, [cartItems]);
     useEffect(() => {
-        const hasMerged = localStorage.getItem('hasMergedCart');
-        if (token && !hasMerged && cartItemsDB.Cart_items && cartItemsDB.Cart_items.length > 0) {
-            dispatch(mergeCart({ dbCart: cartItemsDB.Cart_items, localStorageCart: cartItems }));
-            localStorage.setItem('hasMergedCart', 'true');
+        if (cartDb[0]) {
+            const hasMerged = localStorage.getItem('hasMergedCart');
+            if (token && !hasMerged && cartDb[0].Cart_items && cartDb[0].Cart_items.length > 0) {
+                dispatch(mergeCart({ dbCart: cartDb[0].Cart_items, localStorageCart: cartItems }));
+                localStorage.setItem('hasMergedCart', 'true');
+            }
         }
-    }, [cartItemsDB, cartItems, dispatch, token]);
-    useEffect(() => {
-        console.log('cartItems', cartItems);
-        const abc = localStorage.getItem('persist:cart');
-        if (abc) {
-            console.log();
-            const a = JSON.parse(abc);
-            console.log(JSON.parse(a.cartItems));
-        }
-    }, [cartItems]);
-
-    //test
+    }, [cartDb, cartItems, dispatch, token]);
 
     useEffect(() => {
         if (token) {
