@@ -16,8 +16,9 @@ import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
 import { useDispatch, useSelector } from 'react-redux';
 import Loading from '@/components/loading';
-import { CartItem, OrderProps, UserProps } from '@/redux/module';
+import { CartItemProps, OrderProps, UserProps } from '@/redux/module';
 import { createOrderThunk } from '@/redux/reducer/Order';
+import { addOrUpdateCartItemThunk, clearCart } from '@/redux/reducer/Cart';
 const checkoutFormSchema = z.object({
     fName: z.string({ required_error: 'required' }).min(0),
     lName: z.string({ required_error: 'required' }).min(0),
@@ -29,7 +30,7 @@ type CheckoutFormValues = z.infer<typeof checkoutFormSchema>;
 interface CheckoutProps {
     className?: string;
     userInfo: UserProps;
-    cartItems: CartItem[];
+    cartItems: CartItemProps[];
 }
 export default function CheckoutForm({ className, userInfo, cartItems }: CheckoutProps) {
     const router = useRouter();
@@ -48,19 +49,20 @@ export default function CheckoutForm({ className, userInfo, cartItems }: Checkou
     //   const { errorLogin, successLogin, loading, message } = useSelector(
     //     (state: RootState) => state.users
     //   );
-    console.log(cartItems);
+    console.log('cartItems', cartItems);
 
     const [orderItems, setOrderItems] = useState<OrderProps[]>();
 
     useEffect(() => {
         const consolidatedCartItems = new Map();
+
         cartItems.forEach((item) => {
             const productId = item.product.id;
-            const existingItem = consolidatedCartItems.get(productId);
-            if (existingItem) {
-                existingItem.qty += item.qty;
-            } else {
-                consolidatedCartItems.set(productId, {
+            const color = item.color;
+            const size = item.size;
+            consolidatedCartItems.set(
+                { productId, color, size },
+                {
                     product: {
                         id: item.product.id,
                         name: item.product.name,
@@ -70,20 +72,25 @@ export default function CheckoutForm({ className, userInfo, cartItems }: Checkou
                     quantity: item.qty,
                     color: item.color,
                     size: item.size,
-                });
-            }
+                },
+            );
         });
         const outputOrderItems = Array.from(consolidatedCartItems.values());
         setOrderItems(outputOrderItems);
+        console.log('outputOrderItems>>', outputOrderItems);
     }, [cartItems]);
 
     const dispatch = useDispatch<AppDispatch>();
     async function onSubmit(data: CheckoutFormValues) {
         console.log(data);
+        console.log('orderItems>>', orderItems);
         try {
             await dispatch(updateUserThunk(data));
             if (orderItems) {
                 await dispatch(createOrderThunk(orderItems));
+                dispatch(clearCart());
+                await dispatch(addOrUpdateCartItemThunk(cartItems));
+                window.location.href = '/';``
             }
         } catch (error) {}
     }

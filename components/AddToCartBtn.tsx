@@ -3,7 +3,7 @@
 import QtyBtn from '@/components/QtyBtn';
 import { useProductQtyInCart } from '@/components/hook';
 import { Button } from '@/components/ui/button';
-import { CartItem, ClothesPropsData } from '@/redux/module';
+import { CartItemProps, ClothesPropsData } from '@/redux/module';
 import { decrement, increment } from '@/redux/reducer/Cart';
 import { useAppDispatch } from '@/redux/store/Store';
 
@@ -13,7 +13,7 @@ interface AddToBtnProps {
     color: string;
 }
 
-export const updatedCartItems = (cartItems: CartItem[]) => {
+export const updatedCartItems = (cartItems: CartItemProps[]) => {
     return cartItems.map((item) => {
         const { product, qty, ...rest } = item;
         const { id } = product;

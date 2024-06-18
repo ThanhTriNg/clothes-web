@@ -2,7 +2,7 @@ import CartItemCard from '@/components/CartItemCard';
 import { useCartItems, useTotalPrices } from '@/components/hook';
 import { Button } from '@/components/ui/button';
 import { formatPrice } from '@/utils';
-import { CartItem } from '@/redux/module';
+import { CartItemProps } from '@/redux/module';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 
@@ -10,7 +10,7 @@ const Cart = () => {
     const totalPrice = useTotalPrices();
     const cartItems = useCartItems();
     const { convertPrice } = formatPrice(totalPrice);
-    const [sortCartItems, setSortCartItems] = useState<CartItem[]>();
+    const [sortCartItems, setSortCartItems] = useState<CartItemProps[]>();
 
     // sort cartItem by id
     useEffect(() => {

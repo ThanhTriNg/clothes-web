@@ -7,6 +7,7 @@ interface myState {
     successLogin: boolean;
     errorLogin: any;
     clothesInfoData: ClothesPropsData[] | null;
+    testTy: ClothesPropsData[] | null;
     clothesInfo: ClothesProps | null;
     clothesById: ClothesPropsData | null;
     clothesByIdLoading: boolean;
@@ -20,6 +21,7 @@ interface myState {
 
 const initialState: myState = {
     loading: false,
+    testTy: null,
     successLogin: false,
     errorLogin: null,
     clothesInfoData: null,
@@ -41,19 +43,23 @@ interface colorAPI {
 interface colors {
     hex: string;
 }
+
 export const getClothesThunk = createAsyncThunk('getClothes', async (sortValue: string, { rejectWithValue }) => {
     try {
         if (sortValue === '0') {
             const response = await ClothesApi.getClothes();
             return response;
         } else if (sortValue === '1') {
-            const response = await ClothesApi.getLatestClothes();
+            const params = { sort: 'createdAt', order: 'DESC' };
+            const response = await ClothesApi.getClothes(params);
             return response;
         } else if (sortValue === '2') {
-            const response = await ClothesApi.getClothesByPriceAscending();
+            const params = { sort: 'price' };
+            const response = await ClothesApi.getClothes(params);
             return response;
         } else if (sortValue === '3') {
-            const response = await ClothesApi.getClothesByPriceDescending();
+            const params = { sort: 'price', order: 'DESC' };
+            const response = await ClothesApi.getClothes(params);
             return response;
         }
     } catch (error: any) {
@@ -65,6 +71,33 @@ export const getClothesThunk = createAsyncThunk('getClothes', async (sortValue: 
     }
 });
 
+// export const getClothesByCategoryThunk = createAsyncThunk(
+//     'getClothesByCategory',
+//     async ({ categoryId, sortValue }: { categoryId: string; sortValue: string }, { rejectWithValue }) => {
+//         try {
+//             if (sortValue === '0') {
+//                 const response = await ClothesApi.getClothesByCategory(categoryId);
+//                 return response;
+//             } else if (sortValue === '1') {
+
+//                 const response = await ClothesApi.getLatestClothesByCategory(categoryId);
+//                 return response;
+//             } else if (sortValue === '2') {
+//                 const response = await ClothesApi.getClothesPriceAscendingByCategory(categoryId);
+//                 return response;
+//             } else if (sortValue === '3') {
+//                 const response = await ClothesApi.getClothesPriceDescendingByCategory(categoryId);
+//                 return response;
+//             }
+//         } catch (error: any) {
+//             if (error.response && error.response.data.message) {
+//                 return rejectWithValue(error.response.data.message);
+//             } else {
+//                 return rejectWithValue(error.message);
+//             }
+//         }
+//     },
+// );
 export const getClothesByCategoryThunk = createAsyncThunk(
     'getClothesByCategory',
     async ({ categoryId, sortValue }: { categoryId: string; sortValue: string }, { rejectWithValue }) => {
@@ -73,13 +106,16 @@ export const getClothesByCategoryThunk = createAsyncThunk(
                 const response = await ClothesApi.getClothesByCategory(categoryId);
                 return response;
             } else if (sortValue === '1') {
-                const response = await ClothesApi.getLatestClothesByCategory(categoryId);
+                const params = { sort: 'createdAt', order: 'DESC' };
+                const response = await ClothesApi.getClothesByCategory(categoryId, params);
                 return response;
             } else if (sortValue === '2') {
-                const response = await ClothesApi.getClothesPriceAscendingByCategory(categoryId);
+                const params = { sort: 'price' };
+                const response = await ClothesApi.getClothesByCategory(categoryId, params);
                 return response;
             } else if (sortValue === '3') {
-                const response = await ClothesApi.getClothesPriceDescendingByCategory(categoryId);
+                const params = { sort: 'price', order: 'DESC' };
+                const response = await ClothesApi.getClothesByCategory(categoryId, params);
                 return response;
             }
         } catch (error: any) {
@@ -100,13 +136,16 @@ export const getClothesBySubCategoryThunk = createAsyncThunk(
                 const response = await ClothesApi.getClothesBySubCategory(subCateId);
                 return response;
             } else if (sortValue === '1') {
-                const response = await ClothesApi.getLatestClothesBySubCategory(subCateId);
+                const params = { sort: 'createdAt', order: 'DESC' };
+                const response = await ClothesApi.getClothesBySubCategory(subCateId, params);
                 return response;
             } else if (sortValue === '2') {
-                const response = await ClothesApi.getClothesPriceAscendingBySubCategory(subCateId);
+                const params = { sort: 'price' };
+                const response = await ClothesApi.getClothesBySubCategory(subCateId, params);
                 return response;
             } else if (sortValue === '3') {
-                const response = await ClothesApi.getClothesPriceDescendingBySubCategory(subCateId);
+                const params = { sort: 'price', order: 'DESC' };
+                const response = await ClothesApi.getClothesBySubCategory(subCateId, params);
                 return response;
             }
         } catch (error: any) {
@@ -134,7 +173,8 @@ export const getClothesByIdThunk = createAsyncThunk('getClothesById', async (id:
 
 export const getClothesByNameThunk = createAsyncThunk('getClothesByName', async (name: string, { rejectWithValue }) => {
     try {
-        const response = await ClothesApi.getClothesByName(name);
+        const params = { name };
+        const response = await ClothesApi.getClothes(params);
         return response;
     } catch (error: any) {
         if (error.response && error.response.data.message) {
@@ -145,6 +185,22 @@ export const getClothesByNameThunk = createAsyncThunk('getClothesByName', async 
     }
 });
 
+export const getSearchClothesByNameThunk = createAsyncThunk(
+    'getSearchClothesByName',
+    async (name: string, { rejectWithValue }) => {
+        try {
+            const params = { name };
+            const response = await ClothesApi.getClothes(params);
+            return response;
+        } catch (error: any) {
+            if (error.response && error.response.data.message) {
+                return rejectWithValue(error.response.data.message);
+            } else {
+                return rejectWithValue(error.message);
+            }
+        }
+    },
+);
 export const getColorNameThunk = createAsyncThunk('getColorName', async (colors: colors, { rejectWithValue }) => {
     try {
         const { hex } = colors;
@@ -184,18 +240,6 @@ export const addClothesThunk = createAsyncThunk(
         }
     },
 );
-export const getNewClothesThunk = createAsyncThunk('getNewClothes', async (arg, { rejectWithValue }) => {
-    try {
-        const response = await ClothesApi.getNewClothes();
-        return response;
-    } catch (error: any) {
-        if (error.response && error.response.data.message) {
-            return rejectWithValue(error.response.data.message);
-        } else {
-            return rejectWithValue(error.message);
-        }
-    }
-});
 export const clothesSlice = createSlice({
     name: 'clothes',
     initialState,
@@ -240,6 +284,17 @@ export const clothesSlice = createSlice({
             state.loadingClothesByName = false;
         });
 
+        //get search clothes by clothes name
+        builder.addCase(getSearchClothesByNameThunk.pending, (state) => {
+            state.loadingClothesByName = true;
+        });
+        builder.addCase(getSearchClothesByNameThunk.fulfilled, (state, action) => {
+            state.clothesInfoData = action.payload.data.data;
+            state.loadingClothesByName = false;
+        });
+        builder.addCase(getSearchClothesByNameThunk.rejected, (state, action) => {
+            state.loadingClothesByName = false;
+        });
         //get clothes by category id
         builder.addCase(getClothesByCategoryThunk.pending, (state) => {});
         builder.addCase(getClothesByCategoryThunk.fulfilled, (state, action) => {

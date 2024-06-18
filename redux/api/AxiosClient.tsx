@@ -1,4 +1,5 @@
 import axios from 'axios';
+import queryString from 'query-string';
 import Cookies from 'js-cookie';
 const AxiosClient = axios.create({
     baseURL: process.env.NEXT_PUBLIC_API_HOST,
@@ -39,6 +40,7 @@ AxiosClient.interceptors.response.use(
         if (statusCode === 401) {
             //logic code refresh token
             Cookies.remove('token');
+            localStorage.removeItem('hasMergedCart');
             window.location.href = '/login';
         }
         throw error;

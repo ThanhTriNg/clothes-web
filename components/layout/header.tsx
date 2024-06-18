@@ -1,5 +1,5 @@
 import { useMediaQuery } from '@/hook/use-media-query';
-import { addCartItemThunk, getCartThunk, getIsOpenDrawerCart, mergeCart } from '@/redux/reducer/Cart';
+import { addOrUpdateCartItemThunk, getCartThunk, getIsOpenDrawerCart, mergeCart } from '@/redux/reducer/Cart';
 import { User } from '@phosphor-icons/react';
 import { ShoppingCart } from 'lucide-react';
 import Image from 'next/image';
@@ -114,7 +114,7 @@ const Header = ({ token }: HeaderProps) => {
             const debounceTime = 300;
             const timer = setTimeout(() => {
                 const update = updatedCartItems(cartItems);
-                dispatch(addCartItemThunk(update));
+                dispatch(addOrUpdateCartItemThunk(update));
             }, debounceTime);
 
             return () => clearTimeout(timer);

@@ -10,7 +10,6 @@ interface OrderSummaryProps {
 const OrderSummary = ({ className, summaryCart }: OrderSummaryProps) => {
     const totalPrice = useTotalPrices();
     const { convertPrice: totalPriceF } = formatPrice(totalPrice);
-    console.log(totalPriceF);
     return (
         <div className={`${className}`}>
             <div className="text-lg font-bold text-center">Order Summary</div>

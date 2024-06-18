@@ -1,4 +1,4 @@
-import { CartItem } from '@/redux/module';
+import { CartItemProps } from '@/redux/module';
 import { remove } from '@/redux/reducer/Cart';
 import { getCategoriesThunk } from '@/redux/reducer/Categories';
 import { AppDispatch, RootState } from '@/redux/store/Store';
@@ -12,7 +12,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Button } from '../ui/button';
 
 interface CartProps {
-    cartItem: CartItem;
+    cartItem: CartItemProps;
 }
 const Cart = ({ cartItem }: CartProps) => {
     const { convertPrice: price } = formatPrice(cartItem.product.price);

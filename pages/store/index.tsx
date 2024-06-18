@@ -1,71 +1,75 @@
-import ProductList from "@/components/productList";
-import ProductNav from "@/components/productNav";
-import { Combobox } from "@/components/selectBox";
-import StoreUI from "@/components/storeUI";
-import { getCategoriesThunk } from "@/redux/reducer/Categories";
-import { getClothesThunk, getNewClothesThunk } from "@/redux/reducer/Clothes";
-import { AppDispatch, RootState } from "@/redux/store/Store";
-import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import StoreUI from '@/components/storeUI';
+import { getCategoriesThunk } from '@/redux/reducer/Categories';
+import { getClothesThunk, getSearchClothesByNameThunk } from '@/redux/reducer/Clothes';
+import { AppDispatch, RootState } from '@/redux/store/Store';
+import { useRouter } from 'next/router';
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 const Store = () => {
-  const dispatch = useDispatch<AppDispatch>();
+    const dispatch = useDispatch<AppDispatch>();
+    const router = useRouter();
+    const { q } = router.query;
+    useEffect(() => {}, [router]);
 
-  const { clothesInfoData, sortValue } = useSelector(
-    (state: RootState) => state.clothes
-  );
-  const { categoriesInfo } = useSelector(
-    (state: RootState) => state.categories
-  );
+    const { clothesInfoData, sortValue, clothesByName, testTy } = useSelector((state: RootState) => state.clothes);
+    const { categoriesInfo } = useSelector((state: RootState) => state.categories);
 
-  useEffect(() => {
-    dispatch(getCategoriesThunk());
-  }, [dispatch]);
+    useEffect(() => {
+        dispatch(getCategoriesThunk());
+    }, [dispatch]);
 
-  useEffect(() => {
-    dispatch(getClothesThunk(sortValue));
-  }, [sortValue, dispatch]);
-  return (
-    clothesInfoData &&
-    categoriesInfo && (
-      <StoreUI
-        categoriesInfo={categoriesInfo}
-        clothesInfoData={clothesInfoData}
-        title="All"
-      />
-    )
-  );
+    useEffect(() => {
+        if (q && typeof q === 'string') {
+            dispatch(getSearchClothesByNameThunk(q));
+        } else {
+            dispatch(getClothesThunk(sortValue));
+        }
+    }, [sortValue, dispatch, q]);
+
+    return (
+        clothesInfoData &&
+        categoriesInfo && (
+            <>
+                <StoreUI
+                    categoriesInfo={categoriesInfo}
+                    clothesInfoData={clothesInfoData}
+                    title={(q as string) || 'All'}
+                />
+            </>
+        )
+    );
 };
 
 export default Store;
 
 export const textFilters = [
-  {
-    label: "Featured",
-  },
-  {
-    label: "New arrivals",
-  },
-  {
-    label: "Low to high",
-  },
-  {
-    label: "High to low",
-  },
+    {
+        label: 'Featured',
+    },
+    {
+        label: 'New arrivals',
+    },
+    {
+        label: 'Low to high',
+    },
+    {
+        label: 'High to low',
+    },
 ];
 
 export const getCategoryData = (category: string | string[]): string => {
-  // Implement logic to fetch or return data based on the category
-  switch (category) {
-    case "tops":
-      return "Áo";
-    case "bottoms":
-      return "Quần";
-    case "outwears":
-      return "Đồ mặc ngoài";
-    case "dresses":
-      return "Đầm";
-    default:
-      return "";
-  }
+    // Implement logic to fetch or return data based on the category
+    switch (category) {
+        case 'tops':
+            return 'Áo';
+        case 'bottoms':
+            return 'Quần';
+        case 'outwears':
+            return 'Đồ mặc ngoài';
+        case 'dresses':
+            return 'Đầm';
+        default:
+            return '';
+    }
 };

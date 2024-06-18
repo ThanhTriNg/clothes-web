@@ -1,4 +1,4 @@
-import { CartItemDbProps } from '@/redux/module';
+import { CartItemDbProps, CartItemProps } from '@/redux/module';
 
 export const JSONparse = (string: string) => {
     while (typeof string === 'string') {
@@ -79,40 +79,50 @@ export const getCartFromLocalStorage = () => {
 //     return mergedCart;
 // };
 
-// export const mergeCarts = (dbCart: CartItemDbProps[], localStorageCart: any) => {
-//     console.log('dbCart>>', dbCart);
-//     const mergedCart = dbCart.map((item: any) => ({ ...item }));
-//     console.log('dbCart>>', dbCart);
-//     console.log('localStorageCart>>', localStorageCart);
+export const mergeCarts = (localDbCart: CartItemProps[], localStorageCart: CartItemProps[]) => {
+    const mergedCart = [...localDbCart];
+    // console.log('dbCart', dbCart);
+    // console.log('mergeCartCopy', mergeCart);
+    localStorageCart.forEach((localItem: any) => {
+        const existingItemIndex = mergedCart.findIndex((dbItem) => {
+            return (
+                dbItem.product.id === localItem.product.id &&
+                dbItem.size === localItem.size &&
+                dbItem.color === localItem.color
+            );
+        });
 
-//     if (mergedCart) {
-//         localStorageCart.forEach((localItem: any) => {
-//             console.log('localItem>>', localItem.product.id);
+        if (existingItemIndex !== -1) {
+            mergedCart[existingItemIndex].qty += localItem.qty;
+        } else {
+            mergedCart.push(localItem);
+        }
+    });
+    // console.log('mergedCart>>>', mergedCart);
+    return mergedCart;
+};
+const fetchProductById = async (productId: number | string) => {
+    const response = await fetch(`http://localhost:5000/api/v1/clothes/${productId}`);
+    if (!response.ok) {
+        throw new Error('Failed to fetch product details');
+    }
+    return response.json();
+};
 
-//             const existingItemIndex = mergedCart.findIndex((dbItem: any) => {
-//                 console.log('chay vo day');
-//                 return (
-//                     dbItem.productId === localItem.product.id &&
-//                     dbItem.size === localItem.size &&
-//                     dbItem.color === localItem.color
-//                 );
-//             });
+export const convertDbCartToLocalCart = async (dbCart: CartItemDbProps[]) => {
+    const localCart = [];
+    for (const dbItem of dbCart) {
+        const product = await fetchProductById(dbItem.productId);
 
-//             if (existingItemIndex !== -1) {
-//                 console.log('existingItem.quantity>>', mergedCart[existingItemIndex].quantity);
-//                 console.log('localItem.qty>>', localItem.qty);
+        const localItem = {
+            product: product.data,
+            qty: dbItem.quantity,
+            size: dbItem.size,
+            color: dbItem.color,
+        };
 
-//                 // Creating a mutable copy of the existing item
-//                 mergedCart[existingItemIndex] = {
-//                     ...mergedCart[existingItemIndex],
-//                     quantity: mergedCart[existingItemIndex].quantity + localItem.qty,
-//                 };
-//             } else {
-//                 mergedCart.push(localItem);
-//             }
-//         });
-//         return mergedCart;
-//     } else {
-//         return localStorageCart;
-//     }
-// };
+        localCart.push(localItem);
+    }
+
+    return localCart;
+};
