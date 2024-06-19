@@ -1,6 +1,6 @@
 import { AddClothesProps } from '../module';
-interface ParamsProps {
-    [key: string]: string;
+export interface ParamsProps {
+    [key: string]: string | undefined | number;
 }
 import AxiosClient, { TheColorAPI, AxiosClient2 } from './AxiosClient';
 const ClothesApi = {

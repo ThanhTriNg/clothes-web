@@ -11,7 +11,7 @@ interface myState {
     clothesInfo: ClothesProps | null;
     clothesById: ClothesPropsData | null;
     clothesByIdLoading: boolean;
-    clothesByName: ClothesPropsData[] | null;
+    clothesByName: ClothesProps | null;
     loadingClothesByName: boolean;
     successLogout: boolean;
     errorLogout: string | null;
@@ -171,19 +171,22 @@ export const getClothesByIdThunk = createAsyncThunk('getClothesById', async (id:
     }
 });
 
-export const getClothesByNameThunk = createAsyncThunk('getClothesByName', async (name: string, { rejectWithValue }) => {
-    try {
-        const params = { name };
-        const response = await ClothesApi.getClothes(params);
-        return response;
-    } catch (error: any) {
-        if (error.response && error.response.data.message) {
-            return rejectWithValue(error.response.data.message);
-        } else {
-            return rejectWithValue(error.message);
+export const getClothesByNameThunk = createAsyncThunk(
+    'getClothesByName',
+    async ({ name, pageSize }: { name: string; pageSize?: number }, { rejectWithValue }) => {
+        try {
+            const params = { name, pageSize };
+            const response = await ClothesApi.getClothes(params);
+            return response;
+        } catch (error: any) {
+            if (error.response && error.response.data.message) {
+                return rejectWithValue(error.response.data.message);
+            } else {
+                return rejectWithValue(error.message);
+            }
         }
-    }
-});
+    },
+);
 
 export const getSearchClothesByNameThunk = createAsyncThunk(
     'getSearchClothesByName',
@@ -246,7 +249,6 @@ export const clothesSlice = createSlice({
     reducers: {
         getSort: (state, action: PayloadAction<string>) => {
             state.sortValue = action.payload;
-            // console.log(action.payload);
         },
     },
 
@@ -265,8 +267,6 @@ export const clothesSlice = createSlice({
         builder.addCase(getClothesByIdThunk.fulfilled, (state, action) => {
             state.clothesById = action.payload.data;
             state.clothesByIdLoading = false;
-
-            // console.log(action.payload.data)
         });
         builder.addCase(getClothesByIdThunk.rejected, (state, action) => {
             state.clothesByIdLoading = false;
@@ -277,7 +277,7 @@ export const clothesSlice = createSlice({
             state.loadingClothesByName = true;
         });
         builder.addCase(getClothesByNameThunk.fulfilled, (state, action) => {
-            state.clothesByName = action.payload.data.data;
+            state.clothesByName = action.payload.data;
             state.loadingClothesByName = false;
         });
         builder.addCase(getClothesByNameThunk.rejected, (state, action) => {

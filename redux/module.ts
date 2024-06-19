@@ -30,6 +30,7 @@ export interface ClothesPropsData {
     colors?: string;
     isDeleted?: boolean;
 }
+
 export interface SubCateInClothesProps {
     id: number;
     name: string;
