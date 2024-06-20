@@ -93,9 +93,6 @@ const Header = ({ token }: HeaderProps) => {
         }, 200);
         return () => clearTimeout(timeoutId);
     };
-    useEffect(() => {
-        console.log(cartItems);
-    }, [cartItems]);
 
     useEffect(() => {
         if (categoriesInfo) {
@@ -150,9 +147,7 @@ const Header = ({ token }: HeaderProps) => {
                 await dispatch(addDbToLocalThunk({ dbCart: cartDb[0].Cart_items, localStorageCart: cartItems }));
             }
         }
-        console.log(cartDb[0]);
     };
-    console.log(womenCate);
     return (
         <header className="h-auto md:h-20 mb-4 sticky top-0 z-20 bg-white shadow-md shadow-slate-300 xl:px-8 md:px-6 p-4">
             <div className="md:flex justify-between items-center h-full xl:max-w-[1300px] mx-auto">

@@ -57,7 +57,7 @@ export const addDbToLocalThunk = createAsyncThunk(
     'cart/addDbToLocal',
     async ({ dbCart, localStorageCart }: { dbCart: CartItemDbProps[]; localStorageCart: CartItemProps[] }) => {
         const localDbCart = await convertDbCartToLocalCart(dbCart);
-        console.log('localDbCart>>', localDbCart);
+        // console.log('localDbCart>>', localDbCart);
         return addDbToLocal(localDbCart, localStorageCart);
     },
 );

@@ -1,4 +1,4 @@
-import { CartItemDbProps, CartItemProps } from '@/redux/module';
+import { CartItemDbProps, CartItemProps, ClothesProps, ClothesPropsData } from '@/redux/module';
 
 export const JSONparse = (string: string) => {
     while (typeof string === 'string') {
@@ -110,7 +110,6 @@ export const addDbToLocal = (localDbCart: CartItemProps[], localStorageCart: Car
     localDbCart.forEach((dbItem) => {
         localStorageCart.push(dbItem);
     });
-    console.log(localStorageCart);
     return localStorageCart;
 };
 
@@ -122,20 +121,38 @@ const fetchProductById = async (productId: number | string) => {
     return response.json();
 };
 
-export const convertDbCartToLocalCart = async (dbCart: CartItemDbProps[]) => {
-    const localCart = [];
-    for (const dbItem of dbCart) {
-        const product = await fetchProductById(dbItem.productId);
-
-        const localItem = {
-            product: product.data,
-            qty: dbItem.quantity,
-            size: dbItem.size,
-            color: dbItem.color,
-        };
-
-        localCart.push(localItem);
+export const uniqueProduct = async (dbCart: CartItemDbProps[]) => {
+    const uniqueProductIdsObj: { [key: string]: boolean } = {};
+    for (let i = 0; i < dbCart.length; i++) {
+        uniqueProductIdsObj[dbCart[i].productId] = true;
     }
+    // Convert the object keys into an array of unique product IDs
+    const uniqueProductIds = Object.keys(uniqueProductIdsObj).map(Number);
+    const productFetchPromises = uniqueProductIds.map((productId) => {
+        return fetchProductById(productId);
+    });
+    const products: ProductPromiseProps[] = await Promise.all(productFetchPromises);
+    // Create a map of productId to product details for quick lookup
+    const productMap: { [key: number]: ClothesPropsData } = {};
+    products.forEach((product) => {
+        productMap[product.data.id] = product.data;
+    });
+    return productMap;
+};
+
+export const convertDbCartToLocalCart = async (dbCart: CartItemDbProps[]) => {
+    const productMap = await uniqueProduct(dbCart);
+    const localCart = dbCart.map((dbItem) => ({
+        product: productMap[dbItem.productId],
+        qty: dbItem.quantity,
+        size: dbItem.size,
+        color: dbItem.color,
+    }));
 
     return localCart;
 };
+
+interface ProductPromiseProps {
+    message: string;
+    data: ClothesPropsData;
+}
