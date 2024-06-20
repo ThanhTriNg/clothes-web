@@ -12,10 +12,7 @@ interface myState {
   successLogin: boolean;
   errorLogin: any;
   categoriesInfo: CategoriesProps[] | null;
-
   subCateByIdInfo: SubCateProps[] | null;
-  successLogout: boolean;
-  errorLogout: string | null;
   saveCateMen: CategoriesProps[] | null;
   saveCateWomen: CategoriesProps[] | null;
   subCateInfo: SubCateProps[] | null;
@@ -26,13 +23,8 @@ const initialState: myState = {
   successLogin: false,
   errorLogin: null,
   categoriesInfo: null,
-
   subCateByIdInfo: null,
-
-  successLogout: false,
-  errorLogout: null,
   subCateInfo: null,
-
   saveCateMen: null,
   saveCateWomen: null,
 };

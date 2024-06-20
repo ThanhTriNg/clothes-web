@@ -16,6 +16,9 @@ import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
 import { useDispatch, useSelector } from 'react-redux';
 import Loading from '@/components/loading';
+
+import { persistor } from '@/redux/store/Store';
+
 const loginFormSchema = z.object({
     email: z.string({ required_error: 'Bắt buộc' }).min(0).email('Vui vòng nhập địa chỉ email hợp lệ'),
     password: z.string().min(8, 'Tối thiểu 8 kí tự'),
@@ -103,7 +106,9 @@ export default function LoginForm() {
             const email = data.email;
             const password = data.password;
             await dispatch(loginThunk({ email, password }));
-        } catch (error) {}
+        } catch (error) {
+            console.log(error);
+        }
     }
     const togglePassword = () => {
         setPasswordShown(!passwordShown);

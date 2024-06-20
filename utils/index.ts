@@ -101,6 +101,19 @@ export const mergeCarts = (localDbCart: CartItemProps[], localStorageCart: CartI
     // console.log('mergedCart>>>', mergedCart);
     return mergedCart;
 };
+
+export const addDbToLocal = (localDbCart: CartItemProps[], localStorageCart: CartItemProps[]) => {
+    // Clear the local storage cart
+    localStorageCart = [];
+
+    // Add items from the database cart to the local storage cart
+    localDbCart.forEach((dbItem) => {
+        localStorageCart.push(dbItem);
+    });
+    console.log(localStorageCart);
+    return localStorageCart;
+};
+
 const fetchProductById = async (productId: number | string) => {
     const response = await fetch(`http://localhost:5000/api/v1/clothes/${productId}`);
     if (!response.ok) {

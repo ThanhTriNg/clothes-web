@@ -13,8 +13,6 @@ interface myState {
     clothesByIdLoading: boolean;
     clothesByName: ClothesProps | null;
     loadingClothesByName: boolean;
-    successLogout: boolean;
-    errorLogout: string | null;
     colorAPI: colorAPI | null;
     sortValue: string;
 }
@@ -30,8 +28,6 @@ const initialState: myState = {
     clothesByIdLoading: false,
     clothesByName: null,
     loadingClothesByName: false,
-    successLogout: false,
-    errorLogout: null,
     colorAPI: null,
     sortValue: '0',
 };

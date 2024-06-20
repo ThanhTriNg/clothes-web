@@ -1,5 +1,12 @@
 import { useMediaQuery } from '@/hook/use-media-query';
-import { addOrUpdateCartItemThunk, getCartThunk, getIsOpenDrawerCart, mergeCart } from '@/redux/reducer/Cart';
+import {
+    addDbToLocalThunk,
+    addOrUpdateCartItemThunk,
+    clearCart,
+    getCartThunk,
+    getIsOpenDrawerCart,
+    mergeCartThunk,
+} from '@/redux/reducer/Cart';
 import { User } from '@phosphor-icons/react';
 import { ShoppingCart } from 'lucide-react';
 import Image from 'next/image';
@@ -10,16 +17,25 @@ import DrawerMenu from '../drawerMenu';
 import Cart from './cart';
 import Nav from './nav';
 import Search from './searchBtn';
-
 import { updatedCartItems } from '@/components/AddToCartBtn';
 import { useCartItems, useTotalItems } from '@/components/hook/';
-import { CartItemProps, CategoriesProps } from '@/redux/module';
+import { Drawer, DrawerContent, DrawerTrigger } from '@/components/ui/drawer';
+import { CartDbProps, CartItemProps, CategoriesProps } from '@/redux/module';
 import { getCategoriesThunk } from '@/redux/reducer/Categories';
-import { signOut } from '@/redux/reducer/User';
-import { AppDispatch, RootState } from '@/redux/store/Store';
+import { logOut } from '@/redux/reducer/User';
+import { AppDispatch, RootState, persistor } from '@/redux/store/Store';
 import { toast } from 'react-hot-toast';
 import { useDispatch, useSelector } from 'react-redux';
-import { Drawer, DrawerContent, DrawerTrigger } from '../ui/drawer';
+
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+
 interface HeaderProps {
     token: string | undefined;
 }
@@ -29,15 +45,15 @@ const Header = ({ token }: HeaderProps) => {
     const totalItems = useTotalItems();
     const cartItems = useCartItems();
     const isMobile = useMediaQuery('(max-width:767px)');
+    const { cartDb } = useSelector((state: RootState) => state.cartPersistedReducer);
+    const { categoriesInfo } = useSelector((state: RootState) => state.categories);
+
     const [womenCate, setWomenCate] = useState<CategoriesProps[]>();
     const [menCate, setMenCate] = useState<CategoriesProps[]>();
+    const [onOpenDropMenu, setOnOpenDropMenu] = useState<boolean>(false);
     const [isOpen, setIsOpen] = useState(false);
     const [cartActive, setCartActive] = useState(false);
     const [sortCartItems, setSortCartItems] = useState<CartItemProps[]>();
-    const { cartDb } = useSelector((state: RootState) => state.cartPersistedReducer);
-
-    const { categoriesInfo } = useSelector((state: RootState) => state.categories);
-
     useEffect(() => {
         if (isOpen === true) {
             setIsOpen(false);
@@ -68,14 +84,18 @@ const Header = ({ token }: HeaderProps) => {
     }, [isOpen, dispatch]);
 
     //sign out
-    const handleSignOut = () => {
-        dispatch(signOut());
+    const handleLogOut = () => {
+        dispatch(logOut());
+        dispatch(clearCart());
         toast.success('Signed out successfully');
         const timeoutId = setTimeout(() => {
             window.location.reload();
         }, 200);
         return () => clearTimeout(timeoutId);
     };
+    useEffect(() => {
+        console.log(cartItems);
+    }, [cartItems]);
 
     useEffect(() => {
         if (categoriesInfo) {
@@ -100,14 +120,9 @@ const Header = ({ token }: HeaderProps) => {
     }, [dispatch, token]);
 
     useEffect(() => {
-        if (cartDb[0]) {
-            const hasMerged = localStorage.getItem('hasMergedCart');
-            if (token && !hasMerged && cartDb[0].Cart_items && cartDb[0].Cart_items.length > 0) {
-                dispatch(mergeCart({ dbCart: cartDb[0].Cart_items, localStorageCart: cartItems }));
-                localStorage.setItem('hasMergedCart', 'true');
-            }
-        }
-    }, [cartDb, cartItems, dispatch, token]);
+        handleMergeCart(cartDb, cartItems, token);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [cartDb, dispatch, token]);
 
     useEffect(() => {
         if (token) {
@@ -120,7 +135,24 @@ const Header = ({ token }: HeaderProps) => {
             return () => clearTimeout(timer);
         }
     }, [cartItems, dispatch, token]);
+    useEffect(() => {
+        setOnOpenDropMenu(false);
+    }, [router]);
 
+    const handleMergeCart = async (cartDb: CartDbProps[], cartItems: CartItemProps[], token: string | undefined) => {
+        if (cartDb[0] && token) {
+            const hasMerged = localStorage.getItem('hasMergedCart');
+            if (!hasMerged && token && cartDb[0].Cart_items && cartDb[0].Cart_items.length > 0) {
+                await dispatch(mergeCartThunk({ dbCart: cartDb[0].Cart_items, localStorageCart: cartItems }));
+                localStorage.setItem('hasMergedCart', 'true');
+            }
+            if (hasMerged) {
+                await dispatch(addDbToLocalThunk({ dbCart: cartDb[0].Cart_items, localStorageCart: cartItems }));
+            }
+        }
+        console.log(cartDb[0]);
+    };
+    console.log(womenCate);
     return (
         <header className="h-auto md:h-20 mb-4 sticky top-0 z-20 bg-white shadow-md shadow-slate-300 xl:px-8 md:px-6 p-4">
             <div className="md:flex justify-between items-center h-full xl:max-w-[1300px] mx-auto">
@@ -144,9 +176,22 @@ const Header = ({ token }: HeaderProps) => {
                 <div className="flex md:gap-x-10 gap-x-2 items-center md:justify-center justify-around">
                     <Search />
                     {token ? (
-                        <Link href="/user">
-                            <User size={24} className="cursor-pointer" />
-                        </Link>
+                        <DropdownMenu open={onOpenDropMenu} onOpenChange={setOnOpenDropMenu}>
+                            <DropdownMenuTrigger>
+                                <User size={24} className="cursor-pointer" />
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent>
+                                <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                                <DropdownMenuSeparator />
+                                <DropdownMenuItem>
+                                    <Link href="/user">Profile</Link>
+                                </DropdownMenuItem>
+                                <DropdownMenuItem>
+                                    <Link href="/">Billing</Link>
+                                </DropdownMenuItem>
+                                <DropdownMenuItem onClick={handleLogOut}>Logout</DropdownMenuItem>
+                            </DropdownMenuContent>
+                        </DropdownMenu>
                     ) : (
                         <Link href="/login">
                             <User size={24} className="cursor-pointer" />

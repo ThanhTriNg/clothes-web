@@ -90,7 +90,8 @@ export default function CheckoutForm({ className, userInfo, cartItems }: Checkou
                 await dispatch(createOrderThunk(orderItems));
                 dispatch(clearCart());
                 await dispatch(addOrUpdateCartItemThunk(cartItems));
-                window.location.href = '/';``
+                console.log('chay add o day');
+                window.location.href = '/';
             }
         } catch (error) {}
     }

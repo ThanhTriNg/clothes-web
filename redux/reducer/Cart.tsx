@@ -2,7 +2,7 @@ import { PayloadAction, createAsyncThunk, createSelector, createSlice } from '@r
 import { CartDbProps, CartItemDbProps, CartItemProps, ClothesPropsData } from '../module';
 import { RootState } from '../store/Store';
 import CartApi from '@/redux/api/CartApi';
-import { convertDbCartToLocalCart, mergeCarts } from '@/utils';
+import { addDbToLocal, convertDbCartToLocalCart, mergeCarts } from '@/utils';
 // import { mergeCarts } from '@/utils';
 interface myState {
     loading: boolean;
@@ -45,12 +45,20 @@ export const addOrUpdateCartItemThunk = createAsyncThunk('addCartItem', async (c
         }
     }
 });
-export const mergeCart = createAsyncThunk(
+export const mergeCartThunk = createAsyncThunk(
     'cart/mergeCart',
     async ({ dbCart, localStorageCart }: { dbCart: CartItemDbProps[]; localStorageCart: CartItemProps[] }) => {
         const localDbCart = await convertDbCartToLocalCart(dbCart);
         // console.log('localDbCart>>', localDbCart);
         return mergeCarts(localDbCart, localStorageCart);
+    },
+);
+export const addDbToLocalThunk = createAsyncThunk(
+    'cart/addDbToLocal',
+    async ({ dbCart, localStorageCart }: { dbCart: CartItemDbProps[]; localStorageCart: CartItemProps[] }) => {
+        const localDbCart = await convertDbCartToLocalCart(dbCart);
+        console.log('localDbCart>>', localDbCart);
+        return addDbToLocal(localDbCart, localStorageCart);
     },
 );
 export const cartSlice = createSlice({
@@ -120,6 +128,7 @@ export const cartSlice = createSlice({
 
         clearCart(state) {
             state.cartItems = [];
+            state.cartDb = [];
         },
     },
     extraReducers: (builder) => {
@@ -134,8 +143,12 @@ export const cartSlice = createSlice({
         builder.addCase(addOrUpdateCartItemThunk.pending, (state) => {});
         builder.addCase(addOrUpdateCartItemThunk.fulfilled, (state, action) => {});
         builder.addCase(addOrUpdateCartItemThunk.rejected, (state, action) => {});
-        //test
-        builder.addCase(mergeCart.fulfilled, (state, action) => {
+        //mergeCartThunk when first login
+        builder.addCase(mergeCartThunk.fulfilled, (state, action) => {
+            state.cartItems = action.payload;
+        });
+
+        builder.addCase(addDbToLocalThunk.fulfilled, (state, action) => {
             state.cartItems = action.payload;
         });
     },
@@ -164,4 +177,3 @@ export const productQtyInCartSelector = createSelector(
 
 export const { increment, decrement, remove, getIsOpenDrawerCart, clearCart } = cartSlice.actions;
 export default cartSlice.reducer;
-

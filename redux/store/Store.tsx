@@ -31,16 +31,16 @@ const cartPersistConfig = {
     key: 'cart',
     storage,
 };
+
 const cartPersistedReducer = persistReducer(cartPersistConfig, CartReducer);
 
 export const store = configureStore({
     reducer: {
         clothes: ClothesReducer,
         categories: CategoriesReducer,
-        // cart: CartReducer,
         users: UsersReducer,
         cartPersistedReducer,
-        carts: CartReducer,
+        // carts: CartReducer,
         orders: OrderReducer,
     },
     middleware: (getDefaultMiddleware) => getDefaultMiddleware({ serializableCheck: false }),
