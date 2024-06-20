@@ -29,7 +29,7 @@ const DetailPage = () => {
     const [isLike, setIsLike] = useState<boolean>(false);
     const [maxSlidePage, setMaxSlidePage] = useState<number>();
     const [isRightSlug, setIsRightSlug] = useState<boolean>(true);
-    const { clothesInfoData, clothesById, clothesByIdLoading } = useSelector((state: RootState) => state.clothes);
+    const { clothesInfo, clothesById, clothesByIdLoading } = useSelector((state: RootState) => state.clothes);
     useEffect(() => {
         if (slugCateName && typeof slugCateName === 'string' && clothesById) {
             setIsRightSlug(fnIsRightSlug(slugCateName));
@@ -44,22 +44,22 @@ const DetailPage = () => {
         }
     }, [dispatch, productId]);
     useEffect(() => {
-        if (clothesInfoData) {
-            setMaxSlidePage(clothesInfoData.length - 1 - slidesPerView);
+        if (clothesInfo) {
+            setMaxSlidePage(clothesInfo.data.length - 1 - slidesPerView);
         }
-    }, [clothesInfoData]);
+    }, [clothesInfo]);
     const sliderRef = useRef<any>(null);
     const updateIndex = () => {
         setCurrentSlide(sliderRef.current.swiper.realIndex);
     };
     useEffect(() => {
         setCurrentSlide(0);
-        if (clothesById && clothesInfoData) sliderRef.current.swiper.slideTo(0);
+        if (clothesById && clothesInfo) sliderRef.current.swiper.slideTo(0);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [productId]);
 
     useEffect(() => {
-        if (clothesById && clothesInfoData) {
+        if (clothesById && clothesInfo) {
             const swiperInstance = sliderRef.current.swiper;
 
             if (swiperInstance) {
@@ -72,7 +72,7 @@ const DetailPage = () => {
                 }
             };
         }
-    }, [clothesById, clothesInfoData]);
+    }, [clothesById, clothesInfo]);
     const slidePrev = () => {
         sliderRef.current.swiper.slidePrev();
     };
@@ -93,7 +93,7 @@ const DetailPage = () => {
         </div>
     ) : isRightSlug ? (
         clothesById &&
-        clothesInfoData && (
+        clothesInfo && (
             <div className="min-h-screen bg-white p-2">
                 <div className="grid grid-cols-12 md:gap-x-8 gap-x-2">
                     <ProductDetailSlide
@@ -115,7 +115,7 @@ const DetailPage = () => {
                         pagination={{ clickable: true }}
                         className="h-full w-full !flex"
                     >
-                        {clothesInfoData.map((item, idx: number) => {
+                        {clothesInfo.data.map((item, idx: number) => {
                             const cateName = item.Sub_Category.Categories[0].name.toLowerCase();
                             const href = `/store/${cateName}/detail/${item.id}`;
                             const currentProduct = item.id.toString() === productId;

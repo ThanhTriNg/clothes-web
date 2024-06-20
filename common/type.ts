@@ -11,7 +11,7 @@ export interface ProductDetailSlideProps {
     imageUrl: string;
     subImageUrls?: string[];
   };
-  description: string;
+  description?: string;
 }
 //ko xai
 export interface ProductCardProps {

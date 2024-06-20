@@ -6,7 +6,7 @@ interface myState {
     loading: boolean;
     successLogin: boolean;
     errorLogin: any;
-    clothesInfoData: ClothesPropsData[] | null;
+    clothesInfoData: ClothesProps | null;
     testTy: ClothesPropsData[] | null;
     clothesInfo: ClothesProps | null;
     clothesById: ClothesPropsData | null;
@@ -104,6 +104,7 @@ export const getClothesByCategoryThunk = createAsyncThunk(
         try {
             if (sortValue === '0') {
                 const response = await ClothesApi.getClothesByCategory(categoryId);
+
                 return response;
             } else if (sortValue === '1') {
                 const params = { sort: 'createdAt', order: 'DESC' };
@@ -256,7 +257,7 @@ export const clothesSlice = createSlice({
         //get all clothes
         builder.addCase(getClothesThunk.pending, (state) => {});
         builder.addCase(getClothesThunk.fulfilled, (state, action) => {
-            if (action.payload) state.clothesInfoData = action.payload.data.data;
+            if (action.payload) state.clothesInfo = action.payload.data;
         });
         builder.addCase(getClothesThunk.rejected, (state, action) => {});
 
@@ -289,7 +290,7 @@ export const clothesSlice = createSlice({
             state.loadingClothesByName = true;
         });
         builder.addCase(getSearchClothesByNameThunk.fulfilled, (state, action) => {
-            state.clothesInfoData = action.payload.data.data;
+            state.clothesInfo = action.payload.data;
             state.loadingClothesByName = false;
         });
         builder.addCase(getSearchClothesByNameThunk.rejected, (state, action) => {

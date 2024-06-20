@@ -12,7 +12,7 @@ const Store = () => {
     const { q } = router.query;
     useEffect(() => {}, [router]);
 
-    const { clothesInfoData, sortValue, clothesByName, testTy } = useSelector((state: RootState) => state.clothes);
+    const { clothesInfo, sortValue, clothesByName, testTy } = useSelector((state: RootState) => state.clothes);
     const { categoriesInfo } = useSelector((state: RootState) => state.categories);
 
     useEffect(() => {
@@ -28,12 +28,12 @@ const Store = () => {
     }, [sortValue, dispatch, q]);
 
     return (
-        clothesInfoData &&
+        clothesInfo &&
         categoriesInfo && (
             <>
                 <StoreUI
                     categoriesInfo={categoriesInfo}
-                    clothesInfoData={clothesInfoData}
+                    clothesInfo={clothesInfo}
                     title={(q as string) || 'All'}
                 />
             </>

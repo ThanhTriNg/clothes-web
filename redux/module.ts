@@ -21,7 +21,7 @@ export interface ClothesPropsData {
     stock?: number;
     price: number;
     descriptionSort?: string;
-    description: string;
+    description?: string;
     subCategoryId?: number;
     Sub_Category: SubCateInClothesProps;
     imageUrl: string;
@@ -29,6 +29,13 @@ export interface ClothesPropsData {
     sizes?: string;
     colors?: string;
     isDeleted?: boolean;
+}
+export interface ClothesProps {
+    data: ClothesPropsData[];
+    currentPage: number;
+    pageSize: number;
+    totalCount: number;
+    totalPages: number;
 }
 
 export interface SubCateInClothesProps {
@@ -39,13 +46,6 @@ export interface SubCateInClothesProps {
         id: number;
         name: string;
     }[];
-}
-export interface ClothesProps {
-    data: ClothesPropsData[];
-    currentPage: number;
-    pageSize: number;
-    totalCount: number;
-    totalPages: number;
 }
 
 export interface CategoriesProps {

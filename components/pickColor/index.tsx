@@ -15,7 +15,6 @@ const PickColor = ({ colors, size = 20, spaceBetween = 4, showName = false }: Pi
     // const colorsObj = JSONparse(colors);
     const dispatch = useDispatch<AppDispatch>();
     const router = useRouter();
-
     const [colorHex, setColorHex] = useState<string>(removeHashFromColorCode(colors[0]));
 
     const [colorName, setColorName] = useState<string>();
@@ -40,7 +39,7 @@ const PickColor = ({ colors, size = 20, spaceBetween = 4, showName = false }: Pi
     }, [colorAPI]);
 
     useEffect(() => {
-        if (router.asPath.startsWith('/store')) {
+        if (router.asPath.startsWith('/detail')) {
             router.push({
                 pathname: router.pathname,
                 query: { ...router.query, colorCode: colorHex },

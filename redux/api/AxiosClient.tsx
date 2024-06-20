@@ -1,5 +1,4 @@
 import axios from 'axios';
-import queryString from 'query-string';
 import Cookies from 'js-cookie';
 const AxiosClient = axios.create({
     baseURL: process.env.NEXT_PUBLIC_API_HOST,

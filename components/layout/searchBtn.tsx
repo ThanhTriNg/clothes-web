@@ -56,7 +56,7 @@ const Search = () => {
                     pathname: '/store',
                     query,
                 });
-                console.log('inputRef.current>', inputRef.current);
+                localStorage.setItem('q', inputValue.trim());
                 //clear focus css
                 inputRef.current?.blur();
             }
@@ -64,12 +64,12 @@ const Search = () => {
                 router.push({
                     pathname: '/store',
                 });
+                localStorage.setItem('q', inputValue.trim());
                 //clear focus css
                 inputRef.current?.blur();
             }
         }
     };
-
     return (
         <div className="relative group">
             <div className=" relative flex justify-between items-center">
