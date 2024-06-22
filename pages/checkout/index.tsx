@@ -1,11 +1,13 @@
 import { useCartItems } from '@/components/hook';
 import CheckoutForm from '@/pages/checkout/CheckoutForm';
+import PopUp from '@/components/popup';
 import OrderSummary from '@/pages/checkout/OrderSummary';
 import { ClothesPropsData } from '@/redux/module';
 import { getUserThunk } from '@/redux/reducer/User';
 import { AppDispatch, RootState } from '@/redux/store/Store';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { CheckFat } from '@phosphor-icons/react';
 
 export interface summaryCart {
     product: ClothesPropsData;
@@ -38,7 +40,24 @@ const Checkout = () => {
         const outputCartItems = Array.from(consolidatedCartItems.values());
         setSummaryCart(outputCartItems);
     }, [cartItems]);
+    const { errorOrder, successOrder } = useSelector((state: RootState) => state.orders);
+    useEffect(() => {
+        if (successOrder) {
+        } else if (errorOrder) {
+        }
+    }, [errorOrder, successOrder]);
 
+    const [showPopup, setShowPopup] = useState(false);
+
+    useEffect(() => {
+        if (successOrder) {
+            setShowPopup(true);
+        }
+    }, [successOrder]);
+
+    const handleClosePopup = () => {
+        setShowPopup(false);
+    };
     return (
         summaryCart &&
         userInfo && (
@@ -48,6 +67,26 @@ const Checkout = () => {
                     <CheckoutForm className="col-span-3" userInfo={userInfo} cartItems={cartItems} />
                     <OrderSummary className="col-span-2" summaryCart={summaryCart} />
                 </div>
+                {/* {successOrder && (
+                    <PopUp
+                        icon={CheckFat}
+                        colorIcon="green"
+                        sizeIcon={32}
+                        title="Thank you"
+                        message="Your order is confirmed"
+                        description={`We will sending you an email confirm to ${userInfo.email} shortly`}
+                    />
+                )} */}
+                <PopUp
+                    icon={CheckFat}
+                    colorIcon="green"
+                    sizeIcon={32}
+                    title="Thank you"
+                    message="Your order is confirmed"
+                    description="We will send you an email confirmation shortly."
+                    isOpen={showPopup}
+                    onClose={handleClosePopup}
+                />
             </div>
         )
     );

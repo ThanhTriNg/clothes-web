@@ -12,49 +12,52 @@ interface PickColorProps {
 }
 
 const PickColor = ({ colors, size = 20, spaceBetween = 4, showName = false }: PickColorProps) => {
-    // const colorsObj = JSONparse(colors);
     const dispatch = useDispatch<AppDispatch>();
     const router = useRouter();
-    const [colorHex, setColorHex] = useState<string>(removeHashFromColorCode(colors[0]));
 
+    const { colorCode } = router.query;
+
+    const [isActive, setIsActive] = useState<number>(-1);
     const [colorName, setColorName] = useState<string>();
-
     const { colorAPI } = useSelector((state: RootState) => state.clothes);
 
     useEffect(() => {
-        setColorHex(removeHashFromColorCode(colors[0]));
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [colors[0]]);
-
-    useEffect(() => {
-        if (colorHex) {
-            dispatch(getColorNameThunk({ hex: colorHex }));
+        if (typeof colorCode === 'string') {
+            const color = '#' + colorCode;
+            const index = colors.indexOf(color);
+            setIsActive(index);
         }
-    }, [colorHex, dispatch]);
+    }, [colorCode, colors]);
 
     useEffect(() => {
-        if (colorAPI) {
+        if (isActive != -1) {
+            const color = removeHashFromColorCode(colors[isActive]);
+            if (color) {
+                //ex:
+                //true: color == 000
+                //false: color == #000
+                dispatch(getColorNameThunk({ hex: color }));
+            }
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [dispatch, isActive]);
+
+    useEffect(() => {
+        if (colorAPI && showName) {
+            console.log(colorAPI);
             setColorName(colorAPI?.name?.value);
         }
-    }, [colorAPI]);
+    }, [colorAPI, showName]);
 
-    useEffect(() => {
-        if (router.asPath.startsWith('/detail')) {
+    const handleClick = (idx: number, color: string) => {
+        const removeHash = removeHashFromColorCode(color);
+        setIsActive(idx);
+        if (router.asPath.startsWith('/store')) {
             router.push({
                 pathname: router.pathname,
-                query: { ...router.query, colorCode: colorHex },
+                query: { ...router.query, colorCode: removeHash },
             });
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
-
-    const handleClick = (color: string) => {
-        const removeHash = removeHashFromColorCode(color);
-        setColorHex(removeHash);
-        router.push({
-            pathname: router.pathname,
-            query: { ...router.query, colorCode: removeHash },
-        });
     };
 
     const sizeText = `${size}px`;
@@ -69,11 +72,9 @@ const PickColor = ({ colors, size = 20, spaceBetween = 4, showName = false }: Pi
                 }}
             >
                 {colors.map((color: string, idx: number) => {
-                    const activeColor = `#${colorHex}`;
-
                     return (
                         <div
-                            onClick={() => handleClick(color)}
+                            onClick={() => handleClick(idx, color)}
                             key={`pick-color-${idx}`}
                             style={{
                                 backgroundColor: color,
@@ -81,7 +82,7 @@ const PickColor = ({ colors, size = 20, spaceBetween = 4, showName = false }: Pi
                                 width: sizeText,
                             }}
                             className={`cursor-pointer transition-all ${
-                                showName && activeColor === color ? `scale-110 border border-solid` : ``
+                                showName && isActive === idx ? `scale-110 border border-solid` : ``
                             }  `}
                         />
                     );
@@ -103,9 +104,3 @@ const removeHashFromColorCode = (colorCode: string): string => {
     // If the color code doesn't start with '#', return it as is
     return colorCode;
 };
-
-// const isValidColorHex = (colorHex: string) => {
-//   // Regular expression to match valid color hex codes
-//   const hexRegex = /^#?([0-9A-F]{3}){1,2}$/i;
-//   return hexRegex.test(colorHex);
-// };

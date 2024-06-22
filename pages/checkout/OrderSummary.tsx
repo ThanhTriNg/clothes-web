@@ -24,10 +24,12 @@ const OrderSummary = ({ className, summaryCart }: OrderSummaryProps) => {
                             <div className="grid grid-cols-2 items-center justify-center text-center gap-3">
                                 <Image
                                     src={item.product.imageUrl}
-                                    width="100"
-                                    height="50"
                                     alt={item.product.name}
-                                    className="mx-auto"
+                                    width="0"
+                                    height="0"
+                                    sizes="100wh"
+                                    priority={true}
+                                    className="mx-auto w-[100px] h-auto"
                                 />
 
                                 <div className="has-tooltip">

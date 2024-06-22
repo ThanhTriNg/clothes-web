@@ -46,10 +46,6 @@ export default function CheckoutForm({ className, userInfo, cartItems }: Checkou
         },
         mode: 'onSubmit',
     });
-    //   const { errorLogin, successLogin, loading, message } = useSelector(
-    //     (state: RootState) => state.users
-    //   );
-    console.log('cartItems', cartItems);
 
     const [orderItems, setOrderItems] = useState<OrderProps[]>();
 
@@ -77,21 +73,17 @@ export default function CheckoutForm({ className, userInfo, cartItems }: Checkou
         });
         const outputOrderItems = Array.from(consolidatedCartItems.values());
         setOrderItems(outputOrderItems);
-        console.log('outputOrderItems>>', outputOrderItems);
     }, [cartItems]);
 
     const dispatch = useDispatch<AppDispatch>();
     async function onSubmit(data: CheckoutFormValues) {
         console.log(data);
-        console.log('orderItems>>', orderItems);
         try {
             await dispatch(updateUserThunk(data));
             if (orderItems) {
                 await dispatch(createOrderThunk(orderItems));
-                dispatch(clearCart());
-                await dispatch(addOrUpdateCartItemThunk(cartItems));
-                console.log('chay add o day');
-                window.location.href = '/';
+                // dispatch(clearCart());
+                // await dispatch(addOrUpdateCartItemThunk(cartItems));
             }
         } catch (error) {}
     }
