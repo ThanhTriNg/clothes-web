@@ -8,6 +8,8 @@ import { AppDispatch, RootState } from '@/redux/store/Store';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { CheckFat } from '@phosphor-icons/react';
+import { useRouter } from 'next/router';
+import { addOrUpdateCartItemThunk, clearCart } from '@/redux/reducer/Cart';
 
 export interface summaryCart {
     product: ClothesPropsData;
@@ -15,13 +17,21 @@ export interface summaryCart {
 }
 
 const Checkout = () => {
+    const router = useRouter();
     const cartItems = useCartItems();
     const { userInfo } = useSelector((state: RootState) => state.users);
     const dispatch = useDispatch<AppDispatch>();
+    const [summaryCart, setSummaryCart] = useState<summaryCart[]>();
+
+    useEffect(() => {
+        if (cartItems.length === 0) {
+            router.push('/');
+        }
+    }, [cartItems, router]);
+
     useEffect(() => {
         dispatch(getUserThunk());
     }, [dispatch]);
-    const [summaryCart, setSummaryCart] = useState<summaryCart[]>();
 
     useEffect(() => {
         const consolidatedCartItems = new Map();
@@ -41,11 +51,6 @@ const Checkout = () => {
         setSummaryCart(outputCartItems);
     }, [cartItems]);
     const { errorOrder, successOrder } = useSelector((state: RootState) => state.orders);
-    useEffect(() => {
-        if (successOrder) {
-        } else if (errorOrder) {
-        }
-    }, [errorOrder, successOrder]);
 
     const [showPopup, setShowPopup] = useState(false);
 
@@ -54,10 +59,13 @@ const Checkout = () => {
             setShowPopup(true);
         }
     }, [successOrder]);
-
-    const handleClosePopup = () => {
+    const handleClosePopup = async () => {
         setShowPopup(false);
+        dispatch(clearCart());
+        await dispatch(addOrUpdateCartItemThunk(cartItems));
+        router.push('/');
     };
+    
     return (
         summaryCart &&
         userInfo && (
@@ -67,23 +75,14 @@ const Checkout = () => {
                     <CheckoutForm className="col-span-3" userInfo={userInfo} cartItems={cartItems} />
                     <OrderSummary className="col-span-2" summaryCart={summaryCart} />
                 </div>
-                {/* {successOrder && (
-                    <PopUp
-                        icon={CheckFat}
-                        colorIcon="green"
-                        sizeIcon={32}
-                        title="Thank you"
-                        message="Your order is confirmed"
-                        description={`We will sending you an email confirm to ${userInfo.email} shortly`}
-                    />
-                )} */}
+
                 <PopUp
                     icon={CheckFat}
                     colorIcon="green"
                     sizeIcon={32}
                     title="Thank you"
                     message="Your order is confirmed"
-                    description="We will send you an email confirmation shortly."
+                    description={`We will sending you an email confirm to ${userInfo.email} shortly`}
                     isOpen={showPopup}
                     onClose={handleClosePopup}
                 />

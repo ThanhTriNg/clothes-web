@@ -1,24 +1,16 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { EyeIcon, EyeOffIcon } from 'lucide-react';
-import Link from 'next/link';
-import { ChangeEvent, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { Button } from '../../components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '../../components/ui/form';
 import { Input } from '../../components/ui/input';
 
-import { loginThunk, updateUserThunk } from '@/redux/reducer/User';
-import { AppDispatch, RootState } from '@/redux/store/Store';
-import CryptoJS from 'crypto-js';
-import { useRouter } from 'next/navigation';
-import toast from 'react-hot-toast';
-import { useDispatch, useSelector } from 'react-redux';
-import Loading from '@/components/loading';
 import { CartItemProps, OrderProps, UserProps } from '@/redux/module';
 import { createOrderThunk } from '@/redux/reducer/Order';
-import { addOrUpdateCartItemThunk, clearCart } from '@/redux/reducer/Cart';
+import { updateUserThunk } from '@/redux/reducer/User';
+import { AppDispatch } from '@/redux/store/Store';
+import { useDispatch } from 'react-redux';
 const checkoutFormSchema = z.object({
     fName: z.string({ required_error: 'required' }).min(0),
     lName: z.string({ required_error: 'required' }).min(0),
@@ -33,9 +25,6 @@ interface CheckoutProps {
     cartItems: CartItemProps[];
 }
 export default function CheckoutForm({ className, userInfo, cartItems }: CheckoutProps) {
-    const router = useRouter();
-    const [passwordShown, setPasswordShown] = useState(false);
-    const [isChecked, setIsChecked] = useState<boolean>(false);
     const form = useForm<CheckoutFormValues>({
         resolver: zodResolver(checkoutFormSchema),
         defaultValues: {
@@ -82,8 +71,6 @@ export default function CheckoutForm({ className, userInfo, cartItems }: Checkou
             await dispatch(updateUserThunk(data));
             if (orderItems) {
                 await dispatch(createOrderThunk(orderItems));
-                // dispatch(clearCart());
-                // await dispatch(addOrUpdateCartItemThunk(cartItems));
             }
         } catch (error) {}
     }
