@@ -3,6 +3,7 @@
         "reduxjs",
         "Signin",
         "signup",
-        "swiper"
+        "swiper",
+        "Tshop"
     ]
 }

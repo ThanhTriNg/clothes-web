@@ -35,6 +35,7 @@ const LimitedPromotion = () => {
                             sizes="(max-width: 640px) 100vw, 33vw"
                             alt="Image"
                             className="mx-auto"
+                            priority={true}
                         />
                         <div className="space-y-2">
                             <h1 className="text-lg font-bold">
@@ -59,7 +60,7 @@ const LimitedPromotion = () => {
                                     price={item.price}
                                     colors={item.colors}
                                     description={item.description}
-                                    link={`/store/${cateName}`}
+                                    link={`store/${cateName}`}
                                     Sub_Category={item.Sub_Category}
                                 />
                             );

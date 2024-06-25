@@ -11,13 +11,15 @@ export const noto = Noto_Sans({
     subsets: ['latin'],
     weight: ['400', '500', '600', '700'],
 });
-
 import Head from 'next/head';
+import { useRouter } from 'next/router';
 import { PersistGate } from 'redux-persist/integration/react';
 
 function LandingPage({ Component, pageProps }: AppProps) {
+    const router = useRouter();
     const token = Cookies.get('token');
 
+    const isAdminPage = router.pathname.startsWith('/admin');
     return (
         <Provider store={store}>
             <PersistGate loading={null} persistor={persistor}>
@@ -26,13 +28,15 @@ function LandingPage({ Component, pageProps }: AppProps) {
                         <title>TShop</title>
                         <link rel="shortcut icon" href="/svg/logo.svg" type="image/x-icon" />
                     </Head>
-                    <Header token={token} />
+                    {!isAdminPage && <Header token={token} />}
                     <main className="xl:px-8 md:px-6">
-                        <div className=" mx-auto xl:max-w-[1300px]">
-                            <Component {...pageProps} />
+                        <div className={`mx-auto ${isAdminPage ? '' : 'xl:max-w-[1300px] '}`}>
+                            <Component {...pageProps} token={token} />
                         </div>
                     </main>
-                    <Footer />
+
+                    {!isAdminPage && <Footer />}
+
                     <Toaster position="top-right" />
                 </div>
             </PersistGate>
