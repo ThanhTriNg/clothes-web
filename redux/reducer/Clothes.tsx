@@ -221,13 +221,18 @@ export const addClothesThunk = createAsyncThunk(
         try {
             const formData = new FormData();
             formData.append('imageUrl', addClothes.imageUrl);
-
+            console.log('addClothes.subImageUrls>>', addClothes.subImageUrls);
             addClothes.subImageUrls.forEach((file: File) => {
                 formData.append('subImageUrls', file);
             });
             formData.append('name', addClothes.name);
-
             formData.append('price', addClothes.price);
+
+            formData.append('description', addClothes.description);
+            formData.append('descriptionSort', addClothes.descriptionSort);
+
+            formData.append('subCategoryId', addClothes.subCategoryId);
+
             const response = await ClothesApi.addClothes(formData);
 
             return response;

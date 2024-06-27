@@ -19,7 +19,6 @@ const AdminLayout = ({ token, children }: AdminLayoutProps) => {
         if (token) {
             dispatch(getUserThunk());
         }
-        console.log(token);
     }, [dispatch, token]);
 
     return userInfo?.roleCode === 'TA' ? (

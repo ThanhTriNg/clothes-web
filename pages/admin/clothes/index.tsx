@@ -64,6 +64,10 @@ interface AdminClothesProps {
 const AdminClothes = ({ token }: AdminClothesProps) => {
     const form = useForm<AddCateFormValues>({
         resolver: zodResolver(addCateFormSchema),
+        defaultValues: {
+            name: '',
+            price: '',
+        },
         mode: 'onSubmit',
     });
     const dispatch = useDispatch<AppDispatch>();
@@ -115,17 +119,17 @@ const AdminClothes = ({ token }: AdminClothesProps) => {
             const description = data.description;
             const descriptionSort = data.descriptionSort;
             const subCategoryId = data.subCategoryId;
-            // dispatch(
-            //   addClothesThunk({
-            //     name,
-            //     price,
-            //     imageUrl,
-            //     subImageUrls: selectedFiles,
-            //     description,
-            //     descriptionSort,
-            //     subCategoryId,
-            //   })
-            // );
+            dispatch(
+                addClothesThunk({
+                    name,
+                    price,
+                    imageUrl,
+                    subImageUrls: selectedFiles,
+                    description,
+                    descriptionSort,
+                    subCategoryId,
+                }),
+            );
         } catch (error) {
             console.log(error);
         }

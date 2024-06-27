@@ -1,8 +1,10 @@
-import { AddClothesProps } from '../module';
+import Cookies from 'js-cookie';
 export interface ParamsProps {
     [key: string]: string | undefined | number;
 }
-import AxiosClient, { TheColorAPI, AxiosClient2 } from './AxiosClient';
+
+import AxiosClient, { AxiosClient2, TheColorAPI } from './AxiosClient';
+const token = Cookies.get('token');
 const ClothesApi = {
     // getLatestClothesTest: (params: { [key: string]: string }) => {
     //     const config = {
@@ -62,7 +64,11 @@ const ClothesApi = {
         return TheColorAPI.get(`/id?hex=${hex}`);
     },
     addClothes: (formData: any) => {
-        return AxiosClient2.post('/clothes', formData);
+        return AxiosClient2.post('/clothes', formData, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
     },
     getCategories: () => {
         return AxiosClient.get('/categories');

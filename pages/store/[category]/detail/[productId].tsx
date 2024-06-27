@@ -1,7 +1,7 @@
 import ProductDetailDesc from '@/components/ProductDetailDesc';
 import ProductDetailSlide from '@/components/ProductDetailSlide';
 import { useRouter } from 'next/router';
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import Error from 'next/error';
 import Loading from '@/components/loading';
 import { Button } from '@/components/ui/button';
@@ -15,6 +15,7 @@ import 'swiper/css';
 import 'swiper/css/pagination';
 import { Autoplay, Pagination } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
+import { Swiper as SwiperClass } from 'swiper/types';
 
 const imgMenVar = '/img/men';
 const imgWomenVar = '/img/women';
@@ -28,11 +29,13 @@ const DetailPage = () => {
     const [currentSlide, setCurrentSlide] = useState(0);
     const [isLike, setIsLike] = useState<boolean>(false);
     const [maxSlidePage, setMaxSlidePage] = useState<number>();
-    const [isRightSlug, setIsRightSlug] = useState<boolean>(true);
+    const [isRightSlug, setIsRightSlug] = useState<boolean>(false);
     const { clothesInfo, clothesById, clothesByIdLoading } = useSelector((state: RootState) => state.clothes);
     useEffect(() => {
         if (slugCateName && typeof slugCateName === 'string' && clothesById) {
             setIsRightSlug(fnIsRightSlug(slugCateName));
+        } else {
+            setIsRightSlug(false);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [clothesById, slugCateName]);
@@ -49,9 +52,7 @@ const DetailPage = () => {
         }
     }, [clothesInfo]);
     const sliderRef = useRef<any>(null);
-    const updateIndex = () => {
-        setCurrentSlide(sliderRef.current.swiper.realIndex);
-    };
+
     useEffect(() => {
         setCurrentSlide(0);
         if (clothesById && clothesInfo) sliderRef.current.swiper.slideTo(0);
@@ -59,9 +60,8 @@ const DetailPage = () => {
     }, [productId]);
 
     useEffect(() => {
-        if (clothesById && clothesInfo) {
+        if (isRightSlug && clothesById && clothesInfo && sliderRef.current) {
             const swiperInstance = sliderRef.current.swiper;
-
             if (swiperInstance) {
                 swiperInstance.on('slideChange', updateIndex);
             }
@@ -72,10 +72,15 @@ const DetailPage = () => {
                 }
             };
         }
-    }, [clothesById, clothesInfo]);
+    }, [clothesById, clothesInfo, isRightSlug]);
+    const updateIndex = () => {
+        console.log(sliderRef);
+        setCurrentSlide(sliderRef.current.swiper.realIndex);
+    };
     const slidePrev = () => {
         sliderRef.current.swiper.slidePrev();
     };
+
     const slideNext = () => {
         sliderRef.current.swiper.slideNext();
     };
@@ -86,7 +91,6 @@ const DetailPage = () => {
     const fnIsRightSlug = (slugCateName: string) => {
         return clothesById?.Sub_Category.Categories[0].name.toLowerCase() === slugCateName.toLowerCase();
     };
-
     return clothesByIdLoading ? (
         <div className="flex justify-center items-center min-h-[85vh] ">
             <Loading />
