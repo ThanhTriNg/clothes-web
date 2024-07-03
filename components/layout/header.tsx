@@ -175,7 +175,7 @@ const Header = ({ token }: HeaderProps) => {
                             <DropdownMenuTrigger>
                                 <User size={24} className="cursor-pointer" />
                             </DropdownMenuTrigger>
-                            <DropdownMenuContent>
+                            <DropdownMenuContent align='end'>
                                 <DropdownMenuLabel>My Account</DropdownMenuLabel>
                                 <DropdownMenuSeparator />
                                 <DropdownMenuItem>

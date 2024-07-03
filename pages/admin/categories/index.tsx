@@ -38,7 +38,7 @@ const AdminCategories = ({ token }: AdminCategoriesProps) => {
 
     return (
         <AdminLayout token={token}>
-            <div className=" mx-auto xl:max-w-[1300px]">
+            <div className=" mx-auto">
                 <div className="bg-white md:p-6 md:space-y-10 p-2 space-y-2">
                     <Form {...form}>
                         <form onSubmit={form.handleSubmit(onSubmit)} className=" w-full space-y-4">

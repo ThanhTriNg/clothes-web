@@ -130,3 +130,11 @@ export interface CartDbProps {
     updatedAt: string;
     Cart_items: CartItemDbProps[];
 }
+
+export interface ClothesDataTable {
+    id: number;
+    name: string;
+    price: number;
+    imageUrl: string;
+    category: string;
+}

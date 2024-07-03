@@ -21,7 +21,7 @@ const AdminLayout = ({ token, children }: AdminLayoutProps) => {
         }
     }, [dispatch, token]);
 
-    return userInfo?.roleCode === 'TA' ? (
+    return userInfo && userInfo.roleCode === 'TA' ? (
         <div className="">
             <Header userInfo={userInfo} />
             <div className="mt-10 grid grid-cols-12 space-x-14">
