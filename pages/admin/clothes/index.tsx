@@ -6,7 +6,7 @@ import { AppDispatch, RootState } from '@/redux/store/Store';
 import { ColumnDef } from '@tanstack/react-table';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { columnsClothes, dataClothes } from '@/pages/admin/clothes/column';
+import { columnsClothes } from '@/pages/admin/clothes/column';
 interface AdminClothesProps {
     token: string;
 }
