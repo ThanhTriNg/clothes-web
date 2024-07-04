@@ -1,5 +1,6 @@
 import { Button } from '@/components/ui/button';
 import { SortAscending, SortDescending } from '@phosphor-icons/react';
+
 interface SortIconProps {
     isSorted: boolean;
 }
@@ -16,7 +17,6 @@ const SortBtn = ({ column, name }: SortBtnProps) => {
             return <SortDescending className="ml-2 h-4 w-4" />;
         }
     };
-
     return (
         <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
             {name}

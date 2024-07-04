@@ -184,7 +184,18 @@ export const getClothesByNameThunk = createAsyncThunk(
         }
     },
 );
-
+export const deleteClothesByIdThunk = createAsyncThunk('deleteClothesById', async (id: string, { rejectWithValue }) => {
+    try {
+        const response = await ClothesApi.deleteClothesById(id);
+        return response.data;
+    } catch (error: any) {
+        if (error.response && error.response.data.message) {
+            return rejectWithValue(error.response.data.message);
+        } else {
+            return rejectWithValue(error.message);
+        }
+    }
+});
 export const getSearchClothesByNameThunk = createAsyncThunk(
     'getSearchClothesByName',
     async (name: string, { rejectWithValue }) => {

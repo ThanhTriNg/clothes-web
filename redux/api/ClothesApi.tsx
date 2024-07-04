@@ -5,6 +5,7 @@ export interface ParamsProps {
 
 import AxiosClient, { AxiosClient2, TheColorAPI } from './AxiosClient';
 const token = Cookies.get('token');
+
 const ClothesApi = {
     // getLatestClothesTest: (params: { [key: string]: string }) => {
     //     const config = {
@@ -25,6 +26,21 @@ const ClothesApi = {
     // getClothesByName: (name: string) => {
     //     return AxiosClient.get(`/clothes/?name=${name}`);
     // },
+    addClothes: (formData: any) => {
+        return AxiosClient2.post('/clothes', formData, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+    },
+
+    deleteClothesById: (id: string) => {
+        return AxiosClient.delete(`/clothes/${id}`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+    },
 
     //cate
     getClothesByCategory: (categoryId: string, params?: ParamsProps) => {
@@ -63,13 +79,7 @@ const ClothesApi = {
     getColorName: (hex: string) => {
         return TheColorAPI.get(`/id?hex=${hex}`);
     },
-    addClothes: (formData: any) => {
-        return AxiosClient2.post('/clothes', formData, {
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
-        });
-    },
+
     getCategories: () => {
         return AxiosClient.get('/categories');
     },

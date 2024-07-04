@@ -1,12 +1,12 @@
 'use client';
 
+// import { customSortCategoryName } from '@/components/table';
 import SortBtn from '@/components/table/sortBtn';
-import { Button } from '@/components/ui/button';
-import { ClothesDataTable, ClothesProps, ClothesPropsData, SubCateInClothesProps } from '@/redux/module';
+import { ClothesPropsData, SubCateInClothesProps } from '@/redux/module';
 import { SortAscending, SortDescending } from '@phosphor-icons/react';
 import { ColumnDef } from '@tanstack/react-table';
 import Image from 'next/image';
-
+import { formatPrice } from '@/utils';
 interface SortIconProps {
     isSorted: boolean;
 }
@@ -19,7 +19,17 @@ export const columnsClothes: ColumnDef<ClothesPropsData>[] = [
         header: 'Name',
     },
     {
+        accessorKey: 'isDeleted',
+        header: 'isDeleted',
+    },
+    {
         accessorKey: 'price',
+        header: 'Price',
+        cell: ({ cell }) => {
+            const price = cell.getValue<number>();
+            const { convertPrice } = formatPrice(price);
+            return <p>{convertPrice}</p>;
+        },
         // header: ({ column }) => {
         //     return (
         //         <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
@@ -29,10 +39,11 @@ export const columnsClothes: ColumnDef<ClothesPropsData>[] = [
         //     );
         // },
 
-        header: ({ column }) => {
-            return <SortBtn column={column} name="Price" />;
-        },
+        // header: ({ column }) => {
+        //     return <SortBtn column={column} name="Price" />;
+        // },
     },
+
     {
         accessorKey: 'imageUrl',
         header: 'Image',
@@ -50,25 +61,25 @@ export const columnsClothes: ColumnDef<ClothesPropsData>[] = [
     },
 
     {
+        id: 'category',
         accessorKey: 'Sub_Category',
-        header: ({ column }) => {
-            return <SortBtn column={column} name="Sub Category" />;
-        },
+        header: 'Category',
+        accessorFn: (row) => row.Sub_Category.Categories[0].name,
         cell: ({ cell }) => {
-            const subCate = cell.getValue<SubCateInClothesProps>();
-            return <p>{subCate.name}</p>;
+            const categoryName = cell.getValue<string>();
+            return <p>{categoryName}</p>;
         },
+        // sortingFn: customSortCategoryName,
     },
 
     {
+        id: 'subCategory',
         accessorKey: 'Sub_Category',
-        header: ({ column }) => {
-            return <SortBtn column={column} name="Category" />;
-        },
+        header: 'Sub Category',
+        accessorFn: (row) => row.Sub_Category.name,
         cell: ({ cell }) => {
-            const subCate = cell.getValue<SubCateInClothesProps>();
-
-            return <p>{subCate.Categories[0].name}</p>;
+            const subCategoryName = cell.getValue<string>();
+            return <p>{subCategoryName}</p>;
         },
     },
 ];
