@@ -3,8 +3,8 @@ import { EyeIcon, EyeOffIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { Button } from "./ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Form,
   FormControl,
@@ -12,10 +12,10 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "./ui/form";
-import { Input } from "./ui/input";
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
 
-import { resetErrorSignup, signUpThunk } from "@/redux/reducer/User";
+import { signUpThunk } from "@/redux/reducer/User";
 import { AppDispatch, RootState } from "@/redux/store/Store";
 import { useDispatch, useSelector } from "react-redux";
 import toast from "react-hot-toast";
@@ -63,7 +63,6 @@ export default function SignUpForm() {
       if (errorSignupText === "Email already exists") {
         toast.error("Email này đã tồn tại");
       } else toast.error(errorSignupText);
-      dispatch(resetErrorSignup());
     }
   }, [errorSignup, dispatch, errorSignupText]);
 
@@ -75,7 +74,7 @@ export default function SignUpForm() {
       form.setValue("password", "");
       form.setValue("confirmPassword", "");
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [successSignup]);
   const IconPassword = passwordShown ? EyeIcon : EyeOffIcon;
   const IconRePassword = rePasswordShown ? EyeIcon : EyeOffIcon;
@@ -85,12 +84,12 @@ export default function SignUpForm() {
     try {
       const email = data.email;
       const password = data.password;
-      dispatch(signUpThunk({ email, password }));
+      await dispatch(signUpThunk({ email, password }));
     } catch (error) {}
   }
   return (
     <>
-      <Card id="card" className="grid gap-6 bg-transparent border-none ">
+      <Card id="card-signup" className="grid gap-6 bg-transparent border-none ">
         <CardHeader className="text-center grid gap-2 p-0">
           <CardTitle className="text-2xl font-bold text-tertiary-foreground ">
             Đăng ký

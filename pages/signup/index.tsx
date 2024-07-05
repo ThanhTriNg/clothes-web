@@ -19,6 +19,7 @@ const LoginPage = () => {
       myComponent={data.myComponent}
       description={data.description}
     />
+    
     // <div className="min-h-[calc(100vh-80px-1rem)] bg-white">
     //   <div className="grid grid-cols-12 px-12 py-6 gap-4 md:gap-10">
     //     <div className="col-span-full md:col-span-5">

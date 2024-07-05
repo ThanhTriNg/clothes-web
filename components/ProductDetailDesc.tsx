@@ -1,25 +1,32 @@
-import { formatPrice } from "@/pages";
-import { ClothesProps } from "@/redux/module";
+import { formatPrice } from "@/utils";
+import { ClothesProps, ClothesPropsData } from "@/redux/module";
 import { useState } from "react";
 import { Rating } from "react-simple-star-rating";
 import AddToCartBtn from "./AddToCartBtn";
 import PickColor from "./pickColor";
 import PickSize from "./pickSize";
+import { JSONparse } from "@/utils";
+import { useRouter } from "next/router";
 interface ProductDetailProps {
-  clothes: ClothesProps;
+  clothes: ClothesPropsData;
 }
 const ProductDetailDesc = ({ clothes }: ProductDetailProps) => {
   const [rating, setRating] = useState<number>();
   const handleRating = (rate: number) => {
     setRating(rate);
   };
-  const { convertPrice } = formatPrice(clothes.price);
 
-  return (
+  const router = useRouter();
+  const { sizeCode, colorCode } = router.query;
+
+  const { convertPrice } = formatPrice(clothes.price);
+  return clothes ? (
     <div className="col-span-full md:col-span-5 px-4">
       <div className="space-y-4">
         <div>
-          <h1 className="xl:text-4xl md:text-2xl text-lg font-bold uppercase ">{clothes.name} </h1>
+          <h1 className="xl:text-4xl md:text-2xl text-lg font-bold uppercase ">
+            {clothes.name}{" "}
+          </h1>
         </div>
 
         <div className="grid grid-cols-3">
@@ -36,29 +43,34 @@ const ProductDetailDesc = ({ clothes }: ProductDetailProps) => {
           </div>
         </div>
         <div>
-          <h1 className="text-sm md:text-base">{clothes.desc_sort}</h1>
+          <h1 className="text-sm md:text-base">{clothes.descriptionSort}</h1>
         </div>
         <div className="border border-solid border-black/10" />
         <div>
-          <PickColor
-            colors={clothes.color}
-            size={40}
-            spaceBetween={8}
-            showName
-          />
+          {clothes.colors && (
+            <PickColor
+              colors={JSONparse(clothes.colors)}
+              size={40}
+              spaceBetween={8}
+              showName
+            />
+          )}
         </div>
         <div className="border border-solid border-black/10" />
-        <PickSize size={clothes.size} />
+        {clothes.sizes && <PickSize sizes={JSONparse(clothes.sizes)} />}
         <div className="border border-solid border-black/10" />
-      
+
         <div>
           {/* <Button className="uppercase w-full">Thêm vào giỏ hàng</Button> */}
-          <AddToCartBtn product={clothes} />
+          {typeof sizeCode === "string" && typeof colorCode === "string" && (
+            <AddToCartBtn product={clothes} size={sizeCode} color={colorCode} />
+          )}
         </div>
       </div>
     </div>
+  ) : (
+    <div>Test</div>
   );
 };
 
 export default ProductDetailDesc;
-const colors = ["#E7DFD4", "#535353", "#F3BCB9", "#EFEDF0"];

@@ -8,14 +8,17 @@ import { useEffect, useRef, useState } from "react";
 import { Autoplay, Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 
-import { ProductDetailSlide } from "@/common/type";
+import { ProductDetailSlideProps } from "@/common/type";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { Rating } from "react-simple-star-rating";
 import "swiper/css";
 import "swiper/css/pagination";
 
-const ProductDetailSlide = ({ thumbnail }: ProductDetailSlide) => {
+const ProductDetailSlide = ({
+  thumbnail,
+  description,
+}: ProductDetailSlideProps) => {
   const router = useRouter();
 
   const [rating, setRating] = useState<number>();
@@ -24,10 +27,12 @@ const ProductDetailSlide = ({ thumbnail }: ProductDetailSlide) => {
 
   const { productId } = router.query;
   const sliderRef = useRef<any>(null);
-
   useEffect(() => {
     if (thumbnail) {
-      setConvertThumbnail([thumbnail.main, ...(thumbnail.sub ?? [])]);
+      setConvertThumbnail([
+        thumbnail.imageUrl,
+        ...(thumbnail.subImageUrls ?? []),
+      ]);
     }
   }, [thumbnail]);
 
@@ -71,6 +76,29 @@ const ProductDetailSlide = ({ thumbnail }: ProductDetailSlide) => {
   const handleRating = (rate: number) => {
     setRating(rate);
   };
+
+  const subOverview = [
+    "Vải thoáng mát với Kết cấu mềm mại.",
+    "Công nghệ DRY và cool Touch.",
+    "vải tạo ra một Kiểu dáng đẹp.",
+  ];
+
+  const subMaterial = [
+    "Thân: 73% Bông, 27% Polyeste/ Bo: 82% Bông, 15% Polyeste, 3% Elastan",
+  ];
+  // const formattedDescription = description.replace(/\\n/g, "\n");
+  const desc = [
+    {
+      title: "Overview",
+      sub: subOverview,
+      // sub: description,
+    },
+    {
+      title: "Metarial",
+      sub: subMaterial,
+    },
+  ];
+  // console.log(JSON.parse(description));
   return (
     convertThumbnail && (
       <div className="col-span-full md:col-span-7 grid grid-cols-7 h-fit">
@@ -80,7 +108,7 @@ const ProductDetailSlide = ({ thumbnail }: ProductDetailSlide) => {
             return (
               <div
                 key={idx}
-                className={`col-span-1  cursor-pointer transition-all ${
+                className={`col-span-1 cursor-pointer transition-all ${
                   currentSlide === idx
                     ? `p-1 border border-black border-solid`
                     : `p-2`
@@ -89,9 +117,10 @@ const ProductDetailSlide = ({ thumbnail }: ProductDetailSlide) => {
               >
                 <Image
                   src={item}
-                  width="80"
-                  height="80"
+                  width="85"
+                  height="85"
                   alt="Banner"
+                  className="mx-auto"
                 />
               </div>
             );
@@ -124,7 +153,9 @@ const ProductDetailSlide = ({ thumbnail }: ProductDetailSlide) => {
         </div>
         <div className="my-4 md:my-12 space-y-4 md:space-y-8 col-span-full">
           <div className="">
-            <h1 className="uppercase font-bold md:text-2xl text-base">Mô tả</h1>
+            <h1 className="uppercase font-bold md:text-2xl text-base">
+              DESCRIPTION
+            </h1>
             <Accordion type="multiple" className="ml-4">
               {desc.map((item, idx: number) => {
                 return (
@@ -134,11 +165,12 @@ const ProductDetailSlide = ({ thumbnail }: ProductDetailSlide) => {
                         {item.title}
                       </AccordionTrigger>
                       <AccordionContent className="space-y-2 ml-2">
-                        {item.sub.map((sub, idx) => (
+                        {/* {item.sub.map((sub, idx) => (
                           <p key={`sub-${idx}`} className="text-base">
-                            -{sub}{" "}
+                            -{sub}
                           </p>
-                        ))}
+                        ))} */}
+                      {item.sub}
                       </AccordionContent>
                     </AccordionItem>
                   </div>
@@ -165,21 +197,3 @@ const ProductDetailSlide = ({ thumbnail }: ProductDetailSlide) => {
   );
 };
 export default ProductDetailSlide;
-const subOverview = [
-  "Vải thoáng mát với Kết cấu mềm mại.",
-  "Công nghệ DRY và cool Touch.",
-  "vải tạo ra một Kiểu dáng đẹp.",
-];
-const subMaterial = [
-  "Thân: 73% Bông, 27% Polyeste/ Bo: 82% Bông, 15% Polyeste, 3% Elastan",
-];
-const desc = [
-  {
-    title: "Tổng quan",
-    sub: subOverview,
-  },
-  {
-    title: "Chất liệu",
-    sub: subMaterial,
-  },
-];

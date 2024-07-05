@@ -1,20 +1,30 @@
-import { GetSubCateProps } from "../module";
-import AxiosClient from "./AxiosClient";
-const CategoriesApi = {
-  getCategories: () => {
-    return AxiosClient.get("/categories");
-  },
-  getMenSubCate: () => {
-    return AxiosClient.get(`/men`);
-  },
-  getWomenSubCate: () => {
-    return AxiosClient.get(`/women`);
-  },
+import { CateApiProps, GetSubCateProps } from '../module';
+import AxiosClient from './AxiosClient';
+import Cookies from 'js-cookie';
+const token = Cookies.get('token');
 
-  getSubCateByCategoryId: (getSubCate: GetSubCateProps) => {
-    const { subName, categoryId } = getSubCate;
-    return AxiosClient.get(`/${subName}/?categoryId=${categoryId}`);
-  },
+const CategoriesApi = {
+    getCategories: () => {
+        return AxiosClient.get('/categories');
+    },
+
+    getSubCateByCateId: (categoryId: number) => {
+        return AxiosClient.get(`/subCategories?categoryId=${categoryId}`);
+    },
+
+    //create cate
+    createCate: (category: CateApiProps) => {
+        return AxiosClient.post('/categories', category, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+    },
+
+    // sub cate
+    getAllSubCate: () => {
+        return AxiosClient.get('/subCategories');
+    },
 };
 
 export default CategoriesApi;

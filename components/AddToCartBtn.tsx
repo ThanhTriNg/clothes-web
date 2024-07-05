@@ -1,45 +1,55 @@
-"use client";
+'use client';
 
-import { ClothesProps } from "@/redux/module";
-import {
-  decrement,
-  increment,
-  productQtyInCartSelector,
-} from "@/redux/reducer/Cart";
-import { useAppDispatch, useAppSelector } from "@/redux/store/Store";
-import QtyBtn from "./QtyBtn";
-import { Button } from "./ui/button";
+import QtyBtn from '@/components/QtyBtn';
+import { useProductQtyInCart } from '@/components/hook';
+import { Button } from '@/components/ui/button';
+import { CartItemProps, ClothesPropsData } from '@/redux/module';
+import { decrement, increment } from '@/redux/reducer/Cart';
+import { useAppDispatch } from '@/redux/store/Store';
 
-interface Props {
-  product: ClothesProps;
+interface AddToBtnProps {
+    product: ClothesPropsData;
+    size: string;
+    color: string;
 }
 
-const AddToCartBtn = (props: Props) => {
-  const dispatch = useAppDispatch();
+export const updatedCartItems = (cartItems: CartItemProps[]) => {
+    return cartItems.map((item) => {
+        const { product, qty, ...rest } = item;
+        const { id } = product;
+        return {
+            product: { id },
+            quantity: qty,
+            ...rest,
+        };
+    });
+};
+const AddToCartBtn = ({ product, size, color }: AddToBtnProps) => {
+    const dispatch = useAppDispatch();
 
-  const qty = useAppSelector((state) =>
-    productQtyInCartSelector(state, props.product.id)
-  );
-  if (!qty)
-    return (
-      <div>
-        {/* <button>Add to cart</button> */}
-        <Button
-          className="uppercase w-full"
-          onClick={() => dispatch(increment(props.product))}
-        >
-          Thêm vào giỏ hàng
-        </Button>
-      </div>
-    );
+    // const qty = useAppSelector((state) => {
+    //     return productQtyInCartSelector(state, product.id, size, color);
+    // });
 
-  return (
-    <QtyBtn
-      onDecrease={() => dispatch(decrement(props.product))}
-      onIncrease={() => dispatch(increment(props.product))}
-      qty={qty}
-    />
-  );
+    const qty = useProductQtyInCart(product.id, size, color);
+    const handleIncrement = () => {
+        dispatch(increment({ product, size, color }));
+    };
+
+    const handleDecrement = () => {
+        dispatch(decrement({ product, size, color }));
+    };
+
+    if (!qty)
+        return (
+            <div>
+                <Button className="uppercase w-full" onClick={handleIncrement}>
+                    Add to cart
+                </Button>
+            </div>
+        );
+
+    return <QtyBtn onIncrease={handleIncrement} onDecrease={handleDecrement} qty={qty} />;
 };
 
 export default AddToCartBtn;
