@@ -33,7 +33,13 @@ const ClothesApi = {
             },
         });
     },
-
+    editClothes: (formData: any, id: string) => {
+        return AxiosClient2.patch(`/clothes/${id}`, formData, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+    },
     deleteClothesById: (id: string) => {
         return AxiosClient.delete(`/clothes/${id}`, {
             headers: {

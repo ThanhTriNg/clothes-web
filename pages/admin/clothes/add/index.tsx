@@ -24,6 +24,7 @@ import { getCategoriesThunk, getSubCateByCateIdThunk } from '@/redux/reducer/Cat
 import { addClothesThunk } from '@/redux/reducer/Clothes';
 import { AppDispatch, RootState } from '@/redux/store/Store';
 import { useDispatch, useSelector } from 'react-redux';
+import MediaLibrary from '@/components/mediaLibrary';
 
 const addCateFormSchema = z.object({
     name: z.string().min(1),
@@ -131,6 +132,17 @@ const AdminClothesAdd = ({ token }: AdminClothesProps) => {
         }
     }
 
+    const [openMediaLibrary, setOpenMediaLibrary] = useState<boolean>(false);
+
+    const handleClickMedia = (event: React.MouseEvent<HTMLButtonElement>) => {
+        event.preventDefault();
+
+        setOpenMediaLibrary(true);
+    };
+    const handleClosePopup = async () => {
+        setOpenMediaLibrary(false);
+    };
+
     return (
         <AdminLayout token={token}>
             <div className=" mx-auto">
@@ -139,6 +151,13 @@ const AdminClothesAdd = ({ token }: AdminClothesProps) => {
                         <form onSubmit={form.handleSubmit(onSubmit)} className=" w-full space-y-4">
                             <FormFieldInput form={form} name="name" />
                             <FormFieldInput form={form} name="price" type="number" />
+
+                            <div>
+                                <Button variant="ghost" onClick={handleClickMedia}>
+                                    Select Image
+                                </Button>
+                                <MediaLibrary isOpen={openMediaLibrary} onClose={handleClosePopup} />
+                            </div>
 
                             <FormField
                                 control={form.control}

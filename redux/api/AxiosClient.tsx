@@ -40,12 +40,12 @@ AxiosClient.interceptors.response.use(
         console.log(statusCode);
         if (statusCode === 401) {
             //logic code refresh token
-            // Cookies.remove('token');
-            // console.log('chay vao logic 401');
-            // localStorage.removeItem('hasMergedCart');
-            // localStorage.removeItem('isFirstLogin');
-            // localStorage.removeItem('persist:cart');
-            // window.location.href = '/login';
+            Cookies.remove('token');
+            console.log('chay vao logic 401');
+            localStorage.removeItem('hasMergedCart');
+            localStorage.removeItem('isFirstLogin');
+            localStorage.removeItem('persist:cart');
+            window.location.href = '/login';
         }
         throw error;
     },

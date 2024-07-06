@@ -18,7 +18,7 @@ const CartItemCard = ({ cartItem }: Props) => {
     const dispatch = useAppDispatch();
     const { convertPrice: price } = formatPrice(cartItem.product.price);
 
-    const handleClickRemove = (event: any) => {
+    const handleClickRemove = (event: React.MouseEvent<HTMLButtonElement>) => {
         event.preventDefault();
         dispatch(
             remove({

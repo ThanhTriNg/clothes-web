@@ -34,7 +34,7 @@ const Cart = ({ cartItem }: CartProps) => {
         return href;
     };
 
-    const handleClickRemove = (event: any) => {
+    const handleClickRemove = (event: React.MouseEvent<HTMLButtonElement>) => {
         event.preventDefault();
         dispatch(
             remove({

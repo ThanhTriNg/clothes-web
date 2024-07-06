@@ -18,10 +18,7 @@ export const columnsClothes: ColumnDef<ClothesPropsData>[] = [
         accessorKey: 'name',
         header: 'Name',
     },
-    {
-        accessorKey: 'isDeleted',
-        header: 'isDeleted',
-    },
+
     {
         accessorKey: 'price',
         header: 'Price',

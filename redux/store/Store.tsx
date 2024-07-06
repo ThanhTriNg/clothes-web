@@ -6,6 +6,7 @@ import CategoriesReducer from '../reducer/Categories';
 import CartReducer from '../reducer/Cart';
 import UsersReducer from '../reducer/User';
 import OrderReducer from '../reducer/Order';
+import MediaReducer from '../reducer/Media';
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
 
 import { persistStore, persistReducer } from 'redux-persist';
@@ -42,6 +43,7 @@ export const store = configureStore({
         cartPersistedReducer,
         // carts: CartReducer,
         orders: OrderReducer,
+        media: MediaReducer,
     },
     middleware: (getDefaultMiddleware) => getDefaultMiddleware({ serializableCheck: false }),
 });

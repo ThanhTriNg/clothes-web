@@ -8,21 +8,19 @@ import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { columnsClothes } from '@/pages/admin/clothes/column';
 import { Button } from '@/components/ui/button';
+import { useRouter } from 'next/router';
 interface AdminClothesProps {
     token: string;
 }
 const RenderRowActions = (row: ClothesPropsData) => {
     const dispatch = useDispatch<AppDispatch>();
-
+    const router = useRouter();
     const handleClickEdit = (row: ClothesPropsData) => {
-        console.log(`Editing row with id ${row.id}`);
+        router.push(`${router.asPath}/edit/${row.id}`);
     };
     const handleClickDelete = async (row: ClothesPropsData) => {
-        console.log(`Delete row with id ${row.id}`);
-        
         const productId: string = row.id.toString();
         await dispatch(deleteClothesByIdThunk(productId));
-
     };
     return (
         <div className="space-x-2">

@@ -9,7 +9,7 @@ interface SideBarProps {
     className?: string;
 }
 
-const handleClickIcon = (e: any) => {
+const handleClickIcon = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     console.log('test');
 };
