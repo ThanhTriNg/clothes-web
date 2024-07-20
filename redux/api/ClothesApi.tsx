@@ -4,6 +4,7 @@ export interface ParamsProps {
 }
 
 import AxiosClient, { AxiosClient2, TheColorAPI } from './AxiosClient';
+import { AddClothesProps, ClothesProps, ClothesPropsData } from '@/redux/module';
 const token = Cookies.get('token');
 
 const ClothesApi = {
@@ -26,8 +27,8 @@ const ClothesApi = {
     // getClothesByName: (name: string) => {
     //     return AxiosClient.get(`/clothes/?name=${name}`);
     // },
-    addClothes: (formData: any) => {
-        return AxiosClient2.post('/clothes', formData, {
+    addClothes: (clothes: AddClothesProps) => {
+        return AxiosClient.post('/clothes', clothes, {
             headers: {
                 Authorization: `Bearer ${token}`,
             },

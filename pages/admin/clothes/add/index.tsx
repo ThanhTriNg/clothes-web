@@ -24,8 +24,10 @@ import { getCategoriesThunk, getSubCateByCateIdThunk } from '@/redux/reducer/Cat
 import { addClothesThunk } from '@/redux/reducer/Clothes';
 import { AppDispatch, RootState } from '@/redux/store/Store';
 import { useDispatch, useSelector } from 'react-redux';
-import MediaLibrary from '@/components/mediaLibrary';
+// import MediaLibrary from '@/components/mediaLibrary';
 
+import ProductImage from '@/pages/admin/clothes/add/ProductImage';
+import ProductGallery from '@/pages/admin/clothes/add/ProductGallery';
 const addCateFormSchema = z.object({
     name: z.string().min(1),
     price: z.string().min(1),
@@ -87,6 +89,7 @@ const AdminClothesAdd = ({ token }: AdminClothesProps) => {
         setSelectedFiles([...event.target.files]);
     };
     const { categoriesInfo, subCateInfo } = useSelector((state: RootState) => state.categories);
+    const { saveProductImage, saveProductGallery } = useSelector((state: RootState) => state.media);
     useEffect(() => {
         dispatch(getCategoriesThunk());
     }, [dispatch]);
@@ -107,42 +110,50 @@ const AdminClothesAdd = ({ token }: AdminClothesProps) => {
         }
     }, [, subCateInfo]);
 
+    // const handleGallery=()=>{
+    //     saveProductGallery.forEach(item => {
+
+    //     });
+    // }
+
+    const urls = saveProductGallery?.map((image) => image.url);
+    console.log(urls);
     async function onSubmit(data: AddCateFormValues) {
         console.log(data);
         try {
             const name = data.name;
             const price = data.price;
-            const imageUrl = data.imageUrl;
+            const imageUrl = saveProductImage?.url;
+            const subImageUrls = saveProductGallery?.map((image) => image.url);
             const description = data.description;
             const descriptionSort = data.descriptionSort;
             const subCategoryId = data.subCategoryId;
-            dispatch(
-                addClothesThunk({
-                    name,
-                    price,
-                    imageUrl,
-                    subImageUrls: selectedFiles,
-                    description,
-                    descriptionSort,
-                    subCategoryId,
-                }),
-            );
+            console.log('imageUrl>>>', imageUrl);
+            // console.log(selectedFiles);
+            if (saveProductImage) {
+                dispatch(
+                    addClothesThunk({
+                        name,
+                        price,
+                        imageUrl,
+                        subImageUrls,
+                        description,
+                        descriptionSort,
+                        subCategoryId,
+                    }),
+                );
+            }
         } catch (error) {
             console.log(error);
         }
     }
 
-    const [openMediaLibrary, setOpenMediaLibrary] = useState<boolean>(false);
-
-    const handleClickMedia = (event: React.MouseEvent<HTMLButtonElement>) => {
-        event.preventDefault();
-
-        setOpenMediaLibrary(true);
-    };
-    const handleClosePopup = async () => {
-        setOpenMediaLibrary(false);
-    };
-
+    useEffect(() => {
+        console.log('add saveProductImage>>', saveProductImage);
+    }, [saveProductImage]);
+    useEffect(() => {
+        console.log('add saveProductGallery>>', saveProductGallery);
+    }, [saveProductGallery]);
     return (
         <AdminLayout token={token}>
             <div className=" mx-auto">
@@ -152,14 +163,11 @@ const AdminClothesAdd = ({ token }: AdminClothesProps) => {
                             <FormFieldInput form={form} name="name" />
                             <FormFieldInput form={form} name="price" type="number" />
 
-                            <div>
-                                <Button variant="ghost" onClick={handleClickMedia}>
-                                    Select Image
-                                </Button>
-                                <MediaLibrary isOpen={openMediaLibrary} onClose={handleClosePopup} />
-                            </div>
+                            <ProductImage />
 
-                            <FormField
+                            <ProductGallery />
+
+                            {/* <FormField
                                 control={form.control}
                                 name="imageUrl"
                                 render={({ field: { value, onChange, ...fieldProps } }) => {
@@ -186,9 +194,8 @@ const AdminClothesAdd = ({ token }: AdminClothesProps) => {
                                         </FormItem>
                                     );
                                 }}
-                            />
-
-                            <FormField
+                            /> */}
+                            {/* <FormField
                                 control={form.control}
                                 name="subImageUrls"
                                 render={({ field: { value, onChange, ...fieldProps } }) => {
@@ -213,10 +220,8 @@ const AdminClothesAdd = ({ token }: AdminClothesProps) => {
                                         </FormItem>
                                     );
                                 }}
-                            />
-
+                            /> */}
                             <FormFieldArena form={form} name="description" />
-
                             <FormFieldArena form={form} name="descriptionSort" placeholder="description sort" />
                             <Select onValueChange={(value) => setSelectedCate(value)}>
                                 <SelectTrigger className="w-[180px]">
@@ -235,7 +240,6 @@ const AdminClothesAdd = ({ token }: AdminClothesProps) => {
                                     </SelectGroup>
                                 </SelectContent>
                             </Select>
-
                             {subCateInfo && (
                                 <FormField
                                     control={form.control}

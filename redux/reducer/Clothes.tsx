@@ -233,6 +233,8 @@ export const getColorNameThunk = createAsyncThunk('getColorName', async (colors:
 const addOrUpdateClothes = (data: AddClothesProps) => {
     const formData = new FormData();
     formData.append('imageUrl', data.imageUrl);
+    console.log('data.imageUrl>>>', data.imageUrl);
+
     data.subImageUrls.forEach((file: File) => {
         formData.append('subImageUrls', file);
     });
@@ -243,6 +245,7 @@ const addOrUpdateClothes = (data: AddClothesProps) => {
     formData.append('descriptionSort', data.descriptionSort);
 
     formData.append('subCategoryId', data.subCategoryId);
+    console.log(formData);
     return formData;
 };
 
@@ -262,8 +265,7 @@ export const addClothesThunk = createAsyncThunk(
             // formData.append('descriptionSort', addClothes.descriptionSort);
 
             // formData.append('subCategoryId', addClothes.subCategoryId);
-            const formData = addOrUpdateClothes(addClothes);
-            const response = await ClothesApi.addClothes(formData);
+            const response = await ClothesApi.addClothes(addClothes);
 
             return response;
         } catch (error: any) {

@@ -77,11 +77,11 @@ const Card = ({ id, imageUrl, name, price, colors, Sub_Category, link, categorie
                     // height="0"
                     // sizes="100vw"
                     // alt=""
-                    // className="w-full h-auto !mt-0"
-                    width="300"
-                    height="300"
-                    sizes="(max-width: 640px) 50vw, 25vw"
+                    width="200"
+                    height="200"
                     alt="Image"
+                    className="w-[200px] h-[200px]"
+
                 />
 
                 {colors && <PickColor colors={JSONparse(colors)} />}

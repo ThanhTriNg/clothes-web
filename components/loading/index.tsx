@@ -19,8 +19,6 @@ const Loading = ({ size = 'normal' }: LoadingProps) => {
         height = px;
         width = px;
     }
-
-    console.log(height, width);
     return <ReactLoading type={'spin'} color="#0000ff80" height={height} width={width} className="mx-auto" />;
 };
 

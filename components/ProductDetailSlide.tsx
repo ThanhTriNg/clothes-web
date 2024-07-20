@@ -117,10 +117,10 @@ const ProductDetailSlide = ({
               >
                 <Image
                   src={item}
-                  width="85"
-                  height="85"
+                  width="100"
+                  height="100"
                   alt="Banner"
-                  className="mx-auto"
+                  className="w-[85px] h-[85px] mx-auto"
                 />
               </div>
             );
@@ -144,7 +144,7 @@ const ProductDetailSlide = ({
                     height="500"
                     sizes="100vw"
                     alt="Banner"
-                    // className="w-full h-full rounded"
+                    className="w-[500px] h-[500px] rounded"
                   />
                 </SwiperSlide>
               );

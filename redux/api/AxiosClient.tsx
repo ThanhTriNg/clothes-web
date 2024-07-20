@@ -36,7 +36,7 @@ AxiosClient.interceptors.response.use(
     },
     async (error) => {
         const statusCode = error.response?.status;
-
+        console.log(error);
         console.log(statusCode);
         if (statusCode === 401) {
             //logic code refresh token
