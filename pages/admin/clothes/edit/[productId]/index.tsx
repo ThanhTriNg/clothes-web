@@ -18,16 +18,14 @@ import {
 } from '@/components/ui/select';
 
 import { FormFieldArena, FormFieldInput } from '@/components/FormFieldCustom';
+import Loading from '@/components/loading';
 import AdminLayout from '@/pages/admin/(layout)/AdminLayout';
 import { SubCateProps } from '@/redux/module';
 import { getCategoriesThunk, getSubCateByCateIdThunk } from '@/redux/reducer/Categories';
 import { editClothesThunk, getClothesByIdThunk } from '@/redux/reducer/Clothes';
 import { AppDispatch, RootState } from '@/redux/store/Store';
-import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
-import Loading from '@/components/loading';
-import PopUp from '@/components/popup';
-import { CheckFat } from '@phosphor-icons/react';
+import { useDispatch, useSelector } from 'react-redux';
 
 const addCateFormSchema = z.object({
     name: z.string().min(1),

@@ -1,16 +1,16 @@
 'use client';
 
+import { SortAscending, SortDescending } from '@phosphor-icons/react';
 import {
     ColumnDef,
     SortingState,
     flexRender,
     getCoreRowModel,
-    getPaginationRowModel,
     getSortedRowModel,
     useReactTable,
 } from '@tanstack/react-table';
-import { SortAscending, SortDescending } from '@phosphor-icons/react';
 
+import { PaginationTable } from '@/components/table/pagination';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { useState } from 'react';
 
@@ -18,10 +18,15 @@ interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[];
     data: TData[];
     renderRowActions?: (row: TData) => JSX.Element;
+    paginationInfo?: {
+        currentPage: number;
+        pageSize: number;
+        totalPages: number;
+        totalCount: number;
+    };
+    onChangePageTable: (value: number) => void;
+    onChangePageSizeTable: (value: string) => void;
 }
-import { SortingFn } from '@tanstack/react-table';
-import { ClothesPropsData } from '@/redux/module';
-import { Button } from '@/components/ui/button';
 
 // export const customSortCategoryName: SortingFn<ClothesPropsData> = (rowA, rowB, columnId) => {
 //     const valueA = rowA.original.Sub_Category.Categories[0].name;
@@ -31,7 +36,14 @@ import { Button } from '@/components/ui/button';
 //     return valueA.localeCompare(valueB);
 // };
 
-export function DataTable<TData, TValue>({ columns, data, renderRowActions }: DataTableProps<TData, TValue>) {
+export function DataTable<TData, TValue>({
+    columns,
+    data,
+    renderRowActions,
+    paginationInfo,
+    onChangePageTable,
+    onChangePageSizeTable,
+}: DataTableProps<TData, TValue>) {
     const [sorting, setSorting] = useState<SortingState>([]);
 
     const table = useReactTable({
@@ -44,9 +56,7 @@ export function DataTable<TData, TValue>({ columns, data, renderRowActions }: Da
         state: {
             sorting,
         },
-        // sortingFns: {
-        //     customSortCategoryName,
-        // },
+
         initialState: {
             sorting: [
                 {
@@ -61,6 +71,12 @@ export function DataTable<TData, TValue>({ columns, data, renderRowActions }: Da
         },
     });
 
+    const onChangePage = (value: number) => {
+        onChangePageTable(value);
+    };
+    const onChangePageSize = (value: string) => {
+        onChangePageSizeTable(value);
+    };
     return (
         <div className="rounded-md border">
             <Table className="">
@@ -115,6 +131,7 @@ export function DataTable<TData, TValue>({ columns, data, renderRowActions }: Da
                         </TableRow>
                     ))}
                 </TableHeader>
+
                 <TableBody>
                     {table.getRowModel().rows?.length ? (
                         table.getRowModel().rows.map((row) => {
@@ -141,6 +158,15 @@ export function DataTable<TData, TValue>({ columns, data, renderRowActions }: Da
                     )}
                 </TableBody>
             </Table>
+            {paginationInfo && (
+                <PaginationTable
+                    currentPage={paginationInfo.currentPage}
+                    totalPages={paginationInfo.totalPages}
+                    // pageSize = {paginationInfo.pageSize}
+                    onChangePage={onChangePage}
+                    onChangePageSize={onChangePageSize}
+                />
+            )}
         </div>
     );
 }

@@ -23,7 +23,7 @@ const Store = () => {
         if (q && typeof q === 'string') {
             dispatch(getSearchClothesByNameThunk(q));
         } else {
-            dispatch(getClothesThunk(sortValue));
+            dispatch(getClothesThunk({ sortValue: sortValue, page:1 }));
         }
     }, [sortValue, dispatch, q]);
 
@@ -31,11 +31,7 @@ const Store = () => {
         clothesInfo &&
         categoriesInfo && (
             <>
-                <StoreUI
-                    categoriesInfo={categoriesInfo}
-                    clothesInfo={clothesInfo}
-                    title={(q as string) || 'All'}
-                />
+                <StoreUI categoriesInfo={categoriesInfo} clothesInfo={clothesInfo} title={(q as string) || 'All'} />
             </>
         )
     );

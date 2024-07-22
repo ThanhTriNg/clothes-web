@@ -223,6 +223,7 @@ const AdminClothesAdd = ({ token }: AdminClothesProps) => {
                             /> */}
                             <FormFieldArena form={form} name="description" />
                             <FormFieldArena form={form} name="descriptionSort" placeholder="description sort" />
+                            
                             <Select onValueChange={(value) => setSelectedCate(value)}>
                                 <SelectTrigger className="w-[180px]">
                                     <SelectValue placeholder="Select a category" />

@@ -41,7 +41,8 @@ const DetailPage = () => {
     }, [clothesById, slugCateName]);
 
     useEffect(() => {
-        dispatch(getClothesThunk('0'));
+        dispatch(getClothesThunk({ sortValue: '0', page: 1 }));
+
         if (typeof productId === 'string') {
             dispatch(getClothesByIdThunk(productId));
         }
@@ -132,7 +133,7 @@ const DetailPage = () => {
                                                 width="450"
                                                 height="450"
                                                 sizes="33vw"
-                                                className='w-[450px] h-[450px]'
+                                                className="w-[450px] h-[450px]"
                                                 alt="Banner"
                                             />
                                         </Link>

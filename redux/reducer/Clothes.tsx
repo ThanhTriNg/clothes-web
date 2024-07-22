@@ -44,32 +44,42 @@ interface colors {
     hex: string;
 }
 
-export const getClothesThunk = createAsyncThunk('getClothes', async (sortValue: string, { rejectWithValue }) => {
-    try {
-        if (sortValue === '0') {
-            const response = await ClothesApi.getClothes();
-            return response;
-        } else if (sortValue === '1') {
-            const params = { sort: 'createdAt', order: 'DESC' };
-            const response = await ClothesApi.getClothes(params);
-            return response;
-        } else if (sortValue === '2') {
-            const params = { sort: 'price' };
-            const response = await ClothesApi.getClothes(params);
-            return response;
-        } else if (sortValue === '3') {
-            const params = { sort: 'price', order: 'DESC' };
-            const response = await ClothesApi.getClothes(params);
-            return response;
+interface ClothesParams {
+    sortValue: string;
+    page: number;
+    pageSize?: number;
+}
+
+export const getClothesThunk = createAsyncThunk(
+    'getClothes',
+    async ({ sortValue, page, pageSize = 10 }: ClothesParams, { rejectWithValue }) => {
+        try {
+            if (sortValue === '0') {
+                const params = { page, pageSize: pageSize };
+                const response = await ClothesApi.getClothes(params);
+                return response;
+            } else if (sortValue === '1') {
+                const params = { sort: 'createdAt', order: 'DESC', page };
+                const response = await ClothesApi.getClothes(params);
+                return response;
+            } else if (sortValue === '2') {
+                const params = { sort: 'price', page };
+                const response = await ClothesApi.getClothes(params);
+                return response;
+            } else if (sortValue === '3') {
+                const params = { sort: 'price', order: 'DESC', page };
+                const response = await ClothesApi.getClothes(params);
+                return response;
+            }
+        } catch (error: any) {
+            if (error.response && error.response.data.message) {
+                return rejectWithValue(error.response.data.message);
+            } else {
+                return rejectWithValue(error.message);
+            }
         }
-    } catch (error: any) {
-        if (error.response && error.response.data.message) {
-            return rejectWithValue(error.response.data.message);
-        } else {
-            return rejectWithValue(error.message);
-        }
-    }
-});
+    },
+);
 
 // export const getClothesByCategoryThunk = createAsyncThunk(
 //     'getClothesByCategory',
