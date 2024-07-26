@@ -11,23 +11,7 @@ import { useDispatch, useSelector } from 'react-redux';
 interface AdminClothesProps {
     token: string;
 }
-const RenderRowActions = (row: ClothesPropsData) => {
-    const dispatch = useDispatch<AppDispatch>();
-    const router = useRouter();
-    const handleClickEdit = (row: ClothesPropsData) => {
-        router.push(`${router.asPath}/edit/${row.id}`);
-    };
-    const handleClickDelete = async (row: ClothesPropsData) => {
-        const productId: string = row.id.toString();
-        await dispatch(deleteClothesByIdThunk(productId));
-    };
-    return (
-        <div className="space-x-2">
-            <Button onClick={() => handleClickEdit(row)}>Edit</Button>
-            <Button onClick={() => handleClickDelete(row)}>Delete</Button>
-        </div>
-    );
-};
+
 export interface PaginationInfoProps {
     currentPage: number;
     pageSize: number;
@@ -38,12 +22,20 @@ const AdminClothes = ({ token }: AdminClothesProps) => {
     const dispatch = useDispatch<AppDispatch>();
     const [page, setPage] = useState<number>(1);
     const [pageSize, setPageSize] = useState<number>(1);
-
+    // const [clothesInfoData, setClothesInfoData] = useState<ClothesPropsData[]>();
     const { clothesInfo } = useSelector((state: RootState) => state.clothes);
 
+    const [isChanged, setIsChanged] = useState<boolean>(false);
+
+    // useEffect(() => {
+    //     setClothesInfoData(clothesInfo?.data);
+    // }, [clothesInfo]);
+
     useEffect(() => {
+        setIsChanged(false);
+
         dispatch(getClothesThunk({ sortValue: '0', page, pageSize }));
-    }, [dispatch, page, pageSize]);
+    }, [dispatch, page, pageSize, isChanged]);
 
     const [paginationInfo, setPaginationInfo] = useState<PaginationInfoProps>();
 
@@ -61,6 +53,7 @@ const AdminClothes = ({ token }: AdminClothesProps) => {
     const onChangePageSizeTable = (value: string) => {
         setPageSize(parseInt(value));
     };
+
     return (
         <AdminLayout token={token}>
             {clothesInfo && paginationInfo && (
@@ -69,7 +62,7 @@ const AdminClothes = ({ token }: AdminClothesProps) => {
                         <DataTable
                             columns={columnsClothes}
                             data={clothesInfo.data}
-                            renderRowActions={RenderRowActions}
+                            renderRowActions={(row) => <RenderRowActions row={row} setIsChanged={setIsChanged} />}
                             paginationInfo={paginationInfo}
                             onChangePageTable={onChangePageTable}
                             onChangePageSizeTable={onChangePageSizeTable}
@@ -84,4 +77,36 @@ const AdminClothes = ({ token }: AdminClothesProps) => {
 export default AdminClothes;
 export const convertSubCategoriesToArray = (subCates: SubCateProps[]) => {
     return subCates.map((subCate) => subCate.name);
+};
+
+interface RenderRowActionsProps {
+    row: ClothesPropsData;
+    setIsChanged: React.Dispatch<React.SetStateAction<boolean>>;
+}
+const RenderRowActions: React.FC<RenderRowActionsProps> = ({ row, setIsChanged }) => {
+    const dispatch = useDispatch<AppDispatch>();
+    const router = useRouter();
+    const handleClickEdit = (row: ClothesPropsData) => {
+        router.push(`${router.asPath}/edit/${row.id}`);
+    };
+    const handleClickDelete = async (row: ClothesPropsData) => {
+        const productId: string = row.id.toString();
+        const result = await dispatch(deleteClothesByIdThunk(productId));
+        if (deleteClothesByIdThunk.fulfilled.match(result)) {
+            setIsChanged(true);
+        } else {
+            // Handle error here
+            console.error('Failed to delete the item.');
+        }
+    };
+    return (
+        <div className="flex justify-center items-center gap-2">
+            <Button size="xs" className=" xl:h-10 xl:py-2 xl:px-4" onClick={() => handleClickEdit(row)}>
+                Edit
+            </Button>
+            <Button size="xs" className=" xl:h-10 xl:py-2 xl:px-4" onClick={() => handleClickDelete(row)}>
+                Delete
+            </Button>
+        </div>
+    );
 };

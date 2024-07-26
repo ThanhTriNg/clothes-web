@@ -28,14 +28,6 @@ interface DataTableProps<TData, TValue> {
     onChangePageSizeTable: (value: string) => void;
 }
 
-// export const customSortCategoryName: SortingFn<ClothesPropsData> = (rowA, rowB, columnId) => {
-//     const valueA = rowA.original.Sub_Category.Categories[0].name;
-//     const valueB = rowB.original.Sub_Category.Categories[0].name;
-
-//     console.log('valueA.localeCompare(valueB)', valueA.localeCompare(valueB));
-//     return valueA.localeCompare(valueB);
-// };
-
 export function DataTable<TData, TValue>({
     columns,
     data,
@@ -162,7 +154,6 @@ export function DataTable<TData, TValue>({
                 <PaginationTable
                     currentPage={paginationInfo.currentPage}
                     totalPages={paginationInfo.totalPages}
-                    // pageSize = {paginationInfo.pageSize}
                     onChangePage={onChangePage}
                     onChangePageSize={onChangePageSize}
                 />

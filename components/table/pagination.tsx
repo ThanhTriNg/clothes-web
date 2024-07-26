@@ -17,7 +17,7 @@ interface PaginationInfoProps {
     onChangePageSize: (value: string) => void;
 }
 
-const pagePerRow = [1, 20, 30];
+const pagePerRow = [2, 4, 30];
 const maxPagesToShow = 6;
 
 export function PaginationTable({ totalPages, onChangePage, onChangePageSize }: PaginationInfoProps) {
@@ -66,7 +66,6 @@ export function PaginationTable({ totalPages, onChangePage, onChangePageSize }: 
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [pageSize]);
 
-
     const handleClick = (pageNum: number) => {
         setPage(pageNum);
     };
@@ -84,32 +83,35 @@ export function PaginationTable({ totalPages, onChangePage, onChangePageSize }: 
         if (page < totalPages) setPage(page + 1);
     };
 
-    // if (totalPages <= maxPagesToShow) {
-    //     for (let i = 1; i <= totalPages; i++) {
-    //         pagesArray.push(i);
-    //     }
-    // } else {
-    //     if (page <= 4) {
-    //         pagesArray.push(1, 2, 3, 4, 5, '...', totalPages);
-    //     } else if (page > totalPages - 4) {
-    //         pagesArray.push(1, '...', totalPages - 4, totalPages - 3, totalPages - 2, totalPages - 1, totalPages);
-    //     } else {
-    //         pagesArray.push(1, '...', page - 1, page, page + 1, '...', totalPages);
-    //     }
-    // }
+    const checkLeftEnd = () => {
+        if (page === 1) {
+            return true;
+        } else return false;
+    };
+    const checkRightEnd = () => {
+        if (page >= totalPages) {
+            return true;
+        } else return false;
+    };
 
     return (
         <div className="mt-4">
-            <Pagination className="flex items-center">
-                <PaginationContent>
+            <Pagination className="flex items-center gap-2">
+                <PaginationContent >
                     <PaginationItem onClick={handleClickDoubleLeft}>
-                        <PaginationLink className="select-none hover:cursor-pointer">
+                        <PaginationLink
+                            variant={checkLeftEnd() ? 'disabled' : 'default'}
+                            className="select-none cursor-pointer"
+                        >
                             <CaretDoubleLeft />
                         </PaginationLink>
                     </PaginationItem>
 
                     <PaginationItem onClick={handleClickLeft}>
-                        <PaginationLink className="select-none hover:cursor-pointer">
+                        <PaginationLink
+                            variant={checkLeftEnd() ? 'disabled' : 'default'}
+                            className="select-none cursor-pointer"
+                        >
                             <CaretLeft />
                         </PaginationLink>
                     </PaginationItem>
@@ -118,7 +120,7 @@ export function PaginationTable({ totalPages, onChangePage, onChangePageSize }: 
                         return typeof pageNum === 'number' ? (
                             <PaginationItem key={`pageNum-${pageNum}`}>
                                 <PaginationLink
-                                    className={`select-none hover:cursor-pointer ${
+                                    className={`select-none cursor-pointer ${
                                         pageNum === page ? 'bg-primary hover:bg-primary' : ''
                                     }`}
                                     onClick={(e) => handleClick(pageNum)}
@@ -131,13 +133,19 @@ export function PaginationTable({ totalPages, onChangePage, onChangePageSize }: 
                         );
                     })}
                     <PaginationItem onClick={handleClickRight}>
-                        <PaginationLink className="select-none hover:cursor-pointer">
+                        <PaginationLink
+                            variant={checkRightEnd() ? 'disabled' : 'default'}
+                            className="select-none cursor-pointer"
+                        >
                             <CaretRight />
                         </PaginationLink>
                     </PaginationItem>
 
                     <PaginationItem onClick={handleClickDoubleRight}>
-                        <PaginationLink className="select-none hover:cursor-pointer">
+                        <PaginationLink
+                            variant={checkRightEnd() ? 'disabled' : 'default'}
+                            className="select-none cursor-pointer"
+                        >
                             <CaretDoubleRight />
                         </PaginationLink>
                     </PaginationItem>
