@@ -17,6 +17,7 @@ export const columnsClothes: ColumnDef<ClothesPropsData>[] = [
     {
         accessorKey: 'name',
         header: 'Name',
+        
     },
 
     {

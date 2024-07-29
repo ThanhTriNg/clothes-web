@@ -17,6 +17,8 @@ interface myState {
     loadingClothesByName: boolean;
     colorAPI: colorAPI | null;
     sortValue: string;
+
+    loadingClothes: boolean;
 }
 
 const initialState: myState = {
@@ -34,6 +36,7 @@ const initialState: myState = {
     loadingClothesByName: false,
     colorAPI: null,
     sortValue: '0',
+    loadingClothes: false,
 };
 interface colorAPI {
     name: {
@@ -330,11 +333,16 @@ export const clothesSlice = createSlice({
 
     extraReducers: (builder) => {
         //get all clothes
-        builder.addCase(getClothesThunk.pending, (state) => {});
+        builder.addCase(getClothesThunk.pending, (state) => {
+            state.loadingClothes = true;
+        });
         builder.addCase(getClothesThunk.fulfilled, (state, action) => {
             if (action.payload) state.clothesInfo = action.payload.data;
+            state.loadingClothes = false;
         });
-        builder.addCase(getClothesThunk.rejected, (state, action) => {});
+        builder.addCase(getClothesThunk.rejected, (state, action) => {
+            state.loadingClothes = false;
+        });
 
         //get clothes by clothes id
         builder.addCase(getClothesByIdThunk.pending, (state) => {

@@ -26,6 +26,7 @@ interface DataTableProps<TData, TValue> {
     };
     onChangePageTable: (value: number) => void;
     onChangePageSizeTable: (value: string) => void;
+    pagePerRow: number[];
 }
 
 export function DataTable<TData, TValue>({
@@ -35,6 +36,7 @@ export function DataTable<TData, TValue>({
     paginationInfo,
     onChangePageTable,
     onChangePageSizeTable,
+    pagePerRow,
 }: DataTableProps<TData, TValue>) {
     const [sorting, setSorting] = useState<SortingState>([]);
 
@@ -156,6 +158,7 @@ export function DataTable<TData, TValue>({
                     totalPages={paginationInfo.totalPages}
                     onChangePage={onChangePage}
                     onChangePageSize={onChangePageSize}
+                    pagePerRow={pagePerRow}
                 />
             )}
         </div>

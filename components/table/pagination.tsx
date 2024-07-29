@@ -1,28 +1,41 @@
-import {
-    Pagination,
-    PaginationContent,
-    PaginationEllipsis,
-    PaginationItem,
-    PaginationLink,
-    PaginationNext,
-    PaginationPrevious,
-} from '@/components/ui/pagination';
-import { useEffect, useState } from 'react';
-import { CaretDoubleLeft, CaretDoubleRight, CaretLeft, CaretRight } from '@phosphor-icons/react';
+import { Pagination, PaginationContent, PaginationItem, PaginationLink } from '@/components/ui/pagination';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { CaretDoubleLeft, CaretDoubleRight, CaretLeft, CaretRight } from '@phosphor-icons/react';
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
 interface PaginationInfoProps {
     totalPages: number;
     currentPage: number;
     onChangePage: (value: number) => void;
     onChangePageSize: (value: string) => void;
+    pagePerRow: number[];
 }
 
-const pagePerRow = [2, 4, 30];
 const maxPagesToShow = 6;
+const pageSizeFn = (pagePerRow: number[], pageSizeInit: string) => {
+    const index = pagePerRow.findIndex((value) => parseInt(pageSizeInit) === value);
+    return index;
+};
 
-export function PaginationTable({ totalPages, onChangePage, onChangePageSize }: PaginationInfoProps) {
-    const [page, setPage] = useState<number>(1);
-    const [pageSize, setPageSize] = useState<string>(pagePerRow[0].toString());
+const checkLeftEnd = (page: number) => {
+    if (page === 1) {
+        return true;
+    } else return false;
+};
+const checkRightEnd = (page: number, totalPages: number) => {
+    if (page >= totalPages) {
+        return true;
+    } else return false;
+};
+export function PaginationTable({ totalPages, onChangePage, onChangePageSize, pagePerRow }: PaginationInfoProps) {
+    const router = useRouter();
+    const { p } = router.query;
+    const pageSizeLocal = localStorage.getItem('pageSize');
+    const pageSizeInit = typeof pageSizeLocal === 'string' ? pageSizeLocal : pagePerRow[0].toString();
+
+    const [page, setPage] = useState<number>(typeof p === 'string' ? parseInt(p) : 1);
+    const [pageSize, setPageSize] = useState<string>(pageSizeInit);
+    const [indexPageSize, setIndexPageSize] = useState<number>(pageSizeFn(pagePerRow, pageSizeInit));
 
     const pagesArray: any[] = [];
 
@@ -60,11 +73,14 @@ export function PaginationTable({ totalPages, onChangePage, onChangePageSize }: 
         onChangePage(page);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [page]);
+
     useEffect(() => {
-        onChangePageSize(pageSize);
-        setPage(1);
+        if (pagePerRow[indexPageSize] != parseInt(pageSize)) {
+            onChangePageSize(pageSize);
+            setPage(1);
+        }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [pageSize]);
+    }, [pageSize, indexPageSize]);
 
     const handleClick = (pageNum: number) => {
         setPage(pageNum);
@@ -83,24 +99,18 @@ export function PaginationTable({ totalPages, onChangePage, onChangePageSize }: 
         if (page < totalPages) setPage(page + 1);
     };
 
-    const checkLeftEnd = () => {
-        if (page === 1) {
-            return true;
-        } else return false;
-    };
-    const checkRightEnd = () => {
-        if (page >= totalPages) {
-            return true;
-        } else return false;
-    };
+    useEffect(() => {
+        const index = pageSizeFn(pagePerRow, pageSizeInit);
+        setIndexPageSize(index);
+    }, [pageSize, pagePerRow, pageSizeInit]);
 
     return (
         <div className="mt-4">
             <Pagination className="flex items-center gap-2">
-                <PaginationContent >
+                <PaginationContent>
                     <PaginationItem onClick={handleClickDoubleLeft}>
                         <PaginationLink
-                            variant={checkLeftEnd() ? 'disabled' : 'default'}
+                            variant={checkLeftEnd(page) ? 'disabled' : 'default'}
                             className="select-none cursor-pointer"
                         >
                             <CaretDoubleLeft />
@@ -109,7 +119,7 @@ export function PaginationTable({ totalPages, onChangePage, onChangePageSize }: 
 
                     <PaginationItem onClick={handleClickLeft}>
                         <PaginationLink
-                            variant={checkLeftEnd() ? 'disabled' : 'default'}
+                            variant={checkLeftEnd(page) ? 'disabled' : 'default'}
                             className="select-none cursor-pointer"
                         >
                             <CaretLeft />
@@ -134,7 +144,7 @@ export function PaginationTable({ totalPages, onChangePage, onChangePageSize }: 
                     })}
                     <PaginationItem onClick={handleClickRight}>
                         <PaginationLink
-                            variant={checkRightEnd() ? 'disabled' : 'default'}
+                            variant={checkRightEnd(page, totalPages) ? 'disabled' : 'default'}
                             className="select-none cursor-pointer"
                         >
                             <CaretRight />
@@ -143,7 +153,7 @@ export function PaginationTable({ totalPages, onChangePage, onChangePageSize }: 
 
                     <PaginationItem onClick={handleClickDoubleRight}>
                         <PaginationLink
-                            variant={checkRightEnd() ? 'disabled' : 'default'}
+                            variant={checkRightEnd(page, totalPages) ? 'disabled' : 'default'}
                             className="select-none cursor-pointer"
                         >
                             <CaretDoubleRight />
@@ -156,11 +166,13 @@ export function PaginationTable({ totalPages, onChangePage, onChangePageSize }: 
                         <SelectValue placeholder={pageSize} />
                     </SelectTrigger>
                     <SelectContent side="top">
-                        {pagePerRow.map((pageSize) => (
-                            <SelectItem key={pageSize} value={`${pageSize}`}>
-                                {pageSize}
-                            </SelectItem>
-                        ))}
+                        {pagePerRow.map((value: number, index: number) => {
+                            return (
+                                <SelectItem key={value} value={`${value}`}>
+                                    {value}
+                                </SelectItem>
+                            );
+                        })}
                     </SelectContent>
                 </Select>
             </Pagination>

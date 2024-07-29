@@ -18,26 +18,29 @@ export interface PaginationInfoProps {
     totalPages: number;
     totalCount: number;
 }
+const pagePerRow = [4, 5, 6, 7, 8];
 const AdminClothes = ({ token }: AdminClothesProps) => {
+    const router = useRouter();
+    const { p } = router.query;
+
+    const pageSizeLocal = localStorage.getItem('pageSize');
+
     const dispatch = useDispatch<AppDispatch>();
-    const [page, setPage] = useState<number>(1);
-    const [pageSize, setPageSize] = useState<number>(1);
-    // const [clothesInfoData, setClothesInfoData] = useState<ClothesPropsData[]>();
+    const [pageSize, setPageSize] = useState<number>(
+        typeof pageSizeLocal === 'string' ? parseInt(pageSizeLocal) : pagePerRow[0],
+    );
     const { clothesInfo } = useSelector((state: RootState) => state.clothes);
-
     const [isChanged, setIsChanged] = useState<boolean>(false);
-
-    // useEffect(() => {
-    //     setClothesInfoData(clothesInfo?.data);
-    // }, [clothesInfo]);
+    const [paginationInfo, setPaginationInfo] = useState<PaginationInfoProps>();
 
     useEffect(() => {
         setIsChanged(false);
-
-        dispatch(getClothesThunk({ sortValue: '0', page, pageSize }));
-    }, [dispatch, page, pageSize, isChanged]);
-
-    const [paginationInfo, setPaginationInfo] = useState<PaginationInfoProps>();
+        if (typeof p === 'string') {
+            dispatch(getClothesThunk({ sortValue: '0', page: parseInt(p), pageSize }));
+        } else {
+            dispatch(getClothesThunk({ sortValue: '0', page: 1, pageSize }));
+        }
+    }, [dispatch, p, pageSize, isChanged]);
 
     useEffect(() => {
         if (clothesInfo) {
@@ -47,13 +50,19 @@ const AdminClothes = ({ token }: AdminClothesProps) => {
     }, [clothesInfo]);
 
     const onChangePageTable = (value: number) => {
-        setPage(value);
+        router.push({
+            pathname: router.pathname,
+            query: { ...router.query, p: value },
+        });
     };
 
     const onChangePageSizeTable = (value: string) => {
         setPageSize(parseInt(value));
+        localStorage.setItem('pageSize', value);
     };
-
+    const onDelete = (value: boolean) => {
+        setIsChanged(value);
+    };
     return (
         <AdminLayout token={token}>
             {clothesInfo && paginationInfo && (
@@ -62,10 +71,11 @@ const AdminClothes = ({ token }: AdminClothesProps) => {
                         <DataTable
                             columns={columnsClothes}
                             data={clothesInfo.data}
-                            renderRowActions={(row) => <RenderRowActions row={row} setIsChanged={setIsChanged} />}
+                            renderRowActions={(row) => <RenderRowActions row={row} onDelete={onDelete} />}
                             paginationInfo={paginationInfo}
                             onChangePageTable={onChangePageTable}
                             onChangePageSizeTable={onChangePageSizeTable}
+                            pagePerRow={pagePerRow}
                         />
                     </div>
                 </div>
@@ -81,9 +91,10 @@ export const convertSubCategoriesToArray = (subCates: SubCateProps[]) => {
 
 interface RenderRowActionsProps {
     row: ClothesPropsData;
-    setIsChanged: React.Dispatch<React.SetStateAction<boolean>>;
+    // setIsChanged: React.Dispatch<React.SetStateAction<boolean>>;
+    onDelete: (value: boolean) => void;
 }
-const RenderRowActions: React.FC<RenderRowActionsProps> = ({ row, setIsChanged }) => {
+const RenderRowActions: React.FC<RenderRowActionsProps> = ({ row, onDelete }) => {
     const dispatch = useDispatch<AppDispatch>();
     const router = useRouter();
     const handleClickEdit = (row: ClothesPropsData) => {
@@ -93,7 +104,7 @@ const RenderRowActions: React.FC<RenderRowActionsProps> = ({ row, setIsChanged }
         const productId: string = row.id.toString();
         const result = await dispatch(deleteClothesByIdThunk(productId));
         if (deleteClothesByIdThunk.fulfilled.match(result)) {
-            setIsChanged(true);
+            onDelete(true);
         } else {
             // Handle error here
             console.error('Failed to delete the item.');
