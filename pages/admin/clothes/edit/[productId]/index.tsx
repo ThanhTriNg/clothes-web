@@ -26,6 +26,11 @@ import { editClothesThunk, getClothesByIdThunk } from '@/redux/reducer/Clothes';
 import { AppDispatch, RootState } from '@/redux/store/Store';
 import { useRouter } from 'next/router';
 import { useDispatch, useSelector } from 'react-redux';
+import ProductImage from '@/pages/admin/clothes/add/ProductImage';
+import Image from 'next/image';
+import ProductGallery from '@/pages/admin/clothes/add/ProductGallery';
+import { JSONparse } from '@/utils';
+import { getProductImage, getProductGallery } from '@/redux/reducer/Media';
 
 const addCateFormSchema = z.object({
     name: z.string().min(1),
@@ -54,16 +59,19 @@ const addCateFormSchema = z.object({
     // gender: z.string().min(1),
     // stock: z.string().min(1),
 });
-
 type AddCateFormValues = z.infer<typeof addCateFormSchema>;
 interface AdminClothesProps {
     token: string;
+}
+
+interface SubImgArrProps {
+    url: string;
 }
 const AdminClothesAdd = ({ token }: AdminClothesProps) => {
     const dispatch = useDispatch<AppDispatch>();
 
     const { clothesById, successEdit, errorEdit, loading } = useSelector((state: RootState) => state.clothes);
-    const [selectedFiles, setSelectedFiles] = useState<any>([]);
+    const { saveProductImage, saveProductGallery } = useSelector((state: RootState) => state.media);
 
     const router = useRouter();
     const { productId } = router.query;
@@ -82,6 +90,22 @@ const AdminClothesAdd = ({ token }: AdminClothesProps) => {
             dispatch(getClothesByIdThunk(productId));
         }
     }, [dispatch, productId]);
+    const [subImgArr, setSubImgArr] = useState<SubImgArrProps[]>();
+
+    useEffect(() => {
+        if (clothesById?.subImageUrls) {
+            const parseSubImageUrls: string[] = JSONparse(clothesById?.subImageUrls);
+            const formattedArr: SubImgArrProps[] = parseSubImageUrls.map((url: string) => ({ url }));
+            setSubImgArr(formattedArr);
+        }
+    }, [clothesById]);
+
+    // useEffect(() => {
+    //     if (subImgArr) {
+    //         dispatch(getProductGallery(subImgArr));
+    //         console.log('chay dispatch getProductGallery');
+    //     }
+    // }, [dispatch, subImgArr]);
 
     useEffect(() => {
         if (clothesById) {
@@ -97,26 +121,11 @@ const AdminClothesAdd = ({ token }: AdminClothesProps) => {
     useEffect(() => {
         if (successEdit) {
             const basePath = router.pathname.replace('[productId]', '');
-            console.log(basePath);
+            // console.log(basePath);
             // router.push(basePath);
         }
     }, [router, successEdit]);
 
-    const handleImageFileChange = (event: any, onChange: any) => {
-        const selectedFile = event.target.files;
-        const maxFilesAllowed = 1; // Set your desired limit here
-
-        if (selectedFile && selectedFile.length > maxFilesAllowed) {
-            alert(`You can only select up to ${maxFilesAllowed} files.`);
-            event.target.value = ''; // Clear the selected files
-            return;
-        }
-        onChange(selectedFile && selectedFile[0]);
-    };
-
-    const handleFileChange = (event: any) => {
-        setSelectedFiles([...event.target.files]);
-    };
     const { categoriesInfo, subCateInfo } = useSelector((state: RootState) => state.categories);
     useEffect(() => {
         dispatch(getCategoriesThunk());
@@ -129,7 +138,6 @@ const AdminClothesAdd = ({ token }: AdminClothesProps) => {
         }
     }, [dispatch, selectedCate]);
 
-    // console.log(subCateInfo);
     const [subCateStringArray, setSubCateStringArray] = useState<string[]>();
     useEffect(() => {
         if (subCateInfo) {
@@ -137,14 +145,14 @@ const AdminClothesAdd = ({ token }: AdminClothesProps) => {
             setSubCateStringArray(subCateStringArray);
         }
     }, [, subCateInfo]);
-
     async function onSubmit(data: AddCateFormValues) {
         console.log(data);
         try {
             if (productId && typeof productId === 'string') {
                 const name = data.name;
                 const price = data.price;
-                const imageUrl = data.imageUrl;
+                const imageUrl = saveProductImage ? saveProductImage.url : clothesById?.imageUrl;
+                const subImageUrls = saveProductGallery?.map((image) => image.url);
                 const description = data.description;
                 const descriptionSort = data.descriptionSort;
                 const subCategoryId = data.subCategoryId;
@@ -154,7 +162,7 @@ const AdminClothesAdd = ({ token }: AdminClothesProps) => {
                             name,
                             price,
                             imageUrl,
-                            subImageUrls: selectedFiles,
+                            subImageUrls,
                             description,
                             descriptionSort,
                             subCategoryId,
@@ -181,65 +189,58 @@ const AdminClothesAdd = ({ token }: AdminClothesProps) => {
                             <form onSubmit={form.handleSubmit(onSubmit)} className=" w-full space-y-4">
                                 <FormFieldInput form={form} name="name" />
                                 <FormFieldInput form={form} name="price" type="number" />
-
-                                <FormField
-                                    control={form.control}
-                                    name="imageUrl"
-                                    render={({ field: { value, onChange, ...fieldProps } }) => {
-                                        // console.log(value);
-                                        return (
-                                            <FormItem>
-                                                <FormLabel className="text-black font-semibold text-sm uppercase">
-                                                    imageUrl
-                                                </FormLabel>
-                                                <FormControl>
-                                                    <Input
-                                                        multiple
-                                                        type="file"
-                                                        // variant="default"
-                                                        placeholder="imageUrl"
-                                                        {...fieldProps}
-                                                        accept="image/*"
-                                                        onChange={(event) => {
-                                                            handleImageFileChange(event, onChange);
-                                                        }}
-                                                    />
-                                                </FormControl>
-                                                <FormMessage />
-                                            </FormItem>
-                                        );
-                                    }}
-                                />
-
-                                <FormField
-                                    control={form.control}
-                                    name="subImageUrls"
-                                    render={({ field: { value, onChange, ...fieldProps } }) => {
-                                        // console.log(value);
-                                        return (
-                                            <FormItem>
-                                                <FormLabel className="text-black font-semibold text-sm uppercase">
-                                                    subImageUrls
-                                                </FormLabel>
-                                                <FormControl>
-                                                    <Input
-                                                        multiple
-                                                        type="file"
-                                                        // variant="default"
-                                                        placeholder="subImageUrls"
-                                                        {...fieldProps}
-                                                        accept="image/*"
-                                                        onChange={handleFileChange}
-                                                    />
-                                                </FormControl>
-                                                <FormMessage />
-                                            </FormItem>
-                                        );
-                                    }}
-                                />
-
+                                <div>
+                                    <ProductImage />
+                                    <Image
+                                        src={
+                                            saveProductImage
+                                                ? saveProductImage.url
+                                                : clothesById
+                                                ? clothesById.imageUrl
+                                                : '/img/no-image.jpg'
+                                        }
+                                        alt={`img`}
+                                        width="0"
+                                        height="0"
+                                        sizes="100vw"
+                                        className="w-40 h-40 "
+                                    />
+                                </div>
+                                <div>
+                                    <ProductGallery existed={subImgArr} />
+                                    <div className="flex gap-2">
+                                        {saveProductGallery
+                                            ? saveProductGallery.map((item, idx: number) => {
+                                                  return (
+                                                      <Image
+                                                          key={`img-${item.public_id}`}
+                                                          src={item.url}
+                                                          alt={`img`}
+                                                          width="0"
+                                                          height="0"
+                                                          sizes="100vw"
+                                                          className="w-28 h-28 "
+                                                      />
+                                                  );
+                                              })
+                                            : subImgArr
+                                            ? subImgArr.map((item, idx: number) => {
+                                                  return (
+                                                      <Image
+                                                          key={`img-${item.url}`}
+                                                          src={item.url}
+                                                          alt={`img`}
+                                                          width="0"
+                                                          height="0"
+                                                          sizes="100vw"
+                                                          className="w-28 h-28 "
+                                                      />
+                                                  );
+                                              })
+                                            : 'nothing here'}
+                                    </div>
+                                </div>
                                 <FormFieldArena form={form} name="description" />
-
                                 <FormFieldArena form={form} name="descriptionSort" placeholder="description sort" />
                                 <Select onValueChange={(value) => setSelectedCate(value)}>
                                     <SelectTrigger className="w-[180px]">
@@ -262,7 +263,6 @@ const AdminClothesAdd = ({ token }: AdminClothesProps) => {
                                         </SelectGroup>
                                     </SelectContent>
                                 </Select>
-
                                 {subCateInfo && (
                                     <FormField
                                         control={form.control}

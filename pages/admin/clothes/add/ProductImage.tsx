@@ -15,8 +15,8 @@ const ProductImage = () => {
         setOpenMediaLibrary(false);
     };
     return (
-        <div>
-            <Button variant="ghost" onClick={handleClickMedia}>
+        <div className=''>
+            <Button variant="link" onClick={handleClickMedia}>
                 Product Image
             </Button>
             <MediaLibrary isOpen={openMediaLibrary} onClose={handleClosePopup} identifier="productImage" />

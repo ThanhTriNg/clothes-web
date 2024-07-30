@@ -28,6 +28,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import ProductImage from '@/pages/admin/clothes/add/ProductImage';
 import ProductGallery from '@/pages/admin/clothes/add/ProductGallery';
+import Image from 'next/image';
 const addCateFormSchema = z.object({
     name: z.string().min(1),
     price: z.string().min(1),
@@ -163,9 +164,36 @@ const AdminClothesAdd = ({ token }: AdminClothesProps) => {
                             <FormFieldInput form={form} name="name" />
                             <FormFieldInput form={form} name="price" type="number" />
 
-                            <ProductImage />
+                            <div>
+                                <ProductImage />
+                                <Image
+                                    src={saveProductImage ? saveProductImage.url : '/img/no-image.jpg'}
+                                    alt={`img`}
+                                    width="0"
+                                    height="0"
+                                    sizes="100vw"
+                                    className="w-40 h-40 "
+                                />
+                            </div>
 
-                            <ProductGallery />
+                            <div>
+                                <ProductGallery />
+                                <div className="flex gap-2">
+                                    {saveProductGallery?.map((item, idx: number) => {
+                                        return (
+                                            <Image
+                                                key={`img-${item.asset_id}`}
+                                                src={item.url}
+                                                alt={`img`}
+                                                width="0"
+                                                height="0"
+                                                sizes="100vw"
+                                                className="w-28 h-28 "
+                                            />
+                                        );
+                                    })}
+                                </div>
+                            </div>
 
                             {/* <FormField
                                 control={form.control}
@@ -223,7 +251,7 @@ const AdminClothesAdd = ({ token }: AdminClothesProps) => {
                             /> */}
                             <FormFieldArena form={form} name="description" />
                             <FormFieldArena form={form} name="descriptionSort" placeholder="description sort" />
-                            
+
                             <Select onValueChange={(value) => setSelectedCate(value)}>
                                 <SelectTrigger className="w-[180px]">
                                     <SelectValue placeholder="Select a category" />

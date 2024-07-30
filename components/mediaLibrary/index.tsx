@@ -2,6 +2,9 @@ interface MediaLibraryPageProps {
     isOpen: boolean;
     onClose: () => void;
     identifier: 'productGallery' | 'productImage';
+    existed?: {
+        url: string;
+    }[];
 }
 import { getProductImage, getProductGallery } from '@/redux/reducer/Media';
 import { Button } from '@/components/ui/button';
@@ -16,7 +19,7 @@ import Loading from '@/components/loading';
 import { useDropzone } from 'react-dropzone';
 import React, { useCallback } from 'react';
 
-const MediaLibrary = ({ isOpen, onClose, identifier }: MediaLibraryPageProps) => {
+const MediaLibrary = ({ isOpen, onClose, existed, identifier }: MediaLibraryPageProps) => {
     const dispatch = useDispatch<AppDispatch>();
 
     const { mediaInfo, nextCursor, loading } = useSelector((state: RootState) => state.media);
@@ -53,6 +56,29 @@ const MediaLibrary = ({ isOpen, onClose, identifier }: MediaLibraryPageProps) =>
         event.preventDefault();
         await dispatch(getMediaThunk(nextCursor));
     };
+
+    useEffect(() => {
+        if (existed) {
+            existed.forEach((existedItem) => {
+                const mediaItem = mediaList.find((item) => item.url === existedItem.url);
+                console.log(clickedItems);
+                if (clickedItems) {
+                    if (mediaItem && !clickedItems.some((item) => item.url === mediaItem.url)) {
+                        setClickedItems((prevItems) => {
+                            return [...(prevItems || []), mediaItem];
+                        });
+                    }
+                } else {
+                    if (mediaItem) {
+                        setClickedItems((prevItems) => {
+                            return [...(prevItems || []), mediaItem];
+                        });
+                    }
+                }
+            });
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [existed, mediaList]);
 
     const handleClickMultiImg = (item: MediaCloudinaryProps) => {
         setClickedItems((prevItems) => {
@@ -139,48 +165,52 @@ const MediaLibrary = ({ isOpen, onClose, identifier }: MediaLibraryPageProps) =>
                 {isDragActive ? (
                     <p className="h-full flex justify-center items-center">Drop the files here ...</p>
                 ) : (
-                    <div className="">
-                        <h3 className="text-white text-center text-xl font-bold mt-4">Media Library</h3>
+                    <div className="h-full">
+                        <h3 className="text-white text-center text-xl font-bold h-16 flex items-center justify-center">
+                            Media Library
+                        </h3>
                         {loading ? (
                             <div className="flex justify-center items-center h-full">
                                 <Loading />
                             </div>
                         ) : (
-                            <div className="p-4 grid grid-cols-6 xl:grid-cols-8 gap-2">
-                                {mediaList?.map((item, idx) => {
-                                    return (
-                                        <div
-                                            key={idx}
-                                            className={`relative flex justify-center ${
-                                                isClickedFn(item) ? 'border-primary p-1 border-solid border-2' : ''
-                                            }`}
-                                            onClick={
-                                                identifier === 'productGallery'
-                                                    ? () => handleClickMultiImg(item)
-                                                    : () => handleClickSingleImg(item)
-                                            }
-                                        >
-                                            <Image
-                                                src={item.url}
-                                                alt={`img-${idx}`}
-                                                width="0"
-                                                height="0"
-                                                sizes="100vw"
-                                                className="w-40 h-40 "
-                                            />
-                                            <div className="bg-slate-600 w-4 h-4 absolute right-2 top-2 flex justify-center items-center">
-                                                {isClickedFn(item) && (
-                                                    <Check size={18} className="text-center" color="white" />
-                                                )}
+                            <div className="h-[calc(100%-64px)] overflow-y-scroll">
+                                <div className="p-4 grid grid-cols-6 xl:grid-cols-8 gap-2 ">
+                                    {mediaList?.map((item, idx) => {
+                                        return (
+                                            <div
+                                                key={idx}
+                                                className={`relative flex justify-center ${
+                                                    isClickedFn(item) ? 'border-primary p-1 border-solid border-2' : ''
+                                                }`}
+                                                onClick={
+                                                    identifier === 'productGallery'
+                                                        ? () => handleClickMultiImg(item)
+                                                        : () => handleClickSingleImg(item)
+                                                }
+                                            >
+                                                <Image
+                                                    src={item.url}
+                                                    alt={`img-${idx}`}
+                                                    width="0"
+                                                    height="0"
+                                                    sizes="100vw"
+                                                    className="w-40 h-40 "
+                                                />
+                                                <div className="bg-slate-600 w-4 h-4 absolute right-2 top-2 flex justify-center items-center">
+                                                    {isClickedFn(item) && (
+                                                        <Check size={18} className="text-center" color="white" />
+                                                    )}
+                                                </div>
                                             </div>
-                                        </div>
-                                    );
-                                })}
+                                        );
+                                    })}
+                                </div>
                             </div>
                         )}
-                        <div className="text-center">
+                        {/* <div className="text-center">
                             <Button onClick={handleLoadMore}>Load more</Button>
-                        </div>
+                        </div> */}
                     </div>
                 )}
             </div>
