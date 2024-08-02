@@ -3,8 +3,14 @@ import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/comp
 import { Input } from '@/components/ui/input';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Textarea } from '@/components/ui/textarea';
+import { formatPrice } from '@/utils';
+import { FieldValues, PathValue, Path } from 'react-hook-form';
 
-export const FormFieldInput = ({ form, name, type = 'text' }: FormFieldInputProps) => {
+export const FormFieldInput = <TProps extends FieldValues>({
+    form,
+    name,
+    type = 'text',
+}: FormFieldInputProps<TProps>) => {
     return (
         <FormField
             control={form.control}
@@ -18,7 +24,6 @@ export const FormFieldInput = ({ form, name, type = 'text' }: FormFieldInputProp
                                 type={type}
                                 // variant="default"
                                 placeholder={name}
-                                // value={field.value || ''}
                                 {...field}
                             />
                         </FormControl>
@@ -30,7 +35,11 @@ export const FormFieldInput = ({ form, name, type = 'text' }: FormFieldInputProp
     );
 };
 
-export const FormFieldFile = ({ form, name, type = 'text' }: FormFieldInputProps) => {
+export const FormFieldFile = <TProps extends FieldValues>({
+    form,
+    name,
+    type = 'text',
+}: FormFieldInputProps<TProps>) => {
     return (
         <FormField
             control={form.control}
@@ -52,7 +61,7 @@ export const FormFieldFile = ({ form, name, type = 'text' }: FormFieldInputProps
         />
     );
 };
-export const FormFieldArena = ({ form, name, placeholder }: FormFieldProps) => {
+export const FormFieldArena = <TProps extends FieldValues>({ form, name, placeholder }: FormFieldProps<TProps>) => {
     let ph: string = '';
     if (name) {
         ph = name;
@@ -71,7 +80,7 @@ export const FormFieldArena = ({ form, name, placeholder }: FormFieldProps) => {
                 <FormItem>
                     <FormLabel className="text-black font-semibold text-sm uppercase">{readableString}</FormLabel>
                     <FormControl>
-                        <Textarea placeholder={ph} {...field} />
+                        <Textarea className="h-[400px]" placeholder={ph} {...field} />
                     </FormControl>
                     <FormMessage />
                 </FormItem>
@@ -79,7 +88,7 @@ export const FormFieldArena = ({ form, name, placeholder }: FormFieldProps) => {
         />
     );
 };
-export const FormFieldRadio = ({ form, name, options }: FormFieldRadioProps) => {
+export const FormFieldRadio = <TProps extends FieldValues>({ form, name, options }: FormFieldRadioProps<TProps>) => {
     return (
         <FormField
             control={form.control}

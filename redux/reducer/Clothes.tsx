@@ -243,25 +243,6 @@ export const getColorNameThunk = createAsyncThunk('getColorName', async (colors:
     }
 });
 
-const addOrUpdateClothes = (data: AddClothesProps) => {
-    const formData = new FormData();
-    formData.append('imageUrl', data.imageUrl);
-    console.log('data.imageUrl>>>', data.imageUrl);
-
-    data.subImageUrls.forEach((file: File) => {
-        formData.append('subImageUrls', file);
-    });
-    formData.append('name', data.name);
-    formData.append('price', data.price);
-
-    formData.append('description', data.description);
-    formData.append('descriptionSort', data.descriptionSort);
-
-    formData.append('subCategoryId', data.subCategoryId);
-    console.log(formData);
-    return formData;
-};
-
 export const addClothesThunk = createAsyncThunk(
     'addClothes',
     async (addClothes: AddClothesProps, { rejectWithValue }) => {
@@ -293,23 +274,22 @@ export const addClothesThunk = createAsyncThunk(
 
 export const editClothesThunk = createAsyncThunk(
     'editClothes',
-    async ({ editClothes, id }: { editClothes: AddClothesProps; id: string }, { rejectWithValue }) => {
+    async ({ editCloth, id }: { editCloth: AddClothesProps; id: string }, { rejectWithValue }) => {
         try {
             // const formData = new FormData();
-            // formData.append('imageUrl', editClothes.imageUrl);
-            // editClothes.subImageUrls.forEach((file: File) => {
+            // formData.append('imageUrl', editCloth.imageUrl);
+            // editCloth.subImageUrls.forEach((file: File) => {
             //     formData.append('subImageUrls', file);
             // });
-            // formData.append('name', editClothes.name);
-            // formData.append('price', editClothes.price);
+            // formData.append('name', editCloth.name);
+            // formData.append('price', editCloth.price);
 
-            // formData.append('description', editClothes.description);
-            // formData.append('descriptionSort', editClothes.descriptionSort);
+            // formData.append('description', editCloth.description);
+            // formData.append('descriptionSort', editCloth.descriptionSort);
 
-            // formData.append('subCategoryId', editClothes.subCategoryId);
-            const formData = addOrUpdateClothes(editClothes);
+            // formData.append('subCategoryId', editCloth.subCategoryId);
 
-            const response = await ClothesApi.editClothes(formData, id);
+            const response = await ClothesApi.editClothes(editCloth, id);
 
             return response;
         } catch (error: any) {
@@ -400,6 +380,16 @@ export const clothesSlice = createSlice({
         });
         builder.addCase(getColorNameThunk.rejected, (state, action) => {});
 
+        //add clothes
+        builder.addCase(addClothesThunk.pending, (state) => {
+            state.loading = true;
+        });
+        builder.addCase(addClothesThunk.fulfilled, (state, action) => {
+            state.loading = false;
+        });
+        builder.addCase(addClothesThunk.rejected, (state, action) => {
+            state.loading = false;
+        });
         //edit clothes
         builder.addCase(editClothesThunk.pending, (state) => {
             state.loading = true;

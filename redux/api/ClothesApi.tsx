@@ -34,13 +34,22 @@ const ClothesApi = {
             },
         });
     },
-    editClothes: (formData: any, id: string) => {
-        return AxiosClient2.patch(`/clothes/${id}`, formData, {
+
+    // editClothes: (formData: any, id: string) => {
+    //     return AxiosClient2.patch(`/clothes/${id}`, formData, {
+    //         headers: {
+    //             Authorization: `Bearer ${token}`,
+    //         },
+    //     });
+    // },
+    editClothes: (clothes: AddClothesProps, id: string) => {
+        return AxiosClient.patch(`/clothes/${id}`, clothes, {
             headers: {
                 Authorization: `Bearer ${token}`,
             },
         });
     },
+
     deleteClothesById: (id: string) => {
         return AxiosClient.delete(`/clothes/${id}`, {
             headers: {

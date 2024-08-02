@@ -15,10 +15,7 @@ import 'swiper/css';
 import 'swiper/css/pagination';
 import { Autoplay, Pagination } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { Swiper as SwiperClass } from 'swiper/types';
 
-const imgMenVar = '/img/men';
-const imgWomenVar = '/img/women';
 
 const slidesPerView = 3;
 

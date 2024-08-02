@@ -6,18 +6,15 @@ interface MediaLibraryPageProps {
         url: string;
     }[];
 }
-import { getProductImage, getProductGallery } from '@/redux/reducer/Media';
-import { Button } from '@/components/ui/button';
-import { getMediaThunk, uploadImageThunk } from '@/redux/reducer/Media';
-import { AppDispatch, RootState } from '@/redux/store/Store';
-import { XCircle, Check } from '@phosphor-icons/react';
-import Image from 'next/image';
-import { useEffect, useMemo, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { MediaCloudinaryProps } from '@/redux/module';
 import Loading from '@/components/loading';
+import { MediaCloudinaryProps } from '@/redux/module';
+import { getMediaThunk, getProductGallery, getProductImage, uploadImageThunk } from '@/redux/reducer/Media';
+import { AppDispatch, RootState } from '@/redux/store/Store';
+import { Check, XCircle } from '@phosphor-icons/react';
+import Image from 'next/image';
+import { useCallback, useEffect, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
-import React, { useCallback } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 const MediaLibrary = ({ isOpen, onClose, existed, identifier }: MediaLibraryPageProps) => {
     const dispatch = useDispatch<AppDispatch>();
@@ -26,6 +23,7 @@ const MediaLibrary = ({ isOpen, onClose, existed, identifier }: MediaLibraryPage
     const [mediaList, setMediaList] = useState<MediaCloudinaryProps[]>([]);
     const [clickedItems, setClickedItems] = useState<MediaCloudinaryProps[] | null>(null);
     const [clickedItem, setClickedItem] = useState<MediaCloudinaryProps | null>(null);
+    const [isPushExistedToMediaItem, setIsPushExistedToMediaItem] = useState<boolean>(false);
 
     useEffect(() => {
         if (isOpen) {
@@ -52,16 +50,11 @@ const MediaLibrary = ({ isOpen, onClose, existed, identifier }: MediaLibraryPage
         }
     }, [clickedItem, clickedItems, dispatch, identifier, isOpen]);
 
-    const handleLoadMore = async (event: React.MouseEvent<HTMLButtonElement>) => {
-        event.preventDefault();
-        await dispatch(getMediaThunk(nextCursor));
-    };
-
     useEffect(() => {
-        if (existed) {
+        if (existed && mediaList.length > 0 && !isPushExistedToMediaItem) {
+            setIsPushExistedToMediaItem(true);
             existed.forEach((existedItem) => {
                 const mediaItem = mediaList.find((item) => item.url === existedItem.url);
-                console.log(clickedItems);
                 if (clickedItems) {
                     if (mediaItem && !clickedItems.some((item) => item.url === mediaItem.url)) {
                         setClickedItems((prevItems) => {

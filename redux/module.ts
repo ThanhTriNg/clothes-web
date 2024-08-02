@@ -1,10 +1,10 @@
 export interface AddClothesProps {
     name: string;
-    price: string;
+    price: number;
 
     imageUrl: any;
     subImageUrls: any;
-
+    stock: number;
     // gender: string;
     // stock: string;
     descriptionSort: string;
@@ -18,7 +18,7 @@ export interface ClothesPropsData {
     id: number;
     name: string;
     gender?: string;
-    stock?: number;
+    stock: number;
     price: number;
     descriptionSort?: string;
     description?: string;
@@ -154,7 +154,3 @@ export interface MediaCloudinaryProps {
     url: string;
     secure_url?: string;
 }
-
-
-
-
