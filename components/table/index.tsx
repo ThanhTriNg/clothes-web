@@ -29,6 +29,10 @@ interface DataTableProps<TData, TValue> {
     pagePerRow: number[];
 }
 
+const getRowColor = (rowIndex: number) => {
+    return rowIndex % 2 === 0 ? '#F6F6F6' : '#FFF'; // Even rows are light blue, odd rows are light gray
+};
+
 export function DataTable<TData, TValue>({
     columns,
     data,
@@ -44,7 +48,8 @@ export function DataTable<TData, TValue>({
         data,
         columns,
         getCoreRowModel: getCoreRowModel(),
-
+        enableColumnResizing: true,
+        columnResizeMode: 'onChange',
         onSortingChange: setSorting,
         getSortedRowModel: getSortedRowModel(),
         state: {
@@ -64,7 +69,6 @@ export function DataTable<TData, TValue>({
             ],
         },
     });
-
     const onChangePage = (value: number) => {
         onChangePageTable(value);
     };
@@ -73,13 +77,13 @@ export function DataTable<TData, TValue>({
     };
     return (
         <div className="rounded-md border">
-            <Table className="">
+            <Table className="table-fixed">
                 <TableHeader>
                     {table.getHeaderGroups().map((headerGroup) => (
                         <TableRow key={headerGroup.id}>
                             {headerGroup.headers.map((header) => {
                                 return (
-                                    <TableHead key={header.id} className="">
+                                    <TableHead key={header.id} className="bg-white">
                                         {header.isPlaceholder ? null : (
                                             <div
                                                 onClick={header.column.getToggleSortingHandler()}
@@ -128,16 +132,30 @@ export function DataTable<TData, TValue>({
 
                 <TableBody>
                     {table.getRowModel().rows?.length ? (
-                        table.getRowModel().rows.map((row) => {
+                        table.getRowModel().rows.map((row, idx: number) => {
                             const rowData = row.original;
-
                             return (
-                                <TableRow key={row.id} data-state={row.getIsSelected() && 'selected'}>
-                                    {row.getVisibleCells().map((cell) => (
-                                        <TableCell key={cell.id}>
-                                            {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                                        </TableCell>
-                                    ))}
+                                <TableRow
+                                    // onClick={row.getToggleSelectedHandler()}
+                                    style={{
+                                        backgroundColor: getRowColor(idx),
+                                    }}
+                                    key={row.id}
+                                    data-state={row.getIsSelected() && 'selected'}
+                                    className="relative"
+                                >
+                                    {row.getVisibleCells().map((cell) => {
+                                        return (
+                                            <TableCell
+                                                key={cell.id}
+                                                // style={{
+                                                //     width: `${cell.column.getSize()}%`,
+                                                // }}
+                                            >
+                                                {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                                            </TableCell>
+                                        );
+                                    })}
 
                                     {renderRowActions && <TableCell>{renderRowActions(rowData)}</TableCell>}
                                 </TableRow>

@@ -1,5 +1,4 @@
-import { ParamsProps } from '@/redux/api/ClothesApi';
-import { UserAuthProps, UserProps } from '../module';
+import { ParamsProps, UserAuthProps, UserProps } from '../module';
 import AxiosClient, { AxiosClient2 } from './AxiosClient';
 import Cookies from 'js-cookie';
 

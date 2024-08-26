@@ -24,11 +24,11 @@ const AdminLayout = ({ token, children }: AdminLayoutProps) => {
     return userInfo && userInfo.roleCode === 'TA' ? (
         <div className="">
             <Header userInfo={userInfo} />
-            <div className="mt-10 grid grid-cols-12 space-x-14">
+            <div className="mt-6 grid grid-cols-12 space-x-14 min-h-[calc(100vh-96px-24px)]">
                 <SideBar className="col-span-2 bg-white" />
                 {/* <  <Content className="col-span-10" />> */}
                 {/* {renderContent()} */}
-                <div className="col-span-10">{children}</div>
+                <div className="col-span-10 bg-white  p-6 rounded-xl ">{children}</div>
             </div>
         </div>
     ) : (

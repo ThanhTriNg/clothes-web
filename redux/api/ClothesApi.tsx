@@ -1,10 +1,7 @@
 import Cookies from 'js-cookie';
-export interface ParamsProps {
-    [key: string]: string | undefined | number;
-}
 
 import AxiosClient, { AxiosClient2, TheColorAPI } from './AxiosClient';
-import { AddClothesProps, ClothesProps, ClothesPropsData } from '@/redux/module';
+import { AddClothesProps, ClothesProps, ClothesPropsData, ParamsProps } from '@/redux/module';
 const token = Cookies.get('token');
 
 const ClothesApi = {

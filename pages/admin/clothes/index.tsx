@@ -100,7 +100,7 @@ const RenderRowActions: React.FC<RenderRowActionsProps> = ({ row, onDelete }) =>
     const handleClickEdit = (row: ClothesPropsData) => {
         router.push(`${router.pathname}/edit/${row.id}`);
     };
-    console.log(router);
+    // console.log(router);
     const handleClickDelete = async (row: ClothesPropsData) => {
         const productId: string = row.id.toString();
         const result = await dispatch(deleteClothesByIdThunk(productId));

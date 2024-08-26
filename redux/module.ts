@@ -1,3 +1,7 @@
+export interface ParamsProps {
+    [key: string]: string | undefined | number;
+}
+
 export interface AddClothesProps {
     name: string;
     price: number;
@@ -153,4 +157,31 @@ export interface MediaCloudinaryProps {
     folder?: string;
     url: string;
     secure_url?: string;
+}
+
+export interface OrderInfoProps {
+    id: number;
+    userId: number;
+    userLNameAtOrderTime: string;
+    userFNameAtOrderTime: string;
+    userAddressAtOrderTime: string;
+    userPhoneAtOrderTime: string;
+    createdAt: string;
+    updatedAt: string;
+
+    Order_items: OrderItemProps[];
+}
+
+export interface OrderItemProps {
+    id: number;
+    productId: number;
+    orderId: number;
+    quantity: number;
+    colorAtOrderTime: string;
+    sizeAtOrderTime: string;
+    priceAtOrderTime: string;
+    productNameAtOrderTime: string;
+    imageUrlAtOrderTime: string;
+    createdAt: string;
+    updatedAt: string;
 }

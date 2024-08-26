@@ -11,7 +11,7 @@ interface HeaderProps {
 }
 const Header = ({ userInfo, className }: HeaderProps) => {
     return (
-        <div className={`flex justify-between items-center ${className}`}>
+        <div className={`flex justify-between items-center h-24 ${className}`}>
             <div>
                 <p>Admin Tshop</p>
                 <Link href="/" className="">

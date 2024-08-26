@@ -1,5 +1,10 @@
 import { CartItemDbProps, CartItemProps, ClothesProps, ClothesPropsData } from '@/redux/module';
 
+interface ProductPromiseProps {
+    message: string;
+    data: ClothesPropsData;
+}
+
 export const JSONparse = (string: string) => {
     while (typeof string === 'string') {
         string = JSON.parse(string);
@@ -152,7 +157,31 @@ export const convertDbCartToLocalCart = async (dbCart: CartItemDbProps[]) => {
     return localCart;
 };
 
-interface ProductPromiseProps {
-    message: string;
-    data: ClothesPropsData;
-}
+const convertDate = (date: Date) => {
+    const day = String(date.getUTCDate()).padStart(2, '0');
+    const month = String(date.getUTCMonth() + 1).padStart(2, '0');
+    const year = date.getUTCFullYear();
+    const hours = String(date.getUTCHours()).padStart(2, '0');
+    const minutes = String(date.getUTCMinutes()).padStart(2, '0');
+
+    return { day, month, year, hours, minutes };
+};
+
+export const convertDateUTC7 = (date: Date) => {
+    const offsetHours = 7;
+    const utc7Date = new Date(date.getTime() + offsetHours * 60 * 60 * 1000);
+
+    const { day, month, year, hours, minutes } = convertDate(utc7Date);
+
+    return { utc7Date, day, month, year, hours, minutes };
+};
+
+export const convertDateDelivery = (date: Date) => {
+    const { utc7Date } = convertDateUTC7(date);
+    const days: number = parseInt(process.env.NEXT_PUBLIC_DELIVERY_DAYS as string);
+    const daysLater = new Date(utc7Date.getTime() + days * 24 * 60 * 60 * 1000);
+
+    const { day, month, year, hours, minutes } = convertDate(daysLater);
+
+    return { day, month, year, hours, minutes };
+};

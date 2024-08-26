@@ -1,12 +1,11 @@
 'use client';
 
 // import { customSortCategoryName } from '@/components/table';
-import SortBtn from '@/components/table/sortBtn';
-import { ClothesPropsData, SubCateInClothesProps } from '@/redux/module';
+import { ClothesPropsData } from '@/redux/module';
+import { formatPrice } from '@/utils';
 import { SortAscending, SortDescending } from '@phosphor-icons/react';
 import { ColumnDef } from '@tanstack/react-table';
 import Image from 'next/image';
-import { formatPrice } from '@/utils';
 interface SortIconProps {
     isSorted: boolean;
 }
@@ -17,10 +16,10 @@ export const columnsClothes: ColumnDef<ClothesPropsData>[] = [
     {
         accessorKey: 'name',
         header: 'Name',
-        
+        // size: 20,
     },
-
     {
+        // size: 20,
         accessorKey: 'price',
         header: 'Price',
         cell: ({ cell }) => {
@@ -43,6 +42,7 @@ export const columnsClothes: ColumnDef<ClothesPropsData>[] = [
     },
 
     {
+        // size: 20,
         accessorKey: 'imageUrl',
         header: 'Image',
         cell: ({ cell }) => {
@@ -59,6 +59,7 @@ export const columnsClothes: ColumnDef<ClothesPropsData>[] = [
     },
 
     {
+        // size: 20,
         id: 'category',
         accessorKey: 'Sub_Category',
         header: 'Category',
@@ -71,6 +72,7 @@ export const columnsClothes: ColumnDef<ClothesPropsData>[] = [
     },
 
     {
+        // size: 20,
         id: 'subCategory',
         accessorKey: 'Sub_Category',
         header: 'Sub Category',
@@ -80,4 +82,5 @@ export const columnsClothes: ColumnDef<ClothesPropsData>[] = [
             return <p>{subCategoryName}</p>;
         },
     },
+  
 ];
