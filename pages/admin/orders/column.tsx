@@ -14,11 +14,34 @@ import { convertDateUTC7, formatPrice } from '@/utils';
 import { DotsThree, SortAscending, SortDescending } from '@phosphor-icons/react';
 import { ColumnDef } from '@tanstack/react-table';
 import Link from 'next/link';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { useEffect, useRef, useState } from 'react';
 interface SortIconProps {
     isSorted: boolean;
 }
 const SortIcon: React.FC<SortIconProps> = ({ isSorted }) =>
     isSorted ? <SortAscending className="ml-2 h-4 w-4" /> : <SortDescending className="ml-2 h-4 w-4" />;
+const NameCell = ({ value }: { value: string }) => {
+    const [isTruncated, setIsTruncated] = useState<boolean>(false);
+    const textRef = useRef<HTMLParagraphElement>(null);
+    useEffect(() => {
+        if (textRef.current) {
+            setIsTruncated(textRef.current.scrollWidth > textRef.current.clientWidth);
+        }
+    }, [value]);
+    return (
+        <TooltipProvider delayDuration={200}>
+            <Tooltip>
+                <TooltipTrigger asChild>
+                    <p ref={textRef} className="truncate">
+                        {value}
+                    </p>
+                </TooltipTrigger>
+                {isTruncated && <TooltipContent>{value}</TooltipContent>}
+            </Tooltip>
+        </TooltipProvider>
+    );
+};
 
 export const columnsOrder: ColumnDef<OrderInfoProps>[] = [
     {
@@ -26,12 +49,16 @@ export const columnsOrder: ColumnDef<OrderInfoProps>[] = [
         header: 'Order',
         cell: ({ cell }) => {
             const value = cell.getValue<string>();
-            return <p>{value}</p>;
+            return <p>#{value}</p>;
         },
     },
     {
         accessorKey: 'userFNameAtOrderTime',
         header: 'Name',
+        cell: ({ cell }) => {
+            const value = cell.getValue<string>();
+            return <NameCell value={value} />;
+        },
     },
     {
         accessorKey: 'userPhoneAtOrderTime',

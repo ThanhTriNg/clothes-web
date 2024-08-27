@@ -124,6 +124,7 @@ export default function HomePage() {
           </div>
         </div>
 
+
         <OutStanding />
         <LimitedPromotion />
       </div>

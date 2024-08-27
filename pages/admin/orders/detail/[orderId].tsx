@@ -118,10 +118,14 @@ const OrderDetail = ({ token }: OrderDetailProps) => {
                         <div className="pt-3">
                             {orderDetail.Order_items.map((item, idx) => {
                                 const { convertPrice } = formatPrice(parseInt(item.priceAtOrderTime));
+
+                                const { convertPrice: pricePerItem } = formatPrice(
+                                    parseInt(item.priceAtOrderTime) * item.quantity,
+                                );
                                 return (
                                     <div
                                         key={`orderItemsById-${idx}`}
-                                        className="flex items-center justify-between py-2 border-b border-gray-200"
+                                        className="flex items-center justify-between py-4 border-b border-gray-200"
                                     >
                                         <div className="flex items-center space-x-4">
                                             <Image
@@ -147,25 +151,29 @@ const OrderDetail = ({ token }: OrderDetailProps) => {
                                         <div className=" text-right">
                                             <p className="text-lg font-semibold"> {convertPrice} </p>
                                             <p className="text-gray-500">Qty: {item.quantity} </p>
+                                            <div>
+                                                <p className="text-lg font-semibold border-t border-solid"> {pricePerItem} </p>
+                                            </div>
                                         </div>
                                     </div>
                                 );
                             })}
                             {/* <div className="grid grid-cols-2  "> */}
                             <div className="grid justify-end space-y-1 ">
-                                <div className="flex justify-end">
-                                    <p className="">Subtotal:</p>
-                                    <p className="text-right w-44 font-bold">{totalPrice} </p>
-                                </div>
+                                <div className="border-solid border-t pt-2">
+                                    <div className="flex justify-end">
+                                        <p className="">Subtotal:</p>
+                                        <p className="text-right w-44 font-bold">{totalPrice} </p>
+                                    </div>
 
-                                <div className="flex justify-end">
-                                    <p className="">Delivery:</p>
-                                    <p className="text-right w-44 font-bold">0</p>
-                                </div>
-
-                                <div className="flex justify-end">
-                                    <p className=""> Total:</p>
-                                    <p className="text-right w-44 font-bold">{totalPrice}</p>
+                                    <div className="flex justify-end">
+                                        <p className="">Delivery:</p>
+                                        <p className="text-right w-44 font-bold">0</p>
+                                    </div>
+                                    <div className="flex justify-end">
+                                        <p className=""> Total:</p>
+                                        <p className="text-right w-44 font-bold">{totalPrice}</p>
+                                    </div>
                                 </div>
                             </div>
 

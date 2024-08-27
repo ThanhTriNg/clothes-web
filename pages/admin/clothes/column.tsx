@@ -1,21 +1,47 @@
 'use client';
 
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 // import { customSortCategoryName } from '@/components/table';
 import { ClothesPropsData } from '@/redux/module';
 import { formatPrice } from '@/utils';
 import { SortAscending, SortDescending } from '@phosphor-icons/react';
 import { ColumnDef } from '@tanstack/react-table';
 import Image from 'next/image';
-interface SortIconProps {
-    isSorted: boolean;
-}
-const SortIcon: React.FC<SortIconProps> = ({ isSorted }) =>
-    isSorted ? <SortAscending className="ml-2 h-4 w-4" /> : <SortDescending className="ml-2 h-4 w-4" />;
+import { useEffect, useRef, useState } from 'react';
+
+const NameCell = ({ value }: { value: string }) => {
+    const [isTruncated, setIsTruncated] = useState<boolean>(false);
+    const textRef = useRef<HTMLParagraphElement>(null);
+    useEffect(() => {
+        if (textRef.current) {
+            setIsTruncated(textRef.current.scrollWidth > textRef.current.clientWidth);
+        }
+    }, [value]);
+    return (
+        <TooltipProvider delayDuration={200}>
+            <Tooltip>
+                <TooltipTrigger asChild>
+                    <p ref={textRef} className="truncate">
+                        {value}
+                    </p>
+                </TooltipTrigger>
+                {isTruncated && <TooltipContent>{value}</TooltipContent>}
+            </Tooltip>
+        </TooltipProvider>
+    );
+};
 
 export const columnsClothes: ColumnDef<ClothesPropsData>[] = [
     {
         accessorKey: 'name',
+
         header: 'Name',
+
+        cell: ({ cell }) => {
+            const value = cell.getValue<string>();
+            return <NameCell value={value} />;
+        },
+
         // size: 20,
     },
     {
@@ -82,5 +108,4 @@ export const columnsClothes: ColumnDef<ClothesPropsData>[] = [
             return <p>{subCategoryName}</p>;
         },
     },
-  
 ];
