@@ -31,9 +31,7 @@ const AdminClothes = ({ token }: AdminClothesProps) => {
     const pageSizeLocal = localStorage.getItem('pageSize');
 
     const dispatch = useDispatch<AppDispatch>();
-    const [pageSize, setPageSize] = useState<number>(
-        typeof pageSizeLocal === 'string' ? parseInt(pageSizeLocal) : pagePerRow[0],
-    );
+
     const { clothesInfo } = useSelector((state: RootState) => state.clothes);
     const [isChanged, setIsChanged] = useState<boolean>(false);
     const [paginationInfo, setPaginationInfo] = useState<PaginationInfoProps>();
@@ -45,7 +43,6 @@ const AdminClothes = ({ token }: AdminClothesProps) => {
         sortOrder: undefined,
     });
 
-    // NEW
     useEffect(() => {
         if (router.isReady) {
             if (typeof p === 'string') {
@@ -65,32 +62,6 @@ const AdminClothes = ({ token }: AdminClothesProps) => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [p]);
 
-    // useEffect(() => {
-    //     setIsChanged(false);
-    //     console.log(p);
-    //     console.log(pageSize);
-    //     console.log(isChanged);
-    //     if (router.isReady) {
-    //         console.log('router.isReady>>>', router.isReady);
-
-    //         if (typeof p === 'string') {
-    //             console.log('typeof p === string');
-
-    //             dispatch(getClothesThunk({ page: parseInt(p), pageSize }));
-    //         } else {
-    //             console.log('else');
-
-    //             setParamsAPI((prev) => ({
-    //                 ...prev,
-    //                 page: 1,
-    //             }));
-    //             dispatch(getClothesThunk({ page: 1, pageSize }));
-    //         }
-    //     }
-    //     // eslint-disable-next-line react-hooks/exhaustive-deps
-    // }, [dispatch, p, pageSize, isChanged]);
-
-    // NEW
     useEffect(() => {
         setIsChanged(false);
         if (paramsAPI.page) {
@@ -113,8 +84,12 @@ const AdminClothes = ({ token }: AdminClothesProps) => {
     };
 
     const onChangePageSizeTable = (value: string) => {
-        setPageSize(parseInt(value));
         localStorage.setItem('pageSize', value);
+
+        setParamsAPI((prev) => ({
+            ...prev,
+            pageSize: parseInt(value),
+        }));
     };
     const onDelete = (value: boolean) => {
         setIsChanged(value);
