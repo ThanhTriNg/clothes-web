@@ -3,6 +3,7 @@
 import { SortAscending, SortDescending } from '@phosphor-icons/react';
 import {
     ColumnDef,
+    OnChangeFn,
     SortingState,
     flexRender,
     getCoreRowModel,
@@ -27,6 +28,9 @@ interface DataTableProps<TData, TValue> {
     onChangePageTable: (value: number) => void;
     onChangePageSizeTable: (value: string) => void;
     pagePerRow: number[];
+
+    //test
+    onSortChange: (columnId: string, sortDirection: 'ASC' | 'DESC' | undefined) => void;
 }
 
 const getRowColor = (rowIndex: number) => {
@@ -41,34 +45,53 @@ export function DataTable<TData, TValue>({
     onChangePageTable,
     onChangePageSizeTable,
     pagePerRow,
+    onSortChange,
 }: DataTableProps<TData, TValue>) {
     const [sorting, setSorting] = useState<SortingState>([]);
+
+    // const handleSortingChange = (newSorting: SortingState) => {
+    //     setSorting(newSorting);
+    //     if (onSortChange) {
+    //         const sort = newSorting[0];
+    //         onSortChange(sort.id, sort.desc ? 'DESC' : 'ASC');
+    //     }
+    // };
+
+    const handleSortingChange: OnChangeFn<SortingState> = (newSorting) => {
+        let sortState: SortingState;
+
+        // If newSorting is a function, invoke it to get the new sorting state
+        if (typeof newSorting === 'function') {
+            sortState = newSorting(sorting);
+        } else {
+            sortState = newSorting;
+        }
+
+        setSorting(sortState);
+        console.log('sortState>>', sortState);
+
+        if (sortState.length > 0) {
+            const sort = sortState[0];
+            onSortChange(sort.id, sort.desc ? 'DESC' : 'ASC');
+        } else {
+            // Clear sorting
+            onSortChange('', undefined);
+        }
+    };
 
     const table = useReactTable({
         data,
         columns,
         getCoreRowModel: getCoreRowModel(),
-        enableColumnResizing: true,
-        columnResizeMode: 'onChange',
-        onSortingChange: setSorting,
+
         getSortedRowModel: getSortedRowModel(),
+        // onSortingChange: setSorting,
+        onSortingChange: handleSortingChange,
         state: {
             sorting,
         },
-
-        initialState: {
-            sorting: [
-                {
-                    id: 'price',
-                    desc: false,
-                },
-                {
-                    id: 'name',
-                    desc: true,
-                },
-            ],
-        },
     });
+
     const onChangePage = (value: number) => {
         onChangePageTable(value);
     };

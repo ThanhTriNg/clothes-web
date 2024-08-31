@@ -16,7 +16,6 @@ import 'swiper/css/pagination';
 import { Autoplay, Pagination } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
 
-
 const slidesPerView = 3;
 
 const DetailPage = () => {
@@ -38,7 +37,7 @@ const DetailPage = () => {
     }, [clothesById, slugCateName]);
 
     useEffect(() => {
-        dispatch(getClothesThunk({ sortValue: '0', page: 1 }));
+        dispatch(getClothesThunk({ page: 1 }));
 
         if (typeof productId === 'string') {
             dispatch(getClothesByIdThunk(productId));

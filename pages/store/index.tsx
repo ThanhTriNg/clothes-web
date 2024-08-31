@@ -1,6 +1,6 @@
 import StoreUI from '@/components/storeUI';
 import { getCategoriesThunk } from '@/redux/reducer/Categories';
-import { getClothesThunk, getSearchClothesByNameThunk } from '@/redux/reducer/Clothes';
+import { getClothesThunk, getSearchClothesByNameThunk, getSort } from '@/redux/reducer/Clothes';
 import { AppDispatch, RootState } from '@/redux/store/Store';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
@@ -23,7 +23,20 @@ const Store = () => {
         if (q && typeof q === 'string') {
             dispatch(getSearchClothesByNameThunk(q));
         } else {
-            dispatch(getClothesThunk({ sortValue: sortValue, page:1 }));
+            // dispatch(
+            //     getClothesThunk({
+            //         sortBy: sortValue ? sortValue.sortBy : '',
+            //         sortOrder: sortValue ? sortValue.sortOrder : '',
+            //         page: 1,
+            //     }),
+            // );
+            dispatch(
+                getClothesThunk({
+                    sortBy: sortValue?.sortBy,
+                    sortOrder: sortValue?.sortOrder,
+                    page: 1,
+                }),
+            );
         }
     }, [sortValue, dispatch, q]);
 

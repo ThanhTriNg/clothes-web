@@ -22,7 +22,7 @@ export interface ClothesPropsData {
     id: number;
     name: string;
     gender?: string;
-    stock: number;
+    stock?: number;
     price: number;
     descriptionSort?: string;
     description?: string;
@@ -184,4 +184,9 @@ export interface OrderItemProps {
     imageUrlAtOrderTime: string;
     createdAt: string;
     updatedAt: string;
+}
+
+export interface SortValueType {
+    sortBy?: string;
+    sortOrder?: 'ASC' | 'DESC';
 }

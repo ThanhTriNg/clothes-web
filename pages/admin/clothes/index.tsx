@@ -2,7 +2,7 @@ import { DataTable } from '@/components/table';
 import { Button } from '@/components/ui/button';
 import AdminLayout from '@/pages/admin/(layout)/AdminLayout';
 import { columnsClothes } from '@/pages/admin/clothes/column';
-import { ClothesPropsData, SubCateProps } from '@/redux/module';
+import { ClothesPropsData, SortValueType, SubCateProps } from '@/redux/module';
 import { deleteClothesByIdThunk, getClothesThunk } from '@/redux/reducer/Clothes';
 import { AppDispatch, RootState } from '@/redux/store/Store';
 import { useRouter } from 'next/router';
@@ -19,6 +19,11 @@ export interface PaginationInfoProps {
     totalCount: number;
 }
 const pagePerRow = [4, 5, 6, 7, 8];
+
+interface ParamsAPIProps extends SortValueType {
+    page: number;
+    pageSize: number;
+}
 const AdminClothes = ({ token }: AdminClothesProps) => {
     const router = useRouter();
     const { p } = router.query;
@@ -33,14 +38,65 @@ const AdminClothes = ({ token }: AdminClothesProps) => {
     const [isChanged, setIsChanged] = useState<boolean>(false);
     const [paginationInfo, setPaginationInfo] = useState<PaginationInfoProps>();
 
+    const [paramsAPI, setParamsAPI] = useState<ParamsAPIProps>({
+        page: parseInt(p as string),
+        pageSize: typeof pageSizeLocal === 'string' ? parseInt(pageSizeLocal) : pagePerRow[0],
+        sortBy: '',
+        sortOrder: undefined,
+    });
+
+    // NEW
+    useEffect(() => {
+        if (router.isReady) {
+            if (typeof p === 'string') {
+                console.log('re-render');
+                setParamsAPI((prev) => ({
+                    ...prev,
+                    page: parseInt(p),
+                }));
+            } else {
+                console.log('re-render');
+                setParamsAPI((prev) => ({
+                    ...prev,
+                    page: 1,
+                }));
+            }
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [p]);
+
+    // useEffect(() => {
+    //     setIsChanged(false);
+    //     console.log(p);
+    //     console.log(pageSize);
+    //     console.log(isChanged);
+    //     if (router.isReady) {
+    //         console.log('router.isReady>>>', router.isReady);
+
+    //         if (typeof p === 'string') {
+    //             console.log('typeof p === string');
+
+    //             dispatch(getClothesThunk({ page: parseInt(p), pageSize }));
+    //         } else {
+    //             console.log('else');
+
+    //             setParamsAPI((prev) => ({
+    //                 ...prev,
+    //                 page: 1,
+    //             }));
+    //             dispatch(getClothesThunk({ page: 1, pageSize }));
+    //         }
+    //     }
+    //     // eslint-disable-next-line react-hooks/exhaustive-deps
+    // }, [dispatch, p, pageSize, isChanged]);
+
+    // NEW
     useEffect(() => {
         setIsChanged(false);
-        if (typeof p === 'string') {
-            dispatch(getClothesThunk({ sortValue: '0', page: parseInt(p), pageSize }));
-        } else {
-            dispatch(getClothesThunk({ sortValue: '0', page: 1, pageSize }));
+        if (paramsAPI.page) {
+            dispatch(getClothesThunk(paramsAPI));
         }
-    }, [dispatch, p, pageSize, isChanged]);
+    }, [dispatch, paramsAPI, isChanged]);
 
     useEffect(() => {
         if (clothesInfo) {
@@ -63,6 +119,29 @@ const AdminClothes = ({ token }: AdminClothesProps) => {
     const onDelete = (value: boolean) => {
         setIsChanged(value);
     };
+    const handleSort = (sortBy: string, sortOrder: 'ASC' | 'DESC' | undefined) => {
+        // console.log('sortBy>>', sortBy);
+        // console.log('sortOrder>>', sortOrder);
+        // dispatch(
+        //     getClothesThunk({
+        //         sortBy,
+        //         sortOrder,
+        //         page: parseInt(p as string),
+        //         pageSize,
+        //     }),
+        // );
+
+        setParamsAPI((prev) => ({
+            ...prev,
+            sortBy,
+            sortOrder,
+        }));
+    };
+
+    // useEffect(() => {
+    //     console.log('clothesInfo>>', clothesInfo);
+    // }, [clothesInfo]);
+
     return (
         <AdminLayout token={token}>
             {clothesInfo && paginationInfo && (
@@ -76,6 +155,9 @@ const AdminClothes = ({ token }: AdminClothesProps) => {
                             onChangePageTable={onChangePageTable}
                             onChangePageSizeTable={onChangePageSizeTable}
                             pagePerRow={pagePerRow}
+                            onSortChange={(sortBy, sortOrder) => {
+                                handleSort(sortBy, sortOrder);
+                            }}
                         />
                     </div>
                 </div>

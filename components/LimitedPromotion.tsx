@@ -17,7 +17,11 @@ const LimitedPromotion = () => {
     const { clothesInfo } = useSelector((state: RootState) => state.clothes);
 
     useEffect(() => {
-        dispatch(getClothesThunk({ sortValue: '0', page: 1}));
+        dispatch(
+            getClothesThunk({
+                page: 1,
+            }),
+        );
     }, [dispatch]);
 
     return (

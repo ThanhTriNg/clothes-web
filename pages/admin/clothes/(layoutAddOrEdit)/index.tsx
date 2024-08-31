@@ -87,7 +87,7 @@ const LayoutAddOrEdit = ({ token, categoriesInfo, editMode }: LayoutAddOrEditPro
                 form.reset({
                     name: clothesById.name,
                     price: clothesById.price.toString(),
-                    stock: clothesById.stock.toString(),
+                    stock: clothesById.stock ? clothesById.stock.toString() : '0',
                     description: clothesById.description,
                     descriptionSort: clothesById.descriptionSort,
                     subCategoryId: clothesById.Sub_Category.id.toString(),

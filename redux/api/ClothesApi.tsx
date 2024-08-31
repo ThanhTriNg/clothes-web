@@ -5,12 +5,6 @@ import { AddClothesProps, ClothesProps, ClothesPropsData, ParamsProps } from '@/
 const token = Cookies.get('token');
 
 const ClothesApi = {
-    // getLatestClothesTest: (params: { [key: string]: string }) => {
-    //     const config = {
-    //         params: { ...params },
-    //     };
-    //     return AxiosClient.get(`/clothes/`, config);
-    // },
     getClothes: (params?: ParamsProps) => {
         const config = {
             params: { ...params },

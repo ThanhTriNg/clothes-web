@@ -29,6 +29,7 @@ function LandingPage({ Component, pageProps }: AppProps) {
                         <link rel="shortcut icon" href="/svg/logo.svg" type="image/x-icon" />
                     </Head>
                     {!isAdminPage && <Header token={token} />}
+                    
                     <main className="xl:px-8 md:px-6">
                         <div className={`mx-auto ${isAdminPage ? '' : 'xl:max-w-[1300px] '}`}>
                             <Component {...pageProps} token={token} />

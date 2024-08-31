@@ -1,6 +1,6 @@
 import { PayloadAction, createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import ClothesApi from '../api/ClothesApi';
-import { AddClothesProps, ClothesProps, ClothesPropsData } from '../module';
+import { AddClothesProps, ClothesProps, ClothesPropsData, SortValueType } from '../module';
 
 interface myState {
     loading: boolean;
@@ -16,7 +16,7 @@ interface myState {
     clothesByName: ClothesProps | null;
     loadingClothesByName: boolean;
     colorAPI: colorAPI | null;
-    sortValue: string;
+    sortValue: SortValueType | null;
 
     loadingClothes: boolean;
 }
@@ -35,7 +35,7 @@ const initialState: myState = {
     clothesByName: null,
     loadingClothesByName: false,
     colorAPI: null,
-    sortValue: '0',
+    sortValue: null,
     loadingClothes: false,
 };
 interface colorAPI {
@@ -47,33 +47,49 @@ interface colors {
     hex: string;
 }
 
-interface ClothesParams {
-    sortValue: string;
+interface ClothesParams extends SortValueType {
     page: number;
     pageSize?: number;
 }
 
 export const getClothesThunk = createAsyncThunk(
     'getClothes',
-    async ({ sortValue, page, pageSize = 10 }: ClothesParams, { rejectWithValue }) => {
+    async ({ sortBy, sortOrder, page, pageSize = 10 }: ClothesParams, { rejectWithValue }) => {
         try {
-            if (sortValue === '0') {
-                const params = { page, pageSize: pageSize };
-                const response = await ClothesApi.getClothes(params);
-                return response;
-            } else if (sortValue === '1') {
-                const params = { sort: 'createdAt', order: 'DESC', page };
-                const response = await ClothesApi.getClothes(params);
-                return response;
-            } else if (sortValue === '2') {
-                const params = { sort: 'price', page };
-                const response = await ClothesApi.getClothes(params);
-                return response;
-            } else if (sortValue === '3') {
-                const params = { sort: 'price', order: 'DESC', page };
-                const response = await ClothesApi.getClothes(params);
-                return response;
-            }
+            // if (sortValue === '0') {
+            //     const params = { sort: sortBy, order: sortOrder, page, pageSize: pageSize };
+            //     const response = await ClothesApi.getClothes(params);
+            //     return response;
+            // } else if (sortValue === '1') {
+            //     const params = { sort: 'createdAt', order: 'DESC', page };
+            //     const response = await ClothesApi.getClothes(params);
+            //     return response;
+            // } else if (sortValue === '2') {
+            //     const params = { sort: 'price', page };
+            //     const response = await ClothesApi.getClothes(params);
+            //     return response;
+            // } else if (sortValue === '3') {
+            //     const params = { sort: 'price', order: 'DESC', page };
+            //     const response = await ClothesApi.getClothes(params);
+            //     return response;
+            // }
+            // let params = { sort: sortBy, page, pageSize };
+
+            // if (sortOrder === '') {
+            //     params = { sort: sortBy, page, pageSize };
+            // } else {
+            //     params = { sort: sortBy, order: sortOrder, page, pageSize };
+            // }
+            const params = {
+                page,
+                pageSize,
+                ...(sortBy && { sort: sortBy }), // Only include sort if sortBy is not null
+                ...(sortOrder && { order: sortOrder }), // Only include order if sortOrder is not null
+            };
+
+            // console.log('params>>', params);
+            const response = await ClothesApi.getClothes(params);
+            return response;
         } catch (error: any) {
             if (error.response && error.response.data.message) {
                 return rejectWithValue(error.response.data.message);
@@ -141,27 +157,40 @@ export const getClothesByCategoryThunk = createAsyncThunk(
         }
     },
 );
+interface ClothesSubParams extends SortValueType {
+    subCateId: number[];
+}
 
 export const getClothesBySubCategoryThunk = createAsyncThunk(
     'getClothesBySubCategory',
-    async ({ subCateId, sortValue }: { subCateId: number[]; sortValue: string }, { rejectWithValue }) => {
+    async ({ subCateId, sortBy, sortOrder }: ClothesSubParams, { rejectWithValue }) => {
         try {
-            if (sortValue === '0') {
-                const response = await ClothesApi.getClothesBySubCategory(subCateId);
-                return response;
-            } else if (sortValue === '1') {
-                const params = { sort: 'createdAt', order: 'DESC' };
-                const response = await ClothesApi.getClothesBySubCategory(subCateId, params);
-                return response;
-            } else if (sortValue === '2') {
-                const params = { sort: 'price' };
-                const response = await ClothesApi.getClothesBySubCategory(subCateId, params);
-                return response;
-            } else if (sortValue === '3') {
-                const params = { sort: 'price', order: 'DESC' };
-                const response = await ClothesApi.getClothesBySubCategory(subCateId, params);
-                return response;
-            }
+            // if (sortValue === '0') {
+            //     const response = await ClothesApi.getClothesBySubCategory(subCateId);
+            //     return response;
+            // } else if (sortValue === '1') {
+            //     const params = { sort: 'createdAt', order: 'DESC' };
+            //     const response = await ClothesApi.getClothesBySubCategory(subCateId, params);
+            //     return response;
+            // } else if (sortValue === '2') {
+            //     const params = { sort: 'price' };
+            //     const response = await ClothesApi.getClothesBySubCategory(subCateId, params);
+            //     return response;
+            // } else if (sortValue === '3') {
+            //     const params = { sort: 'price', order: 'DESC' };
+            //     const response = await ClothesApi.getClothesBySubCategory(subCateId, params);
+            //     return response;
+            // }
+
+            const params = {
+                ...(sortBy && { sort: sortBy }), // Only include sort if sortBy is not null
+                ...(sortOrder && { order: sortOrder }), // Only include order if sortOrder is not null
+            };
+
+            // console.log('params>>', params);
+            // const response = await ClothesApi.getClothes(params);
+            const response = await ClothesApi.getClothesBySubCategory(subCateId, params);
+            return response;
         } catch (error: any) {
             if (error.response && error.response.data.message) {
                 return rejectWithValue(error.response.data.message);
@@ -306,7 +335,7 @@ export const clothesSlice = createSlice({
     name: 'clothes',
     initialState,
     reducers: {
-        getSort: (state, action: PayloadAction<string>) => {
+        getSort: (state, action: PayloadAction<SortValueType>) => {
             state.sortValue = action.payload;
         },
     },

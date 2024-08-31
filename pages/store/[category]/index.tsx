@@ -56,7 +56,8 @@ const Category = () => {
             dispatch(
                 getClothesBySubCategoryThunk({
                     subCateId: idSubCate,
-                    sortValue,
+                    sortBy: sortValue?.sortBy,
+                    sortOrder: sortValue?.sortOrder,
                 }),
             );
         }

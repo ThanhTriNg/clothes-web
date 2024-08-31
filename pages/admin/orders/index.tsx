@@ -7,7 +7,7 @@ import { deleteClothesByIdThunk, getClothesThunk } from '@/redux/reducer/Clothes
 import { getOrderAdminThunk } from '@/redux/reducer/Order';
 import { AppDispatch, RootState } from '@/redux/store/Store';
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 interface AdminOrderProps {
@@ -49,6 +49,15 @@ const AdminOrders = ({ token }: AdminOrderProps) => {
         }
     }, [orderInfo]);
 
+    const fetchSortedData = useCallback(async () => {
+        const response = await fetch(`http://localhost:5000/api/v1/clothes?sort=name&order=DESC`);
+        return response;
+    }, []);
+
+    useEffect(() => {
+        console.log(fetchSortedData());
+    }, [fetchSortedData]);
+
     return (
         <AdminLayout token={token}>
             {orderInfo && (
@@ -61,6 +70,7 @@ const AdminOrders = ({ token }: AdminOrderProps) => {
                             onChangePageTable={onChangePageTable}
                             onChangePageSizeTable={onChangePageSizeTable}
                             pagePerRow={pagePerRow}
+                            onSortChange={fetchSortedData}
                         />
                     </div>
                 </div>

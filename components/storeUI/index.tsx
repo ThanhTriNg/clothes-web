@@ -1,3 +1,4 @@
+import { ComboBoxProps, TextFilterType } from '@/common/type';
 import ProductList from '@/components/productList';
 import ProductNav from '@/components/productNav';
 import { Combobox } from '@/components/selectBox';
@@ -41,17 +42,23 @@ const StoreUI = ({ clothesInfo, categoriesInfo, title }: StoreUIProps) => {
 };
 
 export default StoreUI;
-const textFilters = [
+const textFilters: TextFilterType[] = [
     {
         label: 'Featured',
     },
     {
         label: 'New arrivals',
+        sortBy: 'createdAt',
+        sortOrder: 'DESC',
     },
     {
         label: 'Low to high',
+        sortBy: 'price',
+        sortOrder: 'ASC',
     },
     {
         label: 'High to low',
+        sortBy: 'price',
+        sortOrder: 'DESC',
     },
 ];
