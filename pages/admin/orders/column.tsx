@@ -9,7 +9,7 @@ import {
     DropdownMenuLabel,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { OrderInfoProps } from '@/redux/module';
+import { OrderDataProps } from '@/redux/module';
 import { convertDateUTC7, formatPrice } from '@/utils';
 import { DotsThree, SortAscending, SortDescending } from '@phosphor-icons/react';
 import { ColumnDef } from '@tanstack/react-table';
@@ -43,7 +43,7 @@ const NameCell = ({ value }: { value: string }) => {
     );
 };
 
-export const columnsOrder: ColumnDef<OrderInfoProps>[] = [
+export const columnsOrder: ColumnDef<OrderDataProps>[] = [
     {
         accessorKey: 'id',
         header: 'Order',

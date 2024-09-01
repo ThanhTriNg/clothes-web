@@ -28,8 +28,6 @@ interface DataTableProps<TData, TValue> {
     onChangePageTable: (value: number) => void;
     onChangePageSizeTable: (value: string) => void;
     pagePerRow: number[];
-
-    //test
     onSortChange: (columnId: string, sortDirection: 'ASC' | 'DESC' | undefined) => void;
 }
 
@@ -49,14 +47,6 @@ export function DataTable<TData, TValue>({
 }: DataTableProps<TData, TValue>) {
     const [sorting, setSorting] = useState<SortingState>([]);
 
-    // const handleSortingChange = (newSorting: SortingState) => {
-    //     setSorting(newSorting);
-    //     if (onSortChange) {
-    //         const sort = newSorting[0];
-    //         onSortChange(sort.id, sort.desc ? 'DESC' : 'ASC');
-    //     }
-    // };
-
     const handleSortingChange: OnChangeFn<SortingState> = (newSorting) => {
         let sortState: SortingState;
 
@@ -67,9 +57,6 @@ export function DataTable<TData, TValue>({
             sortState = newSorting;
         }
 
-        setSorting(sortState);
-        console.log('sortState>>', sortState);
-
         if (sortState.length > 0) {
             const sort = sortState[0];
             onSortChange(sort.id, sort.desc ? 'DESC' : 'ASC');
@@ -77,6 +64,8 @@ export function DataTable<TData, TValue>({
             // Clear sorting
             onSortChange('', undefined);
         }
+
+        setSorting(sortState);
     };
 
     const table = useReactTable({
@@ -126,25 +115,6 @@ export function DataTable<TData, TValue>({
                                                     desc: <SortDescending />,
                                                 }[header.column.getIsSorted() as string] ?? null}
                                             </div>
-
-                                            // <div
-                                            //     className={
-                                            //         header.column.getCanSort() ? 'cursor-pointer select-none' : ''
-                                            //     }
-                                            //     onClick={header.column.getToggleSortingHandler()}
-                                            //     title={
-                                            //         header.column.getCanSort()
-                                            //             ? header.column.getNextSortingOrder() === 'asc'
-                                            //                 ? 'Sort ascending'
-                                            //                 : header.column.getNextSortingOrder() === 'desc'
-                                            //                 ? 'Sort descending'
-                                            //                 : 'Clear sort'
-                                            //             : undefined
-                                            //     }
-                                            // >
-                                            //     {flexRender(header.column.columnDef.header, header.getContext())}
-
-                                            // </div>
                                         )}
                                     </TableHead>
                                 );

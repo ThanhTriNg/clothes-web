@@ -1,9 +1,9 @@
 import OrderApi from '@/redux/api/OrderApi';
-import { OrderInfoProps, OrderItemProps, OrderProps } from '@/redux/module';
+import { OrderDataProps, OrderItemProps, OrderProps, OrderAPIProps, SortValueType } from '@/redux/module';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
 interface myState {
-    orderInfo: OrderInfoProps[] | null;
+    orderAPI: OrderAPIProps | null;
     // orderItemsById: OrderItemProps[] | null;
     successOrder: boolean;
     errorOrder: boolean;
@@ -11,7 +11,7 @@ interface myState {
 }
 
 const initialState: myState = {
-    orderInfo: null,
+    orderAPI: null,
     // orderItemsById: null,
     successOrder: false,
     errorOrder: false,
@@ -54,19 +54,32 @@ export const createOrderThunk = createAsyncThunk(
 //         }
 //     },
 // );
+interface ClothesParams extends SortValueType {
+    page: number;
+    pageSize?: number;
+}
+export const getOrderAdminThunk = createAsyncThunk(
+    'getOrderAdmin',
+    async ({ sortBy, sortOrder, page, pageSize = 10 }: ClothesParams, { rejectWithValue }) => {
+        try {
+            const params = {
+                page,
+                pageSize,
+                ...(sortBy && { sort: sortBy }), // Only include sort if sortBy is not null
+                ...(sortOrder && { order: sortOrder }), // Only include order if sortOrder is not null
+            };
 
-export const getOrderAdminThunk = createAsyncThunk('getOrderAdmin', async (arg, { rejectWithValue }) => {
-    try {
-        const response = await OrderApi.getOrderAdmin();
-        return response;
-    } catch (error: any) {
-        if (error.response && error.response.data.message) {
-            return rejectWithValue(error.response.data.message);
-        } else {
-            return rejectWithValue(error.message);
+            const response = await OrderApi.getOrderAdmin(params);
+            return response;
+        } catch (error: any) {
+            if (error.response && error.response.data.message) {
+                return rejectWithValue(error.response.data.message);
+            } else {
+                return rejectWithValue(error.message);
+            }
         }
-    }
-});
+    },
+);
 export const getOrderAdminByIDThunk = createAsyncThunk(
     'getOrderAdminByID',
     async ({ orderID }: OrderAdminParams, { rejectWithValue }) => {
@@ -120,14 +133,14 @@ export const orderSlice = createSlice({
         // admin - get all order
         builder.addCase(getOrderAdminThunk.pending, (state) => {});
         builder.addCase(getOrderAdminThunk.fulfilled, (state, action) => {
-            state.orderInfo = action.payload.data.data;
+            state.orderAPI = action.payload.data;
         });
         builder.addCase(getOrderAdminThunk.rejected, (state, action) => {});
 
         // admin- get order by id
         builder.addCase(getOrderAdminByIDThunk.pending, (state) => {});
         builder.addCase(getOrderAdminByIDThunk.fulfilled, (state, action) => {
-            state.orderInfo = action.payload.data.data;
+            state.orderAPI = action.payload.data.data;
         });
         builder.addCase(getOrderAdminByIDThunk.rejected, (state, action) => {});
     },

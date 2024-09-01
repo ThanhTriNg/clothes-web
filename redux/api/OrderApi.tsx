@@ -3,7 +3,7 @@ import AxiosClient from './AxiosClient';
 import Cookies from 'js-cookie';
 
 const OrderApi = {
-    getOrderAdmin: (params?: any) => {
+    getOrderAdmin: (params?: ParamsProps) => {
         const token = Cookies.get('token');
         const config = {
             params: { ...params },

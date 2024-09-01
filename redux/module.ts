@@ -1,7 +1,12 @@
 export interface ParamsProps {
     [key: string]: string | undefined | number;
 }
-
+export interface PaginationProps {
+    currentPage: number;
+    pageSize: number;
+    totalCount: number;
+    totalPages: number;
+}
 export interface AddClothesProps {
     name: string;
     price: number;
@@ -34,12 +39,8 @@ export interface ClothesPropsData {
     colors?: string;
     isDeleted?: boolean;
 }
-export interface ClothesProps {
+export interface ClothesProps extends PaginationProps {
     data: ClothesPropsData[];
-    currentPage: number;
-    pageSize: number;
-    totalCount: number;
-    totalPages: number;
 }
 
 export interface SubCateInClothesProps {
@@ -104,17 +105,6 @@ export interface CateApiProps {
     name: string;
     gender: string;
 }
-export interface OrderProps {
-    product: {
-        id: string;
-        product: string;
-        price: number;
-        imageUrl: string;
-    };
-    quantity: string;
-    size: string;
-    color: string;
-}
 
 export interface CartItemDbProps {
     id: number;
@@ -158,8 +148,21 @@ export interface MediaCloudinaryProps {
     url: string;
     secure_url?: string;
 }
-
-export interface OrderInfoProps {
+export interface OrderProps {
+    product: {
+        id: string;
+        product: string;
+        price: number;
+        imageUrl: string;
+    };
+    quantity: string;
+    size: string;
+    color: string;
+}
+export interface OrderAPIProps extends PaginationProps {
+    data: OrderDataProps[];
+}
+export interface OrderDataProps {
     id: number;
     userId: number;
     userLNameAtOrderTime: string;

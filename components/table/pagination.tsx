@@ -16,12 +16,13 @@ const pageSizeFn = (pagePerRow: number[], pageSizeInit: string) => {
     const index = pagePerRow.findIndex((value) => parseInt(pageSizeInit) === value);
     return index;
 };
-
 const checkLeftEnd = (page: number) => {
     if (page === 1) {
         return true;
     } else return false;
 };
+
+
 const checkRightEnd = (page: number, totalPages: number) => {
     if (page >= totalPages) {
         return true;

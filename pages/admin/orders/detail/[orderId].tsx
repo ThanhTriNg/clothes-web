@@ -2,7 +2,7 @@ import { TextFilterType } from '@/common/type';
 import { Combobox } from '@/components/selectBox';
 import AdminLayout from '@/pages/admin/(layout)/AdminLayout';
 import OrderItems from '@/pages/admin/orders/detail/orderItems';
-import { OrderInfoProps, OrderItemProps } from '@/redux/module';
+import { OrderDataProps, OrderItemProps } from '@/redux/module';
 import { getOrderAdminByIDThunk } from '@/redux/reducer/Order';
 import { AppDispatch, RootState } from '@/redux/store/Store';
 import { convertDateUTC7, convertDateDelivery, formatPrice } from '@/utils';
@@ -25,12 +25,12 @@ const OrderDetail = ({ token }: OrderDetailProps) => {
 
     const [date, setDate] = useState<dateFormat | null>(null);
     const [dateDelivery, setDateDelivery] = useState<dateFormat | null>(null);
-    const [orderDetail, setOrderDetail] = useState<OrderInfoProps | null>(null);
+    const [orderDetail, setOrderDetail] = useState<OrderDataProps | null>(null);
 
     const dispatch = useDispatch<AppDispatch>();
 
     const { orderId } = router.query;
-    const { orderInfo } = useSelector((state: RootState) => state.orders);
+    const { orderAPI } = useSelector((state: RootState) => state.orders);
 
     useEffect(() => {
         if (orderId) {
@@ -39,14 +39,14 @@ const OrderDetail = ({ token }: OrderDetailProps) => {
     }, [dispatch, orderId]);
 
     useEffect(() => {
-        if (orderInfo) {
-            setOrderDetail(orderInfo[0]);
+        if (orderAPI) {
+            setOrderDetail(orderAPI.data[0]);
         }
-    }, [orderInfo]);
+    }, [orderAPI]);
 
     useEffect(() => {
-        if (orderInfo) {
-            const newDate = new Date(orderInfo[0].createdAt);
+        if (orderAPI) {
+            const newDate = new Date(orderAPI.data[0].createdAt);
 
             const dateFormat = convertDateUTC7(newDate);
             setDate(dateFormat);
@@ -54,7 +54,7 @@ const OrderDetail = ({ token }: OrderDetailProps) => {
             const dateDeliveryFormat = convertDateDelivery(newDate);
             setDateDelivery(dateDeliveryFormat);
         }
-    }, [orderInfo]);
+    }, [orderAPI]);
 
     return (
         orderDetail && (
@@ -122,14 +122,11 @@ const textFilters: TextFilterType[] = [
     },
     {
         label: 'Cancel',
-
     },
     {
         label: 'Complete',
-
     },
     {
         label: 'Hold',
-
     },
 ];
