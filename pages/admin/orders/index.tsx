@@ -192,13 +192,7 @@ const AdminOrders = ({ token }: AdminOrderProps) => {
     const [previousParamsAPI, setPreviousParamsAPI] = useState<ParamsAPIProps>(paramsAPI);
     const isFirstRender = useRef(true);
     useEffect(() => {
-        console.log(
-            'JSON.stringify(paramsAPI) !== JSON.stringify(previousParamsAPI)>>',
-            JSON.stringify(paramsAPI) !== JSON.stringify(previousParamsAPI),
-        );
-
         if (isFirstRender.current || JSON.stringify(paramsAPI) !== JSON.stringify(previousParamsAPI)) {
-            console.log('paramsAPI>>', paramsAPI);
             dispatch(getOrderAdminThunk(paramsAPI));
             setPreviousParamsAPI(paramsAPI);
             isFirstRender.current = false;
@@ -210,10 +204,6 @@ const AdminOrders = ({ token }: AdminOrderProps) => {
     };
     const [paginationAPI, setPaginationAPI] = useState<PaginationProps>();
     useEffect(() => {
-        //   setPaginationAPI((prev) => ({
-        //                 ...prev,
-
-        //             }));
         if (orderAPI) {
             setPaginationAPI({
                 currentPage: orderAPI.currentPage,
@@ -232,7 +222,7 @@ const AdminOrders = ({ token }: AdminOrderProps) => {
                 dataAPI={orderAPI.data}
                 paginationAPI={paginationAPI}
                 columns={columnsOrder}
-                paramsAPIs={paramsAPI}
+                paramsAPI={paramsAPI}
                 onChangeParamsAPI={onChangeParamsAPI}
             />
         )

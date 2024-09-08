@@ -6,54 +6,104 @@ import { z } from 'zod';
 
 import { FormFieldInput, FormFieldRadio } from '@/components/FormFieldCustom';
 import AdminLayout from '@/pages/admin/(layout)/AdminLayout';
-import { createCateThunk } from '@/redux/reducer/Categories';
-import { AppDispatch } from '@/redux/store/Store';
-import { useDispatch } from 'react-redux';
-const addCateFormSchema = z.object({
-    name: z.string().min(1),
-    gender: z.enum(['female', 'male', 'both'], {
-        required_error: 'You need to select a notification type.',
-    }),
-});
+import { createCateThunk, getCategoriesThunk } from '@/redux/reducer/Categories';
+import { useDispatch, useSelector } from 'react-redux';
+
+import { AppDispatch, RootState } from '@/redux/store/Store';
+import { useEffect, useState } from 'react';
+import { CategoriesProps } from '@/redux/module';
+import { PlusCircle } from '@phosphor-icons/react';
+
 interface AdminCategoriesProps {
     token: string;
 }
-type AddCateFormValues = z.infer<typeof addCateFormSchema>;
-
 const AdminCategories = ({ token }: AdminCategoriesProps) => {
-    const form = useForm<AddCateFormValues>({
-        resolver: zodResolver(addCateFormSchema),
-        mode: 'onSubmit',
-    });
     const dispatch = useDispatch<AppDispatch>();
+    const { categoriesInfo } = useSelector((state: RootState) => state.categories);
+    useEffect(() => {
+        dispatch(getCategoriesThunk());
+    }, [dispatch]);
 
-    async function onSubmit(data: AddCateFormValues) {
-        console.log(data);
-        try {
-            const name = data.name;
-            const gender = data.gender;
-            await dispatch(createCateThunk({ name, gender }));
-        } catch (error) {}
-    }
+    const [menCate, setMenCate] = useState<CategoriesProps[]>();
+    const [womenCate, setWomenCate] = useState<CategoriesProps[]>();
 
+    useEffect(() => {
+        if (categoriesInfo) {
+            const womenCategories = categoriesInfo.filter((item) => item.gender === 'both' || item.gender === 'female');
+            const menCategories = categoriesInfo.filter((item) => item.gender === 'both' || item.gender === 'male');
+            setWomenCate(womenCategories);
+            setMenCate(menCategories);
+        }
+    }, [categoriesInfo]);
+
+    const cateGender = [
+        {
+            name: 'Men',
+            cate: menCate,
+        },
+        {
+            name: 'Women',
+            cate: womenCate,
+        },
+    ];
+    const handleAddNew = () => {
+        // dispatch(createCateThunk());
+    };
     return (
         <AdminLayout token={token}>
-            <div className=" mx-auto">
-                <div className="bg-white md:p-6 md:space-y-10 p-2 space-y-2">
-                    <Form {...form}>
-                        <form onSubmit={form.handleSubmit(onSubmit)} className=" w-full space-y-4">
-                            <FormFieldInput form={form} name="name" />
+            <div className="mx-auto ">
+                {/* {categoriesInfo?.map((item) => {
+                    return (
+                        <div key={item.id}>
+                            <div className="">{item.name}</div>
+                            {item.Sub_Categories.map((itemSub) => {
+                                return (
+                                    <div className="ml-2" key={`itemSub-${itemSub.id}`}>
+                                        <p> {itemSub.name} </p>
+                                    </div>
+                                );
+                            })}
+                        </div>
+                    );
+                })} */}
 
-                            <FormFieldRadio form={form} name="gender" options={['female', 'male', 'both']} />
-                            <Button
-                                type="submit"
-                                className="btn-aware w-full text-white uppercase font-bold rounded-[6px] "
-                            >
-                                Create
-                                <span className={`bg-[#00668F]   !duration-[800ms]`}></span>
-                            </Button>
-                        </form>
-                    </Form>
+                {/* <div>
+                    <p>Men</p>
+                    <div className="ml-2 border-l border-black border-solid pl-3 space-y-2">
+                        {menCate?.map((item) => {
+                            return <p key={`men-${item.id}`}>{item.name}</p>;
+                        })}
+                        <div className="w-full  p-2 border-dashed border flex gap-x-2 items-center">
+                            <PlusCircle size={20} /> <span>Add new </span>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <p>Women</p>
+                    <div className="ml-2">
+                        {womenCate?.map((item) => {
+                            return <p key={`women-${item.id}`}>{item.name}</p>;
+                        })}
+                    </div>
+                </div> */}
+
+                <div className="space-y-4">
+                    {cateGender.map((item) => {
+                        return (
+                            <div key={`itemGenderCate-${item.name}`}>
+                                <p className="uppercase font-bold text-lg">{item.name}</p>
+                                <div className="ml-2 border-l border-black border-solid pl-3 space-y-2">
+                                    {item.cate?.map((item) => {
+                                        return <p key={`men-${item.id}`}>{item.name}</p>;
+                                    })}
+                                    <div className="w-full  p-2 border-dashed border flex gap-x-2 items-center">
+                                        <PlusCircle size={20} /> <span>Add new </span>
+                                    </div>
+                                </div>
+                            </div>
+                        );
+                    })}
                 </div>
             </div>
         </AdminLayout>

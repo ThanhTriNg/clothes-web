@@ -269,7 +269,7 @@ const AdminClothes = ({ token }: AdminClothesProps) => {
                 dataAPI={clothesInfo.data}
                 paginationAPI={paginationAPI}
                 columns={columnsClothes}
-                paramsAPIs={paramsAPI}
+                paramsAPI={paramsAPI}
                 onChangeParamsAPI={onChangeParamsAPI}
                 // renderRowActions={RenderRowActions}
                 renderRowActions={(row) => <RenderRowActions row={row} onDelete={onDelete} />}

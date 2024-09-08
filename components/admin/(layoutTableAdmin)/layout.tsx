@@ -22,7 +22,7 @@ interface LayoutTableAdminProps<TData, TValue> {
     dataAPI: TData[];
     paginationAPI: PaginationProps;
     columns: ColumnDef<TData, TValue>[];
-    paramsAPIs: ParamsAPIProps;
+    paramsAPI: ParamsAPIProps;
     onChangeParamsAPI: (value: ParamsAPIProps) => void;
     renderRowActions?: (row: TData) => JSX.Element;
 }
@@ -32,38 +32,38 @@ export interface PaginationInfoProps {
     totalPages: number;
     totalCount: number;
 }
-export const pagePerRow = [4, 5, 6, 7, 8];
+export const pagePerRow = [5, 10, 15, 20];
 
 const LayoutTableAdmin = <TData, TValue>({
     token,
     dataAPI,
     paginationAPI,
     columns,
-    paramsAPIs,
+    paramsAPI,
     onChangeParamsAPI,
     renderRowActions,
 }: LayoutTableAdminProps<TData, TValue>) => {
     const router = useRouter();
     const pageSizeLocal = localStorage.getItem('pageSize');
     const { p } = router.query;
-    // console.log('paramsAPIs>>', paramsAPIs);
+    // console.log('paramsAPI>>', paramsAPI);
     // const { dataAPI } = useSelector((state: RootState) => state.orders);
-    const [paramsAPI, setParamsAPI] = useState<ParamsAPIProps>({
-        page: paramsAPIs.page,
-        pageSize: paramsAPIs.pageSize,
-        sortBy: paramsAPIs.sortBy,
-        sortOrder: paramsAPIs.sortOrder,
+    const [params, setParams] = useState<ParamsAPIProps>({
+        page: paramsAPI.page,
+        pageSize: paramsAPI.pageSize,
+        sortBy: paramsAPI.sortBy,
+        sortOrder: paramsAPI.sortOrder,
     });
 
     useEffect(() => {
         if (router.isReady) {
             if (typeof p === 'string') {
-                setParamsAPI((prev) => ({
+                setParams((prev) => ({
                     ...prev,
                     page: parseInt(p),
                 }));
             } else {
-                setParamsAPI((prev) => ({
+                setParams((prev) => ({
                     ...prev,
                     page: 1,
                 }));
@@ -73,9 +73,9 @@ const LayoutTableAdmin = <TData, TValue>({
     }, [p]);
 
     useEffect(() => {
-        onChangeParamsAPI(paramsAPI);
+        onChangeParamsAPI(params);
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [paramsAPI]);
+    }, [params]);
 
     const [paginationInfo, setPaginationInfo] = useState<PaginationInfoProps>();
     const onChangePageTable = (value: number) => {
@@ -85,13 +85,9 @@ const LayoutTableAdmin = <TData, TValue>({
         });
     };
 
-    const [pageSize, setPageSize] = useState<number>(
-        typeof pageSizeLocal === 'string' ? parseInt(pageSizeLocal) : pagePerRow[0],
-    );
-
     const onChangePageSizeTable = (value: string) => {
         localStorage.setItem('pageSize', value);
-        setParamsAPI((prev) => ({
+        setParams((prev) => ({
             ...prev,
             pageSize: parseInt(value),
         }));
@@ -105,14 +101,14 @@ const LayoutTableAdmin = <TData, TValue>({
     }, [dataAPI, paginationAPI]);
 
     const handleSort = (sortBy: string, sortOrder: 'ASC' | 'DESC' | undefined) => {
-        setParamsAPI((prev) => ({
+        setParams((prev) => ({
             ...prev,
             sortBy,
             sortOrder,
         }));
 
         // onChangeParamsAPI({
-        //     ...paramsAPI,
+        //     ...params,
         //     sortBy,
         //     sortOrder,
         // });

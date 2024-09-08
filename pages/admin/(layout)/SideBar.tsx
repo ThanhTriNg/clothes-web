@@ -37,47 +37,47 @@ const SideBar = ({ className }: SideBarProps) => {
                     </div>
                 );
             })} */}
-            <nav className="">
+            <nav className="space-y-2">
                 {sideBarInfo.map((item, idx) => {
-                    const baseUrl = 'admin';
-                    const borderWidth = 10;
+                    const borderWidth = 6;
                     return (
                         <Link
                             // href={`/${baseUrl}/${item.href}`}
                             href={item.href}
-                            className=" p-2 flex items-center text-lg group relative"
+                            className="p-1 flex items-center text-lg group relative rounded-tl-xl rounded-bl-xl hover:bg-primary hover:text-white"
                             key={`item-${idx}`}
                         >
-                            <p className="flex flex-1 items-center text-base gap-x-2 font-medium p-2 rounded-xl hover:bg-primary hover:text-white">
+                            <p className="flex flex-1 items-center text-base gap-x-2 font-medium p-2 h-10">
                                 {item.icon}
                                 {item.name}
                             </p>
                             {item.sub && (
-                                <div
-                                    className="absolute top-0 left-full z-20 bg-[#E7E9EB] animate-accordion-up invisible rounded-xl p-2 shadow-2xl
-                        group-hover:visible"
-                                >
-                                    <div
+                                // absolute top-0 left-full z-20 animate-accordion-up shadow-2xl invisible group-hover:visible
+                                <div className="absolute top-0 left-full z-20 animate-accordion-up shadow-2xl invisible group-hover:visible">
+                                    {/* arrow */}
+                                    {/* <div
                                         style={{
                                             borderTop: `${borderWidth}px solid transparent`,
                                             borderBottom: `${borderWidth}px solid transparent`,
-                                            borderRight: `${borderWidth * 2}px solid #E7E9EB`,
+                                            borderRight: `${borderWidth * 2}px solid hsl(var(--primary))`,
+                                            // borderRight: `${borderWidth * 2}px solid #000`,
                                         }}
-                                        className="absolute top-4 left-0 -translate-x-3/4"
+                                        className="absolute top-1 -left-1 -translate-x-1/2  "
                                     />
-                                    {item.sub?.map((subItem, subIdx) => (
-                                        <Link
-                                            // href={`/${baseUrl}/${item.href}/${subItem.href}`}
+                                    <div className="h-16 w-9 bg-transparent absolute top-1/3 -left-1/2 -translate-y-1/2" /> */}
+                                    <div className="bg-primary rounded-tr-xl rounded-br-xl">
+                                        {item.sub?.map((subItem, subIdx) => (
+                                            <Link
+                                                // href={`/${baseUrl}/${item.href}/${subItem.href}`}
 
-                                            href={`${item.href}/${subItem.href}`}
-                                            key={`${subIdx}-subLinkAdmin`}
-                                            className=""
-                                        >
-                                            <p className="text-sm font-medium p-3 rounded-xl hover:bg-primary hover:text-white">
-                                                {subItem.name}
-                                            </p>
-                                        </Link>
-                                    ))}
+                                                href={`${item.href}/${subItem.href}`}
+                                                key={`${subIdx}-subLinkAdmin`}
+                                                className="first:rounded-tr-xl last:rounded-br-xl h-12 text-center grid justify-center items-center px-4 text-sm text-black hover:text-white font-medium bg-white hover:bg-primary"
+                                            >
+                                                <p>{subItem.name}</p>
+                                            </Link>
+                                        ))}
+                                    </div>
                                 </div>
                             )}
                         </Link>
@@ -102,29 +102,18 @@ const sideBarInfo = [
         name: 'Orders',
         href: `${baseUrlAdmin}/orders`,
         icon: <ListChecks />,
+        sub: [{ name: 'Export', href: '/export' }],
     },
     {
         name: 'Clothes',
         href: `${baseUrlAdmin}/clothes`,
         icon: <Hoodie />,
-        sub: [
-            { name: 'Add', href: '/add' },
-            {
-                name: 'Update',
-                href: 'update',
-            },
-        ],
+        sub: [{ name: 'Add', href: '/add' }],
     },
     {
         name: 'Categories',
         href: `${baseUrlAdmin}/categories`,
         icon: <Cardholder />,
-        sub: [
-            { name: 'Add', href: 'add' },
-            {
-                name: 'Update',
-                href: 'update',
-            },
-        ],
+        sub: [{ name: 'Add', href: 'add' }],
     },
 ];
